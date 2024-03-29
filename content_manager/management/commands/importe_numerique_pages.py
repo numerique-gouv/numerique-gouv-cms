@@ -12,6 +12,7 @@ from wagtail.rich_text import RichText
 
 from blog.models import BlogEntryPage, BlogIndexPage
 from content_manager.models import ContentPage
+from content_manager.utils import import_image
 
 
 def update_documents_links(text):
@@ -50,8 +51,8 @@ class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 
     def handle(self, *args, **options):
-        categories = ["publications", "communiques", "actualites"]
-        # categories = ["publications"]
+        # categories = ["publications", "communiques", "actualites"]
+        categories = ["actualites"]
         for category in categories:
             # Get a list of all files in the 'numerique_files' directory
             files = os.listdir("numerique_files/_" + category)
@@ -72,6 +73,7 @@ class Command(BaseCommand):
                 title = headers["title"][:255]
                 tags = headers.get("tags", [])
                 tags.append("DINUM")
+
                 # Pour les apostrophes la versions actuelle de numerique enlève la lettre d'avant aussi, slugify non
                 slug = slugify(title)
                 body = []
@@ -95,7 +97,7 @@ class Command(BaseCommand):
 
                 body.append(("markdown", content_without_frontmatter))
 
-                self.create_page(
+                new_page = self.create_page(
                     slug=slug,
                     title=title,
                     body=body,
@@ -103,6 +105,23 @@ class Command(BaseCommand):
                     created_at=str(created_at),
                     tags=tags,
                 )
+
+                # Image de header
+                header_image = headers.get("une-ou-diaporama", [])
+                if header_image:
+                    path = "numerique_files" + header_image[0]["image"]
+                    path = path.replace("uploads", "_uploads")
+                    parts = path.split('/')
+                    file_name_with_extension = parts[-1]
+                    file_parts = file_name_with_extension.split('.')
+                    title = file_parts[0]
+
+                    image = import_image(path, title)
+                    image.tags.add(category)
+                    image.tags.add('ancienne version')
+                    image.save()
+                    new_page.header_image = image
+                    new_page.save()
 
     def create_page(self, slug: str, title: str, body: list, category: str, created_at: str, tags: list):
         # Don't replace a manually created page
@@ -146,3 +165,5 @@ class Command(BaseCommand):
             new_page.save()
 
         self.stdout.write(self.style.SUCCESS(f"Page {slug} created with id {new_page.id}"))
+
+        return new_page
