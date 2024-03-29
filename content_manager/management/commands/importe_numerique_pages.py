@@ -54,10 +54,10 @@ class Command(BaseCommand):
         # categories = ["publications"]
         for category in categories:
             # Get a list of all files in the 'numerique_files' directory
-            files = os.listdir("numerique_files/" + category)
+            files = os.listdir("numerique_files/_" + category)
 
             for file_name in files:
-                file_path = os.path.join("numerique_files/" + category, file_name)
+                file_path = os.path.join("numerique_files/_" + category, file_name)
 
                 with open(file_path, "r") as file:
                     content = file.read()
@@ -71,7 +71,7 @@ class Command(BaseCommand):
 
                 title = headers["title"][:255]
                 tags = headers.get("tags", [])
-
+                tags.append("DINUM")
                 # Pour les apostrophes la versions actuelle de numerique enlève la lettre d'avant aussi, slugify non
                 slug = slugify(title)
                 body = []
@@ -85,7 +85,12 @@ class Command(BaseCommand):
                     tz = pytz.timezone("Europe/Paris")
                     created_at = datetime.now(tz)
 
-                content_without_frontmatter = update_documents_links(content_without_frontmatter)
+                try:
+                    content_without_frontmatter = update_documents_links(content_without_frontmatter)
+                except Exception as e:
+                    self.stdout.write(self.style.ERROR(f"Error while updating documents links of {file_name}: {e}"))
+                    continue
+
                 content_without_frontmatter = remove_html_tags(content_without_frontmatter)
 
                 body.append(("markdown", content_without_frontmatter))
@@ -102,12 +107,13 @@ class Command(BaseCommand):
     def create_page(self, slug: str, title: str, body: list, category: str, created_at: str, tags: list):
         # Don't replace a manually created page
         already_exists = ContentPage.objects.filter(slug=slug).first()
+        category = category.lower()
         if already_exists:
             return
 
         home_page = Site.objects.filter(is_default_site=True).first().root_page
 
-        if category == "Actualites":
+        if category == "actualites":
             category_page = BlogIndexPage.objects.filter(slug=category).first()
             if not category_page:
                 category_page = home_page.add_child(
