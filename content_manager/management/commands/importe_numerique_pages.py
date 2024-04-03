@@ -16,7 +16,6 @@ from content_manager.utils import import_image
 
 
 def update_documents_links(text):
-    # Define the regular expression pattern for the old link
     pattern = r"/uploads/(.*\.pdf)"
     # Find all occurrences of the old link in text
     old_links = re.findall(pattern, text)
@@ -106,22 +105,7 @@ class Command(BaseCommand):
                     tags=tags,
                 )
 
-                # Image de header
-                header_image = headers.get("une-ou-diaporama", [])
-                if header_image:
-                    path = "numerique_files" + header_image[0]["image"]
-                    path = path.replace("uploads", "_uploads")
-                    parts = path.split('/')
-                    file_name_with_extension = parts[-1]
-                    file_parts = file_name_with_extension.split('.')
-                    title = file_parts[0]
-
-                    image = import_image(path, title)
-                    image.tags.add(category)
-                    image.tags.add('ancienne version')
-                    image.save()
-                    new_page.header_image = image
-                    new_page.save()
+                self.import_existing_image(headers, category, new_page, file_name)
 
     def create_page(self, slug: str, title: str, body: list, category: str, created_at: str, tags: list):
         # Don't replace a manually created page
@@ -133,6 +117,17 @@ class Command(BaseCommand):
         home_page = Site.objects.filter(is_default_site=True).first().root_page
 
         if category == "actualites":
+            # N'importe pas les actus avant 2020
+            reference_date = datetime(2020, 1, 1)
+            tz = pytz.timezone("Europe/Paris")
+            reference_date = tz.localize(reference_date)
+            try:
+                created_at = tz.localize(created_at)
+            except Exception as e:
+                self.stdout.write(self.style.ERROR(f"Error while parsing date of {title}: {e}"))
+            if created_at < reference_date:
+                return
+
             category_page = BlogIndexPage.objects.filter(slug=category).first()
             if not category_page:
                 category_page = home_page.add_child(
@@ -167,3 +162,23 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"Page {slug} created with id {new_page.id}"))
 
         return new_page
+
+    def import_existing_image(self, headers, category: str, new_page, file_name):
+        header_image = headers.get("une-ou-diaporama", [])
+        if header_image:
+            try:
+                path = "numerique_files" + header_image[0]["image"]
+                path = path.replace("uploads", "_uploads")
+                parts = path.split('/')
+                file_name_with_extension = parts[-1]
+                file_parts = file_name_with_extension.split('.')
+                title = file_parts[0]
+
+                image = import_image(path, title)
+                image.tags.add(category)
+                image.tags.add('ancienne version')
+                image.save()
+                new_page.header_image = image
+                new_page.save()
+            except Exception as e:
+                self.stdout.write(self.style.ERROR(f"Error while importing header image of {file_name}: {e}"))
