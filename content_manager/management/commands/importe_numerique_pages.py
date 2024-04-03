@@ -1,7 +1,5 @@
 import os
 import re
-from datetime import datetime
-
 import frontmatter
 import pytz
 from django.core.management.base import BaseCommand
@@ -9,10 +7,10 @@ from slugify import slugify
 from wagtail.documents.models import Document
 from wagtail.models import Site
 from wagtail.rich_text import RichText
-
 from blog.models import BlogEntryPage, BlogIndexPage
 from content_manager.models import ContentPage
 from content_manager.utils import import_image
+from datetime import datetime
 
 
 def update_documents_links(text):
@@ -46,6 +44,12 @@ def remove_frontmatter(content_with_frontmatter):
     return parsed.content
 
 
+def import_tags(new_page, tags):
+    for tag in tags:
+        new_page.tags.add(tag)
+        new_page.save()
+
+
 class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 
@@ -71,6 +75,7 @@ class Command(BaseCommand):
 
                 title = headers["title"][:255]
                 tags = headers.get("tags", [])
+                categories = headers.get("categories", [])
                 tags.append("DINUM")
 
                 # Pour les apostrophes la versions actuelle de numerique enlève la lettre d'avant aussi, slugify non
@@ -122,11 +127,17 @@ class Command(BaseCommand):
             tz = pytz.timezone("Europe/Paris")
             reference_date = tz.localize(reference_date)
             try:
+                if isinstance(created_at, str):
+                    try:
+                        created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S")
+                    except ValueError:
+                        print("La chaîne de caractères ne correspond pas au format attendu (YYYY-MM-DD HH:MM:SS)")
                 created_at = tz.localize(created_at)
+                if created_at < reference_date:
+                    return
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error while parsing date of {title}: {e}"))
-            if created_at < reference_date:
-                return
+
 
             category_page = BlogIndexPage.objects.filter(slug=category).first()
             if not category_page:
@@ -155,9 +166,7 @@ class Command(BaseCommand):
                     )
                 )
 
-        for tag in tags:
-            new_page.tags.add(tag)
-            new_page.save()
+        import_tags(new_page, tags)
 
         self.stdout.write(self.style.SUCCESS(f"Page {slug} created with id {new_page.id}"))
 
