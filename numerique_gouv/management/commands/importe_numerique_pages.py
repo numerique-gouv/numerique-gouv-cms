@@ -93,14 +93,13 @@ class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 
     def handle(self, *args, **options):
-        # categories = ["publications", "communiques", "actualites"]
-        categories = ["actualites"]
+        categories = ["publications", "communiques", "actualites"]
         for category in categories:
             # Get a list of all files in the 'numerique_files' directory
-            files = os.listdir("numerique_files/_" + category)
+            files = os.listdir("numerique_gouv/numerique_files/_" + category)
 
             for file_name in files:
-                file_path = os.path.join("numerique_files/_" + category, file_name)
+                file_path = os.path.join("numerique_gouv/numerique_files/_" + category, file_name)
 
                 with open(file_path, "r") as file:
                     content = file.read()
@@ -130,7 +129,7 @@ class Command(BaseCommand):
                     tz = pytz.timezone("Europe/Paris")
                     created_at = datetime.now(tz)
 
-                if category == "actualites":
+                if category == "actualites" or category == "communiques":
                     # N'importe pas les actus avant 2020
                     reference_date = datetime(2020, 1, 1)
                     tz = pytz.timezone("Europe/Paris")
@@ -146,7 +145,7 @@ class Command(BaseCommand):
                         if created_at < reference_date:
                             continue
                     except Exception as e:
-                        self.stdout.write(self.style.ERROR(f"Error while parsing date of {title}: {e}"))
+                        ""
 
                 try:
                     content_without_frontmatter = update_documents_links(content_without_frontmatter)
@@ -186,7 +185,7 @@ class Command(BaseCommand):
 
         home_page = Site.objects.filter(is_default_site=True).first().root_page
 
-        if category == "actualites":
+        if category == "actualites" or category == 'communiques':
 
             category_page = BlogIndexPage.objects.filter(slug=category).first()
             if not category_page:
@@ -199,6 +198,9 @@ class Command(BaseCommand):
                 new_page = category_page.add_child(
                     instance=BlogEntryPage(title=title, body=body, slug=slug, show_in_menus=False, date=created_at)
                 )
+
+            import_page_categories(new_page, page_categories)
+
         else:
             # create category page if not exist
             category_page = ContentPage.objects.filter(slug=category).first()
@@ -216,7 +218,6 @@ class Command(BaseCommand):
                 )
 
         import_tags(new_page, tags)
-        import_page_categories(new_page, page_categories)
 
         self.stdout.write(self.style.SUCCESS(f"Page {slug} created with id {new_page.id}"))
         return new_page
@@ -225,7 +226,7 @@ class Command(BaseCommand):
         header_image = headers.get("une-ou-diaporama", [])
         if header_image:
             try:
-                path = "numerique_files" + header_image[0]["image"]
+                path = "numerique_gouv/numerique_files" + header_image[0]["image"]
                 path = path.replace("uploads", "_uploads")
                 parts = path.split('/')
                 file_name_with_extension = parts[-1]

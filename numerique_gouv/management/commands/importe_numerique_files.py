@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Get a list of all files in the 'numerique_files' directory
-        files = os.listdir("numerique_files/documents")
+        files = os.listdir("numerique_gouv/numerique_files/documents")
         # print(files)
         # Loop through each file
         for file_name in files:
