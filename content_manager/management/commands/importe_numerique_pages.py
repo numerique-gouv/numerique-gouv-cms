@@ -7,10 +7,11 @@ from slugify import slugify
 from wagtail.documents.models import Document
 from wagtail.models import Site
 from wagtail.rich_text import RichText
-from blog.models import BlogEntryPage, BlogIndexPage
+from blog.models import BlogEntryPage, BlogIndexPage, Category
 from content_manager.models import ContentPage
 from content_manager.utils import import_image
 from datetime import datetime
+from wagtail.images.models import Image
 
 
 def update_documents_links(text):
@@ -36,7 +37,9 @@ def update_documents_links(text):
 
 def remove_html_tags(text):
     tags = re.compile("<(/?[bi])>")
-    return re.sub(tags, "", text)
+    text_without_html = re.sub(tags, "", text)
+    text_without_markdown = re.sub(r"\{:(.*?)\}", "", text_without_html)
+    return text_without_markdown
 
 
 def remove_frontmatter(content_with_frontmatter):
@@ -48,6 +51,42 @@ def import_tags(new_page, tags):
     for tag in tags:
         new_page.tags.add(tag)
         new_page.save()
+
+
+def import_page_categories(new_page, categories):
+    for category in categories:
+        page_category = Category.objects.filter(name=category).first()
+        if not page_category:
+            page_category = Category.objects.create(name=category, slug=slugify(category))
+
+        new_page.blog_categories.add(page_category)
+        new_page.save()
+
+
+def import_content_images(text):
+    pattern = r"/uploads/(.*\.(png|jpeg|jpg))"
+    image_links = re.findall(pattern, text)
+    for image_link in image_links:
+        file_name = image_link[0]
+        extension = image_link[1]
+        path = "numerique_files/_uploads/" + file_name
+        parts = path.split('/')
+        file_name_with_extension = parts[-1]
+        file_parts = file_name_with_extension.split('.')
+        title = file_parts[0]
+
+        image = Image.objects.filter(title=title).first()
+        if not image:
+            image = import_image(path, title)
+        image.tags.add('ancienne version')
+        image.save()
+
+        if image:
+            old_path = "/uploads/" + file_name
+            new_link = f"/medias/images/{image.title}.original.{extension}"
+            text = re.sub(old_path, new_link, text)
+
+    return text
 
 
 class Command(BaseCommand):
@@ -75,7 +114,7 @@ class Command(BaseCommand):
 
                 title = headers["title"][:255]
                 tags = headers.get("tags", [])
-                categories = headers.get("categories", [])
+                page_categories = headers.get("categories", [])
                 tags.append("DINUM")
 
                 # Pour les apostrophes la versions actuelle de numerique enlève la lettre d'avant aussi, slugify non
@@ -91,10 +130,34 @@ class Command(BaseCommand):
                     tz = pytz.timezone("Europe/Paris")
                     created_at = datetime.now(tz)
 
+                if category == "actualites":
+                    # N'importe pas les actus avant 2020
+                    reference_date = datetime(2020, 1, 1)
+                    tz = pytz.timezone("Europe/Paris")
+                    reference_date = tz.localize(reference_date)
+                    try:
+                        if isinstance(created_at, str):
+                            try:
+                                created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S")
+                            except ValueError:
+                                print(
+                                    "La chaîne de caractères ne correspond pas au format attendu (YYYY-MM-DD HH:MM:SS)")
+                        created_at = tz.localize(created_at)
+                        if created_at < reference_date:
+                            continue
+                    except Exception as e:
+                        self.stdout.write(self.style.ERROR(f"Error while parsing date of {title}: {e}"))
+
                 try:
                     content_without_frontmatter = update_documents_links(content_without_frontmatter)
                 except Exception as e:
                     self.stdout.write(self.style.ERROR(f"Error while updating documents links of {file_name}: {e}"))
+                    continue
+
+                try:
+                    content_without_frontmatter = import_content_images(content_without_frontmatter)
+                except Exception as e:
+                    self.stdout.write(self.style.ERROR(f"Error while importing images of {file_name}: {e}"))
                     continue
 
                 content_without_frontmatter = remove_html_tags(content_without_frontmatter)
@@ -108,11 +171,13 @@ class Command(BaseCommand):
                     category=category.capitalize(),
                     created_at=str(created_at),
                     tags=tags,
+                    page_categories=page_categories,
                 )
 
                 self.import_existing_image(headers, category, new_page, file_name)
 
-    def create_page(self, slug: str, title: str, body: list, category: str, created_at: str, tags: list):
+    def create_page(self, slug: str, title: str, body: list, category: str, created_at: str, tags: list,
+                    page_categories):
         # Don't replace a manually created page
         already_exists = ContentPage.objects.filter(slug=slug).first()
         category = category.lower()
@@ -122,22 +187,6 @@ class Command(BaseCommand):
         home_page = Site.objects.filter(is_default_site=True).first().root_page
 
         if category == "actualites":
-            # N'importe pas les actus avant 2020
-            reference_date = datetime(2020, 1, 1)
-            tz = pytz.timezone("Europe/Paris")
-            reference_date = tz.localize(reference_date)
-            try:
-                if isinstance(created_at, str):
-                    try:
-                        created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S")
-                    except ValueError:
-                        print("La chaîne de caractères ne correspond pas au format attendu (YYYY-MM-DD HH:MM:SS)")
-                created_at = tz.localize(created_at)
-                if created_at < reference_date:
-                    return
-            except Exception as e:
-                self.stdout.write(self.style.ERROR(f"Error while parsing date of {title}: {e}"))
-
 
             category_page = BlogIndexPage.objects.filter(slug=category).first()
             if not category_page:
@@ -167,9 +216,9 @@ class Command(BaseCommand):
                 )
 
         import_tags(new_page, tags)
+        import_page_categories(new_page, page_categories)
 
         self.stdout.write(self.style.SUCCESS(f"Page {slug} created with id {new_page.id}"))
-
         return new_page
 
     def import_existing_image(self, headers, category: str, new_page, file_name):
@@ -191,3 +240,4 @@ class Command(BaseCommand):
                 new_page.save()
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error while importing header image of {file_name}: {e}"))
+                return
