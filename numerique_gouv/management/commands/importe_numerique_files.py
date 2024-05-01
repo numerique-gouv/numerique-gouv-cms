@@ -3,6 +3,7 @@ import os
 
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
+from git import Repo
 from wagtail.documents.models import Document
 
 
@@ -11,14 +12,23 @@ class Command(BaseCommand):
     #     parser.add_argument("files", nargs="+", type=int)
 
     def handle(self, *args, **options):
+        path_to_clone = "numerique_gouv/numerique_files"
+        uploads_folder = path_to_clone + "/_uploads"
+
+        if not os.path.isdir(path_to_clone):
+            git_url = "https://github.com/numerique-gouv/numerique.gouv.fr"
+            Repo.clone_from(git_url, path_to_clone)
+
         # Get a list of all files in the 'numerique_files' directory
-        files = os.listdir("numerique_gouv/numerique_files/documents")
+        files = os.listdir(uploads_folder)
         # print(files)
         # Loop through each file
         for file_name in files:
-            # print("INFO FILENAME " + file_name)
-            # Construct the full file path
-            file_path = os.path.join("numerique_files/documents", file_name)
+            _, extension = os.path.splitext(file_name)
+            if not extension.lower() == ".pdf":
+                continue
+
+            file_path = os.path.join(uploads_folder, file_name)
 
             # search if document title exists
 
