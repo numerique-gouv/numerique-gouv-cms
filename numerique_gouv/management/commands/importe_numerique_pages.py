@@ -1,17 +1,20 @@
 import os
 import re
+from datetime import datetime
+
 import frontmatter
 import pytz
 from django.core.management.base import BaseCommand
+from git import Repo
 from slugify import slugify
 from wagtail.documents.models import Document
+from wagtail.images.models import Image
 from wagtail.models import Site
 from wagtail.rich_text import RichText
+
 from blog.models import BlogEntryPage, BlogIndexPage, Category
 from content_manager.models import ContentPage
 from content_manager.utils import import_image
-from datetime import datetime
-from wagtail.images.models import Image
 
 
 def update_documents_links(text):
@@ -36,7 +39,7 @@ def update_documents_links(text):
 
 
 def remove_html_tags(text):
-    tags = re.compile("<(/?[bi])>")
+    tags = re.compile("<figure.*?>.*?</figure>|<(/?[bi])>")
     text_without_html = re.sub(tags, "", text)
     text_without_markdown = re.sub(r"\{:(.*?)\}", "", text_without_html)
     return text_without_markdown
@@ -68,21 +71,26 @@ def import_content_images(text):
     image_links = re.findall(pattern, text)
     for image_link in image_links:
         file_name = image_link[0]
+        file_name = file_name.replace("%20", " ")
+        file_name = file_name.replace("%C3%A9", "é")
+        # file_name = file_name.replace("%25", "%")
         extension = image_link[1]
-        path = "numerique_files/_uploads/" + file_name
-        parts = path.split('/')
+        path = "numerique_gouv/numerique_files/_uploads/" + file_name
+        parts = path.split("/")
         file_name_with_extension = parts[-1]
-        file_parts = file_name_with_extension.split('.')
+        file_parts = file_name_with_extension.split(".")
         title = file_parts[0]
 
         image = Image.objects.filter(title=title).first()
         if not image:
             image = import_image(path, title)
-        image.tags.add('ancienne version')
+        image.tags.add("ancienne version")
         image.save()
 
         if image:
             old_path = "/uploads/" + file_name
+
+            # new_link = rendition.url
             new_link = f"/medias/images/{image.title}.original.{extension}"
             text = re.sub(old_path, new_link, text)
 
@@ -93,13 +101,23 @@ class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 
     def handle(self, *args, **options):
+        path_to_clone = "numerique_gouv/numerique_files"
+
+        if not os.path.isdir(path_to_clone):
+            git_url = "https://github.com/numerique-gouv/numerique.gouv.fr"
+            Repo.clone_from(git_url, path_to_clone)
+
         categories = ["publications", "communiques", "actualites"]
+        # categories = ["actualites"]
         for category in categories:
             # Get a list of all files in the 'numerique_files' directory
             files = os.listdir("numerique_gouv/numerique_files/_" + category)
 
             for file_name in files:
                 file_path = os.path.join("numerique_gouv/numerique_files/_" + category, file_name)
+
+                if not os.path.isfile(file_path):
+                    continue
 
                 with open(file_path, "r") as file:
                     content = file.read()
@@ -140,12 +158,14 @@ class Command(BaseCommand):
                                 created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S")
                             except ValueError:
                                 print(
-                                    "La chaîne de caractères ne correspond pas au format attendu (YYYY-MM-DD HH:MM:SS)")
+                                    "La chaîne de caractères ne correspond pas au format attendu (YYYY-MM-DD HH:MM:SS)"
+                                )
                         created_at = tz.localize(created_at)
                         if created_at < reference_date:
                             continue
                     except Exception as e:
-                        ""
+                        self.stdout.write(self.style.ERROR(f"Error while parsing date of {file_name}: {e}"))
+                        continue
 
                 try:
                     content_without_frontmatter = update_documents_links(content_without_frontmatter)
@@ -175,8 +195,9 @@ class Command(BaseCommand):
 
                 self.import_existing_image(headers, category, new_page, file_name)
 
-    def create_page(self, slug: str, title: str, body: list, category: str, created_at: str, tags: list,
-                    page_categories):
+    def create_page(
+        self, slug: str, title: str, body: list, category: str, created_at: str, tags: list, page_categories
+    ):
         # Don't replace a manually created page
         already_exists = ContentPage.objects.filter(slug=slug).first()
         category = category.lower()
@@ -185,8 +206,7 @@ class Command(BaseCommand):
 
         home_page = Site.objects.filter(is_default_site=True).first().root_page
 
-        if category == "actualites" or category == 'communiques':
-
+        if category == "actualites" or category == "communiques":
             category_page = BlogIndexPage.objects.filter(slug=category).first()
             if not category_page:
                 category_page = home_page.add_child(
@@ -228,14 +248,17 @@ class Command(BaseCommand):
             try:
                 path = "numerique_gouv/numerique_files" + header_image[0]["image"]
                 path = path.replace("uploads", "_uploads")
-                parts = path.split('/')
+                path = path.replace("%20", " ")
+                path = path.replace("%C3%A9", "é")
+                # path = path.replace("%25", "%")
+                parts = path.split("/")
                 file_name_with_extension = parts[-1]
-                file_parts = file_name_with_extension.split('.')
+                file_parts = file_name_with_extension.split(".")
                 title = file_parts[0]
 
                 image = import_image(path, title)
                 image.tags.add(category)
-                image.tags.add('ancienne version')
+                image.tags.add("ancienne version")
                 image.save()
                 new_page.header_image = image
                 new_page.save()
