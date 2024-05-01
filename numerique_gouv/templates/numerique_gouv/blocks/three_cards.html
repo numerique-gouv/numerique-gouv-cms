@@ -1,0 +1,87 @@
+{% load dsfr_tags wagtailcore_tags wagtailimages_tags %}
+<div class="fr-container--fluid">
+    <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col col-lg-9">
+            <div class="fr-card fr-enlarge-link fr-card--horizontal-half">
+                <div class="fr-card__body">
+                    <div class="fr-card__content">
+                        <div class="fr-card__title">
+                            {% if value.carte_une_lien_page %}
+                                <a href="{{ value.carte_une_lien_page.url }}">{{ value.carte_une_titre }}</a>
+                            {% elif value.carte_une_titre %}
+                                <a href="{{ value.carte_une_lien_url }}">{{ value.carte_une_titre }}</a>
+                            {% endif %}
+                        </div>
+                        <div class="fr-card__desc">
+                            {{ value.carte_une_texte }}
+                        </div>
+                    </div>
+                </div>
+                <div class="fr-card__header">
+                    <div class="fr-card__img">
+                        {% image value.carte_une_image original class="fr-responsive-img" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fr-col-lg-3">
+            <div class="fr-grid-row fr-grid-row--gutters">
+                <div class="fr-col-6 fr-col-md-12 ">
+                    <div class="fr-card">
+                        <div class="fr-card__body">
+                            <div class="fr-card__content fr-p-5v">
+                                <div class="fr-card__desc">
+                                    {{ value.carte_deux_texte }}
+                                    <div style="text-align: center;">
+                                        {% if value.carte_deux_lien_page %}
+                                            <a href="{{ value.carte_deux_lien_page.url }}" class="fr-btn">{{ value.carte_deux_label_bouton }}</a>
+                                        {% elif value.carte_deux_lien_url %}
+                                            <a href="{{ value.carte_deux_lien_url }}"
+                                               class="fr-btn"
+                                               target="_blank"
+                                               title="{{ value.carte_deux_titre }} - ouvre une nouvelle fenêtre">
+                                                {{ value.carte_deux_label_bouton }}</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fr-card__header">
+                            <div class="fr-card__img">
+                                {% image value.carte_deux_image original class="fr-responsive-img fr-ratio-32x9" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fr-col-6 fr-col-md-12">
+                    <div class="fr-card">
+                        <div class="fr-card__body">
+                            <div class="fr-card__content fr-p-5v">
+                                <div class="fr-card__desc">
+                                    {{ value.carte_trois_texte }}
+                                    <div style="text-align: center;">
+                                    {% if value.carte_trois_lien_page %}
+                                        <a href="{{ value.carte_trois_lien_page.url }}" class="fr-btn fr-btn--secondary">{{ value.carte_trois_label_bouton }}</a>
+                                    {% elif value.carte_trois_lien_url %}
+                                        <a href="{{ value.carte_trois_lien_url }}"
+                                           class="fr-btn fr-btn--secondary"
+                                           target="_blank"
+                                           title="{{ value.carte_trois_titre }} - ouvre une nouvelle fenêtre">
+                                            {{ value.carte_trois_label_bouton }}</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fr-card__header">
+                            <div class="fr-card__img">
+                               {% image value.carte_trois_image original class="fr-responsive-img fr-ratio-32x9" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
