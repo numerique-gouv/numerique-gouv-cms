@@ -2,6 +2,8 @@ from django.utils.translation import gettext_lazy as _
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 
+from content_manager.blocks import MultiColumnsBlock, MultiColumnsWithTitleBlock
+
 
 class ThreeCardsBlock(blocks.StructBlock):
     # Bloc avec trois cartes, une principale à gauche et deux secondaires à droite
@@ -43,6 +45,24 @@ class ThreeCardsBlock(blocks.StructBlock):
         label = "Headline cards"
 
 
+class CustomMultiColumnsBlock(MultiColumnsBlock):
+    # Ajoutez ici les champs supplémentaires que vous souhaitez
+    html = blocks.RawHTMLBlock(
+        required=False,
+        help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
+        group=_("Expert syntax"),
+    )
+
+
+class CustomMultiColumnsWithTitleBlock(MultiColumnsWithTitleBlock):
+    # Ajoutez ici les champs supplémentaires que vous souhaitez
+    columns = CustomMultiColumnsBlock(label=_("Columns"))
+
+    class Meta:
+        icon = "dots-horizontal"
+
+
 STREAMFIELD_NUMERIQUE_BLOCKS = [
-    ("three_cards", ThreeCardsBlock(label=_("Headline cards"), group=_("Numerique components")))
+    ("three_cards", ThreeCardsBlock(label=_("Headline cards"), group=_("Numerique components"))),
+    ("multi_columns", CustomMultiColumnsWithTitleBlock(label=_("Multi columns"), group=_("Numerique components"))),
 ]

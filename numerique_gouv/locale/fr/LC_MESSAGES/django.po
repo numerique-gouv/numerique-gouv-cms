@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-01 11:53+0200\n"
-"PO-Revision-Date: 2024-07-01 16:20+0200\n"
+"POT-Creation-Date: 2024-07-01 17:38+0200\n"
+"PO-Revision-Date: 2024-07-01 17:41+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -19,96 +19,111 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.4.4\n"
 
-#: numerique_gouv/blocks.py:8
+#: numerique_gouv/blocks.py:10
 msgid "Main card image"
 msgstr "Image de la carte principale"
 
-#: numerique_gouv/blocks.py:9
+#: numerique_gouv/blocks.py:11
 msgid "Main card title"
 msgstr "Titre de la carte principale"
 
-#: numerique_gouv/blocks.py:10
+#: numerique_gouv/blocks.py:12
 msgid "Main card text"
 msgstr "Texte de la carte principale"
 
-#: numerique_gouv/blocks.py:11 numerique_gouv/blocks.py:18
-#: numerique_gouv/blocks.py:25
+#: numerique_gouv/blocks.py:14 numerique_gouv/blocks.py:25
+#: numerique_gouv/blocks.py:36
 msgid "Link to a page"
 msgstr "Utilisez soit ce champ soit le champ URL externe"
 
-#: numerique_gouv/blocks.py:11
+#: numerique_gouv/blocks.py:14
 msgid "Main card page link"
 msgstr "Lien vers une page de la carte principale"
 
-#: numerique_gouv/blocks.py:12 numerique_gouv/blocks.py:19
-#: numerique_gouv/blocks.py:26
+#: numerique_gouv/blocks.py:17 numerique_gouv/blocks.py:28
+#: numerique_gouv/blocks.py:39
 msgid "Link to an external URL"
 msgstr "Lien vers une URL externe"
 
-#: numerique_gouv/blocks.py:12
+#: numerique_gouv/blocks.py:17
 msgid "Main card URL link"
 msgstr "Lien externe de la carte principale"
 
-#: numerique_gouv/blocks.py:14
+#: numerique_gouv/blocks.py:20
 msgid "Top right card image"
 msgstr "Image de la carte en haut à droite"
 
-#: numerique_gouv/blocks.py:15
+#: numerique_gouv/blocks.py:21
 msgid "Top right card title"
 msgstr "Titre de la carte en haut à droite"
 
-#: numerique_gouv/blocks.py:16
+#: numerique_gouv/blocks.py:22
 msgid "Top right card text"
 msgstr "Texte de la carte en haut à droite"
 
-#: numerique_gouv/blocks.py:17
+#: numerique_gouv/blocks.py:23
 msgid "Top right card button label"
 msgstr "Texte du bouton de la carte en haut à droite"
 
-#: numerique_gouv/blocks.py:18
-#| msgid "Top right card image"
+#: numerique_gouv/blocks.py:25
 msgid "Top right card page link"
 msgstr "Lien vers une page de la carte en haut à droite"
 
-#: numerique_gouv/blocks.py:19
-#| msgid "Top right card image"
+#: numerique_gouv/blocks.py:28
 msgid "Top right card URL link"
 msgstr "Lien externe de la carte en haut à droite"
 
-#: numerique_gouv/blocks.py:21
+#: numerique_gouv/blocks.py:31
 msgid "Bottom right card image"
 msgstr "Image de la carte en bas à droite"
 
-#: numerique_gouv/blocks.py:22
-#| msgid "Bottom right card text"
+#: numerique_gouv/blocks.py:32
 msgid "Bottom right card title"
 msgstr "Titre de la carte en bas à droite"
 
-#: numerique_gouv/blocks.py:23
+#: numerique_gouv/blocks.py:33
 msgid "Bottom right card text"
 msgstr "Texte de la carte en bas à droite"
 
-#: numerique_gouv/blocks.py:24
+#: numerique_gouv/blocks.py:34
 msgid "Bottom right card button label"
 msgstr "Texte du bouton de la carte en bas à droite"
 
-#: numerique_gouv/blocks.py:25
-#| msgid "Bottom right card image"
+#: numerique_gouv/blocks.py:36
 msgid "Bottom right card page link"
 msgstr "Lien vers une page de la carte en bas à droite"
 
-#: numerique_gouv/blocks.py:26
-#| msgid "Bottom right card image"
+#: numerique_gouv/blocks.py:39
 msgid "Bottom right card URL link"
 msgstr "Lien externe de la carte en bas à droite"
 
-#: numerique_gouv/blocks.py:35
+#: numerique_gouv/blocks.py:51
+msgid ""
+"Warning: Use HTML block with caution. Malicious code can compromise the "
+"security of the site."
+msgstr ""
+"Avertissement : Utilisez le bloc HTML avec précaution. Un code "
+"malveillant peut compromettre la sécurité du site."
+
+#: numerique_gouv/blocks.py:52
+msgid "Expert syntax"
+msgstr "Syntaxe experte"
+
+#: numerique_gouv/blocks.py:56
+msgid "Columns"
+msgstr "Colonnes"
+
+#: numerique_gouv/blocks.py:63
 msgid "Headline cards"
 msgstr "Unes"
 
-#: numerique_gouv/blocks.py:36
+#: numerique_gouv/blocks.py:63 numerique_gouv/blocks.py:64
 msgid "Numerique components"
 msgstr "Composants Numerique.gouv.fr"
+
+#: numerique_gouv/blocks.py:64
+msgid "Multi columns"
+msgstr "Multi-colonnes"
 
 #: numerique_gouv/models.py:8
 msgid "Numerique page"
