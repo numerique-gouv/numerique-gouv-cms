@@ -28,57 +28,75 @@
         <div class="fr-col-lg-3">
             <div class="fr-grid-row fr-grid-row--gutters">
                 <div class="fr-col-6 fr-col-md-12 ">
-                    <div class="fr-card">
+                    <div class="fr-card fr-enlarge-link fr-enlarge-link">
                         <div class="fr-card__body">
                             <div class="fr-card__content fr-p-5v">
+                                {% if not value.top_right_button_label %}
+                                    <h2 class="fr-card__title">
+                                        <a href="{{ value.top_right_url_link }}">{{ value.top_right_title }}</a>
+                                    </h2>
+                                {% endif %}
                                 <div class="fr-card__desc">
                                     {{ value.top_right_text }}
-                                    <div style="text-align: center;">
-                                        {% if value.top_right_page_link %}
-                                            <a href="{{ value.top_right_page_link.url }}" class="fr-btn">{{ value.top_right_button_label }}</a>
-                                        {% elif value.top_right_url_link %}
-                                            <a href="{{ value.top_right_url_link }}"
-                                               class="fr-btn"
-                                               target="_blank"
-                                               title="{{ value.top_right_button_label }} - ouvre une nouvelle fenêtre">
-                                                {{ value.top_right_button_label }}</a>
-                                        {% endif %}
-                                    </div>
+                                    {% if value.top_right_button_label %}
+                                        <div style="text-align: center;">
+                                            {% if value.top_right_page_link %}
+                                                <a href="{{ value.top_right_page_link.url }}" class="fr-btn">{{ value.top_right_button_label }}</a>
+                                            {% elif value.top_right_url_link %}
+                                                <a href="{{ value.top_right_url_link }}"
+                                                   class="fr-btn"
+                                                   target="_blank"
+                                                   title="{{ value.top_right_button_label }} - ouvre une nouvelle fenêtre">
+                                                    {{ value.top_right_button_label }}</a>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                        <div class="fr-card__header">
-                            <div class="fr-card__img">
-                                {% image value.top_right_image original class="fr-responsive-img fr-ratio-32x9" %}
+                        {% if value.top_right_image %}
+                            <div class="fr-card__header">
+                                <div class="fr-card__img">
+                                    {% image value.top_right_image original class="fr-responsive-img fr-ratio-32x9" %}
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="fr-col-6 fr-col-md-12">
-                    <div class="fr-card">
+                    <div class="fr-card fr-enlarge-link">
                         <div class="fr-card__body">
                             <div class="fr-card__content fr-p-5v">
+                                {% if not value.bottom_right_button_label %}
+                                    <h2 class="fr-card__title">
+                                        <a href="{{ value.bottom_right_url_link }}">{{ value.bottom_right_title }}</a>
+                                    </h2>
+                                {% endif %}
                                 <div class="fr-card__desc">
                                     {{ value.bottom_right_text }}
-                                    <div style="text-align: center;">
-                                    {% if value.bottom_right_page_link %}
-                                        <a href="{{ value.bottom_right_page_link.url }}" class="fr-btn fr-btn--secondary">{{ value.bottom_right_button_label }}</a>
-                                    {% elif value.bottom_right_url_link %}
-                                        <a href="{{ value.bottom_right_url_link }}"
-                                           class="fr-btn fr-btn--secondary"
-                                           target="_blank"
-                                           title="{{ value.bottom_right_button_label }} - ouvre une nouvelle fenêtre">
-                                            {{ value.bottom_right_button_label }}</a>
-                                        {% endif %}
-                                    </div>
+                                    {% if value.bottom_right_button_label %}
+                                        <div style="text-align: center;">
+                                            {% if value.bottom_right_page_link %}
+                                                <a href="{{ value.bottom_right_page_link.url }}" class="fr-btn fr-btn--secondary">{{ value.bottom_right_button_label }}</a>
+                                            {% elif value.bottom_right_url_link %}
+                                            <a href="{{ value.bottom_right_url_link }}"
+                                               class="fr-btn fr-btn--secondary"
+                                               target="_blank"
+                                               title="{{ value.bottom_right_button_label }} - ouvre une nouvelle fenêtre">
+                                                {{ value.bottom_right_button_label }}</a>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                        <div class="fr-card__header">
-                            <div class="fr-card__img">
-                               {% image value.bottom_right_image original class="fr-responsive-img fr-ratio-32x9" %}
+                        {% if value.bottom_right_image %}
+                            <div class="fr-card__header">
+                                <div class="fr-card__img">
+                                   {% image value.bottom_right_image original class="fr-responsive-img fr-ratio-32x9" %}
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
