@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-01 17:38+0200\n"
-"PO-Revision-Date: 2024-07-01 17:41+0200\n"
+"POT-Creation-Date: 2024-07-02 15:16+0200\n"
+"PO-Revision-Date: 2024-07-02 15:17+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -41,7 +41,7 @@ msgid "Main card page link"
 msgstr "Lien vers une page de la carte principale"
 
 #: numerique_gouv/blocks.py:17 numerique_gouv/blocks.py:28
-#: numerique_gouv/blocks.py:39
+#: numerique_gouv/blocks.py:39 numerique_gouv/blocks.py:53
 msgid "Link to an external URL"
 msgstr "Lien vers une URL externe"
 
@@ -97,34 +97,95 @@ msgstr "Lien vers une page de la carte en bas à droite"
 msgid "Bottom right card URL link"
 msgstr "Lien externe de la carte en bas à droite"
 
+#: numerique_gouv/blocks.py:49
+msgid "Image"
+msgstr "Image"
+
+#: numerique_gouv/blocks.py:50
+msgid "Alt text"
+msgstr "Texte alternatif"
+
 #: numerique_gouv/blocks.py:51
+msgid "Main link"
+msgstr "Lien principal"
+
+#: numerique_gouv/blocks.py:53
+msgid "Secondary link"
+msgstr "Lien secondaire"
+
+#: numerique_gouv/blocks.py:65 numerique_gouv/blocks.py:82
 msgid ""
 "Warning: Use HTML block with caution. Malicious code can compromise the "
 "security of the site."
 msgstr ""
-"Avertissement : Utilisez le bloc HTML avec précaution. Un code "
-"malveillant peut compromettre la sécurité du site."
+"Avertissement : Utilisez le bloc HTML avec précaution. Un code malveillant "
+"peut compromettre la sécurité du site."
 
-#: numerique_gouv/blocks.py:52
+#: numerique_gouv/blocks.py:66 numerique_gouv/blocks.py:83
 msgid "Expert syntax"
 msgstr "Syntaxe experte"
 
-#: numerique_gouv/blocks.py:56
-msgid "Columns"
-msgstr "Colonnes"
+#: numerique_gouv/blocks.py:68 numerique_gouv/blocks.py:85
+#: numerique_gouv/blocks.py:101
+msgid "Numeric direction card"
+msgstr "Carte direction numérique"
 
-#: numerique_gouv/blocks.py:63
-msgid "Headline cards"
-msgstr "Unes"
-
-#: numerique_gouv/blocks.py:63 numerique_gouv/blocks.py:64
+#: numerique_gouv/blocks.py:69 numerique_gouv/blocks.py:86
+#: numerique_gouv/blocks.py:88 numerique_gouv/blocks.py:99
+#: numerique_gouv/blocks.py:100 numerique_gouv/blocks.py:102
 msgid "Numerique components"
 msgstr "Composants Numerique.gouv.fr"
 
-#: numerique_gouv/blocks.py:64
+#: numerique_gouv/blocks.py:73
+msgid "Column content"
+msgstr "Contenue de la colonne"
+
+#: numerique_gouv/blocks.py:87
+msgid "Custom adjustable column"
+msgstr "Colonne ajustable"
+
+#: numerique_gouv/blocks.py:92
+msgid "Columns"
+msgstr "Colonnes"
+
+#: numerique_gouv/blocks.py:99
+msgid "Headline cards"
+msgstr "Unes"
+
+#: numerique_gouv/blocks.py:100
 msgid "Multi columns"
 msgstr "Multi-colonnes"
 
 #: numerique_gouv/models.py:8
 msgid "Numerique page"
 msgstr "Page Numérique.gouv.fr"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/numeric_direction_card.html:7
+msgid "The direction"
+msgstr "La direction"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/numeric_direction_card.html:10
+msgid "The road map"
+msgstr "La feuille de route"
+
+#, fuzzy
+#~| msgid "Link to a page"
+#~ msgid "Link to page"
+#~ msgstr "Utilisez soit ce champ soit le champ URL externe"
+
+#~ msgid "Title"
+#~ msgstr "Titre"
+
+#, fuzzy
+#~| msgid "Multi columns"
+#~ msgid "Adjustable column"
+#~ msgstr "Multi-colonnes"
+
+#~ msgid "Main link to page"
+#~ msgstr "Lien principal"
+
+#~ msgid "Numeric card main page link"
+#~ msgstr "Lien principal"
+
+#~ msgid "Numeric card secondary page link"
+#~ msgstr "Lien secondaire"

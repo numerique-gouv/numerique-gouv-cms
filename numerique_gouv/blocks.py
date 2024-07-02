@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 
-from content_manager.blocks import MultiColumnsBlock, MultiColumnsWithTitleBlock
+from content_manager.blocks import AdjustableColumnBlock, ColumnBlock, MultiColumnsBlock, MultiColumnsWithTitleBlock
 
 
 class ThreeCardsBlock(blocks.StructBlock):
@@ -45,17 +45,51 @@ class ThreeCardsBlock(blocks.StructBlock):
         label = "Headline cards"
 
 
-class CustomMultiColumnsBlock(MultiColumnsBlock):
-    # Ajoutez ici les champs supplémentaires que vous souhaitez
+class NumericDirectionCardBlock(blocks.StructBlock):
+    image = ImageChooserBlock(required=True, label=_("Image"))
+    alt = blocks.CharBlock(required=True, label=_("Alt text"))
+    main_link = blocks.PageChooserBlock(required=True, label=_("Main link"))
+    secondary_link = blocks.URLBlock(required=True, help_text=_("Link to an external URL"), label=_("Secondary link"))
+
+    class Meta:
+        template = "numerique_gouv/blocks/numeric_direction_card.html"
+        icon = "tablet-alt"
+        label = "Numeric direction card"
+
+
+class CustomColumnBlock(ColumnBlock):
     html = blocks.RawHTMLBlock(
         required=False,
         help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
         group=_("Expert syntax"),
     )
+    numeric_direction_card = NumericDirectionCardBlock(
+        required=False, label=_("Numeric direction card"), group=_("Numerique components")
+    )
+
+
+class CustomAdjustableColumnBlock(AdjustableColumnBlock):
+    content = CustomColumnBlock(label=_("Column content"))
+
+    class Meta:
+        icon = "order-down"
+
+
+class CustomMultiColumnsBlock(MultiColumnsBlock):
+    html = blocks.RawHTMLBlock(
+        required=False,
+        help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
+        group=_("Expert syntax"),
+    )
+    numeric_direction_card = NumericDirectionCardBlock(
+        required=False, label=_("Numeric direction card"), group=_("Numerique components")
+    )
+    custom_ajustable_column = CustomAdjustableColumnBlock(
+        required=False, label=_("Custom adjustable column"), group=_("Numerique components")
+    )
 
 
 class CustomMultiColumnsWithTitleBlock(MultiColumnsWithTitleBlock):
-    # Ajoutez ici les champs supplémentaires que vous souhaitez
     columns = CustomMultiColumnsBlock(label=_("Columns"))
 
     class Meta:
@@ -65,4 +99,8 @@ class CustomMultiColumnsWithTitleBlock(MultiColumnsWithTitleBlock):
 STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("three_cards", ThreeCardsBlock(label=_("Headline cards"), group=_("Numerique components"))),
     ("multi_columns", CustomMultiColumnsWithTitleBlock(label=_("Multi columns"), group=_("Numerique components"))),
+    (
+        "numeric_direction_card",
+        NumericDirectionCardBlock(label=_("Numeric direction card"), group=_("Numerique components")),
+    ),
 ]
