@@ -2,7 +2,13 @@ from django.utils.translation import gettext_lazy as _
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 
-from content_manager.blocks import AdjustableColumnBlock, ColumnBlock, MultiColumnsBlock, MultiColumnsWithTitleBlock
+from content_manager.blocks import (
+    AdjustableColumnBlock,
+    ColumnBlock,
+    HorizontalCardBlock,
+    MultiColumnsBlock,
+    MultiColumnsWithTitleBlock,
+)
 
 
 class ThreeCardsBlock(blocks.StructBlock):
@@ -66,6 +72,7 @@ class CustomColumnBlock(ColumnBlock):
     numeric_direction_card = NumericDirectionCardBlock(
         required=False, label=_("Numeric direction card"), group=_("Numerique components")
     )
+    horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
 
 
 class CustomAdjustableColumnBlock(AdjustableColumnBlock):
@@ -87,6 +94,7 @@ class CustomMultiColumnsBlock(MultiColumnsBlock):
     custom_ajustable_column = CustomAdjustableColumnBlock(
         required=False, label=_("Custom adjustable column"), group=_("Numerique components")
     )
+    horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
 
 
 class CustomMultiColumnsWithTitleBlock(MultiColumnsWithTitleBlock):
