@@ -9,11 +9,13 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtailmarkdown.blocks import MarkdownBlock
 
 from content_manager.constants import (
+    BUTTON_ICON_SIDE,
     BUTTON_TYPE_CHOICES,
     HEADING_CHOICES,
     HORIZONTAL_CARD_IMAGE_RATIOS,
     LEVEL_CHOICES,
     LIMITED_RICHTEXTFIELD_FEATURES,
+    LIMITED_RICHTEXTFIELD_FEATURES_WITHOUT_LINKS,
     LINK_ICON_CHOICES,
     LINK_SIZE_CHOICES,
     MEDIA_WIDTH_CHOICES,
@@ -30,6 +32,27 @@ class BackgroundColorChoiceBlock(blocks.ChoiceBlock):
 
     class Meta:
         icon = "view"
+
+
+class IconPickerBlock(blocks.FieldBlock):
+    def __init__(self, required=True, help_text=None, validators=(), **kwargs):
+        self.field_options = {
+            "required": required,
+            "help_text": help_text,
+            "max_length": 70,
+            "min_length": 0,
+            "validators": [],
+        }
+        super().__init__(**kwargs)
+
+    @cached_property
+    def field(self):
+        field_kwargs = {"widget": DsfrIconPickerWidget()}
+        field_kwargs.update(self.field_options)
+        return forms.CharField(**field_kwargs)
+
+    class Meta:
+        icon = "radio-full"
 
 
 class LinkStructValue(blocks.StructValue):
@@ -87,6 +110,13 @@ class LinksVerticalListBlock(blocks.StreamBlock):
 
 class ButtonBlock(LinkBlock):
     button_type = blocks.ChoiceBlock(label=_("Button type"), choices=BUTTON_TYPE_CHOICES, required=False)
+    icon_class = IconPickerBlock(label=_("Icon"), required=False)
+    icon_side = blocks.ChoiceBlock(
+        label=_("Icon side"),
+        choices=BUTTON_ICON_SIDE,
+        required=False,
+        default="",
+    )
 
     class Meta:
         value_class = LinkStructValue
@@ -107,27 +137,6 @@ class ButtonsVerticalListBlock(blocks.StreamBlock):
     class Meta:
         icon = "list-ul"
         template = "content_manager/blocks/buttons_vertical_list.html"
-
-
-class IconPickerBlock(blocks.FieldBlock):
-    def __init__(self, required=True, help_text=None, validators=(), **kwargs):
-        self.field_options = {
-            "required": required,
-            "help_text": help_text,
-            "max_length": 70,
-            "min_length": 0,
-            "validators": [],
-        }
-        super().__init__(**kwargs)
-
-    @cached_property
-    def field(self):
-        field_kwargs = {"widget": DsfrIconPickerWidget()}
-        field_kwargs.update(self.field_options)
-        return forms.CharField(**field_kwargs)
-
-    class Meta:
-        icon = "radio-full"
 
 
 class SingleLinkBlock(LinkBlock):
@@ -306,7 +315,12 @@ class CardBlock(blocks.StructBlock):
     call_to_action = blocks.StreamBlock(
         [
             ("links", LinksVerticalListBlock()),
-            ("buttons", ButtonsHorizontalListBlock()),
+            (
+                "buttons",
+                ButtonsHorizontalListBlock(
+                    help_text=_("Please use only one primary button. If you use icons, align them on the same side.")
+                ),
+            ),
         ],
         label=_("Bottom call-to-action: links or buttons"),
         help_text=_("Incompatible with the bottom detail text."),
@@ -361,7 +375,9 @@ class TileBlock(blocks.StructBlock):
         default="h3",
         help_text=_("Adapt to the page layout. Defaults to heading 3."),
     )
-    description = blocks.RichTextBlock(label=_("Content"), features=LIMITED_RICHTEXTFIELD_FEATURES, required=False)
+    description = blocks.RichTextBlock(
+        label=_("Content"), features=LIMITED_RICHTEXTFIELD_FEATURES_WITHOUT_LINKS, required=False
+    )
     image = ImageChooserBlock(label=_("Image"), help_text=_("Prefer SVG files."), required=False)
     link = LinkWithoutLabelBlock(
         label=_("Link"),
@@ -611,12 +627,33 @@ class StepperBlock(blocks.StructBlock):
 
 class TextAndCTA(blocks.StructBlock):
     text = blocks.RichTextBlock(label=_("Rich text"), required=False)
-    cta_label = blocks.CharBlock(
-        label=_("Call to action label"),
-        help_text=_("The link appears as a button under the text block"),
+    cta_buttons = blocks.StreamBlock(
+        [
+            (
+                "buttons",
+                ButtonsHorizontalListBlock(
+                    help_text=_("Please use only one primary button. If you use icons, align them on the same side.")
+                ),
+            ),
+        ],
+        label=_("Call-to-action buttons"),
+        max_num=1,
         required=False,
     )
-    cta_url = blocks.CharBlock(label=_("Link"), required=False)
+    cta_label = blocks.CharBlock(
+        label=_("Call to action label  (obsolete)"),
+        help_text=_(
+            "This field is obsolete and will be removed in the near future. Please replace with the CTA buttons above."
+        ),
+        required=False,
+    )
+    cta_url = blocks.CharBlock(
+        label=_("Link (obsolete)"),
+        help_text=_(
+            "This field is obsolete and will be removed in the near future. Please replace with the CTA buttons above."
+        ),
+        required=False,
+    )
 
     class Meta:
         icon = "link"
