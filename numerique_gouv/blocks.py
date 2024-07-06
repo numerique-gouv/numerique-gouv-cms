@@ -5,6 +5,8 @@ from wagtail.images.blocks import ImageChooserBlock
 from content_manager.blocks import (
     AdjustableColumnBlock,
     ColumnBlock,
+    FullWidthBackgroundBlock,
+    FullWidthBlock,
     HorizontalCardBlock,
     MultiColumnsBlock,
     MultiColumnsWithTitleBlock,
@@ -54,6 +56,7 @@ class ThreeCardsBlock(blocks.StructBlock):
 class NumericDirectionCardBlock(blocks.StructBlock):
     image = ImageChooserBlock(required=True, label=_("Image"))
     alt = blocks.CharBlock(required=True, label=_("Alt text"))
+    text = blocks.RichTextBlock(required=True, label=_("Text"))
     main_link = blocks.PageChooserBlock(required=True, label=_("Main link"))
     secondary_link = blocks.URLBlock(required=True, help_text=_("Link to an external URL"), label=_("Secondary link"))
 
@@ -104,11 +107,37 @@ class CustomMultiColumnsWithTitleBlock(MultiColumnsWithTitleBlock):
         icon = "dots-horizontal"
 
 
+class CustomFullWidthBlock(FullWidthBlock):
+    html = blocks.RawHTMLBlock(
+        required=False,
+        help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
+        group=_("Expert syntax"),
+    )
+    numeric_direction_card = NumericDirectionCardBlock(
+        required=False, label=_("Numeric direction card"), group=_("Numerique components")
+    )
+    custom_ajustable_column = CustomAdjustableColumnBlock(
+        required=False, label=_("Custom adjustable column"), group=_("Numerique components")
+    )
+    horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
+    multicolumns = MultiColumnsWithTitleBlock(
+        required=False, label=_("Multi columns"), group=_("Numerique components")
+    )
+
+
+class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
+    content = CustomFullWidthBlock(label=_("Content"))
+
+
 STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("three_cards", ThreeCardsBlock(label=_("Headline cards"), group=_("Numerique components"))),
-    ("multi_columns", CustomMultiColumnsWithTitleBlock(label=_("Multi columns"), group=_("Numerique components"))),
+    ("multicolumns", CustomMultiColumnsWithTitleBlock(label=_("Multi columns"), group=_("Numerique components"))),
     (
         "numeric_direction_card",
         NumericDirectionCardBlock(label=_("Numeric direction card"), group=_("Numerique components")),
+    ),
+    (
+        "fullwidthbackground",
+        CustomFullWidthBackgroundBlock(label=_("Full width background"), group=_("Numerique components")),
     ),
 ]
