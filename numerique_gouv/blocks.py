@@ -129,15 +129,26 @@ class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
     content = CustomFullWidthBlock(label=_("Content"))
 
 
+class SpacerBlock(blocks.StructBlock):
+    marginTop = blocks.DecimalBlock(required=False, label=_("Margin top"), help_text=_("In rem"))
+    marginBottom = blocks.DecimalBlock(required=False, label=_("Margin bottom"), help_text=_("In rem"))
+
+    class Meta:
+        template = "numerique_gouv/blocks/spacer.html"
+        icon = "dots-horizontal"
+        label = "Spacer"
+
+
 STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("three_cards", ThreeCardsBlock(label=_("Headline cards"), group=_("Numerique components"))),
-    ("multicolumns", CustomMultiColumnsWithTitleBlock(label=_("Multi columns"), group=_("Numerique components"))),
+    ("multicolumns", CustomMultiColumnsWithTitleBlock(label=_("Multi columns"), group=_("Page structure"))),
     (
         "numeric_direction_card",
         NumericDirectionCardBlock(label=_("Numeric direction card"), group=_("Numerique components")),
     ),
     (
         "fullwidthbackground",
-        CustomFullWidthBackgroundBlock(label=_("Full width background"), group=_("Numerique components")),
+        CustomFullWidthBackgroundBlock(label=_("Full width background"), group=_("Page structure")),
     ),
+    ("spacer", SpacerBlock(label=_("Spacer"), group=_("Page structure"))),
 ]
