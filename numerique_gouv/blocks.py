@@ -4,6 +4,7 @@ from wagtail.images.blocks import ImageChooserBlock
 
 from content_manager.blocks import (
     AdjustableColumnBlock,
+    BackgroundColorChoiceBlock,
     ColumnBlock,
     FullWidthBackgroundBlock,
     FullWidthBlock,
@@ -85,6 +86,21 @@ class CustomAdjustableColumnBlock(AdjustableColumnBlock):
         icon = "order-down"
 
 
+class StylizedColumn(blocks.StructBlock):
+    bg_color_class = BackgroundColorChoiceBlock(
+        label=_("Background color"),
+        required=False,
+        help_text=_("Uses the French Design System colors"),
+    )
+    border = blocks.BooleanBlock(required=False, label=_("Border"))
+    content = CustomColumnBlock(label=_("Content"))
+
+    class Meta:
+        template = "numerique_gouv/blocks/stylized_column.html"
+        icon = "dots-horizontal"
+        label = "Stylized column"
+
+
 class CustomMultiColumnsBlock(MultiColumnsBlock):
     html = blocks.RawHTMLBlock(
         required=False,
@@ -98,6 +114,7 @@ class CustomMultiColumnsBlock(MultiColumnsBlock):
         required=False, label=_("Custom adjustable column"), group=_("Numerique components")
     )
     horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
+    stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
 
 
 class CustomMultiColumnsWithTitleBlock(MultiColumnsWithTitleBlock):
@@ -123,6 +140,7 @@ class CustomFullWidthBlock(FullWidthBlock):
     multicolumns = MultiColumnsWithTitleBlock(
         required=False, label=_("Multi columns"), group=_("Numerique components")
     )
+    stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
 
 
 class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
@@ -151,4 +169,5 @@ STREAMFIELD_NUMERIQUE_BLOCKS = [
         CustomFullWidthBackgroundBlock(label=_("Full width background"), group=_("Page structure")),
     ),
     ("spacer", SpacerBlock(label=_("Spacer"), group=_("Page structure"))),
+    ("stylized_column", StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))),
 ]
