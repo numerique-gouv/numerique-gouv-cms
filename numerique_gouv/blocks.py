@@ -12,6 +12,8 @@ from content_manager.blocks import (
     MultiColumnsBlock,
     MultiColumnsWithTitleBlock,
 )
+from content_manager.constants import HEADING_CHOICES
+from numerique_gouv.constants import HEADING_SIZE_CHOICES
 
 
 class ThreeCardsBlock(blocks.StructBlock):
@@ -67,7 +69,36 @@ class NumericDirectionCardBlock(blocks.StructBlock):
         label = "Numeric direction card"
 
 
+class CustomTitleBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False, label=_("Title"))
+    heading_tag = blocks.ChoiceBlock(
+        required=False,
+        label=_("Heading level"),
+        choices=HEADING_CHOICES,
+        default="h3",
+        help_text=_("Adapt to the page layout. Defaults to heading 3."),
+    )
+    heading_size = blocks.ChoiceBlock(
+        required=False,
+        label=_("Heading size level"),
+        choices=HEADING_SIZE_CHOICES,
+        default="h3",
+        help_text=_("Defaults to heading 3."),
+    )
+    title_color_class = BackgroundColorChoiceBlock(
+        label=_("Title color"),
+        required=False,
+        help_text=_("Uses the French Design System colors"),
+    )
+
+    class Meta:
+        template = "numerique_gouv/blocks/title.html"
+        icon = "title"
+        label = "Title"
+
+
 class CustomColumnBlock(ColumnBlock):
+    title = CustomTitleBlock(label=_("Title"), group=_("Numerique components"))
     html = blocks.RawHTMLBlock(
         required=False,
         help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
@@ -93,6 +124,7 @@ class StylizedColumn(blocks.StructBlock):
         help_text=_("Uses the French Design System colors"),
     )
     border = blocks.BooleanBlock(required=False, label=_("Border"))
+    center_content = blocks.BooleanBlock(required=False, label=_("Center content"))
     content = CustomColumnBlock(label=_("Content"))
 
     class Meta:
@@ -118,10 +150,20 @@ class CustomMultiColumnsBlock(MultiColumnsBlock):
 
 
 class CustomMultiColumnsWithTitleBlock(MultiColumnsWithTitleBlock):
-    columns = CustomMultiColumnsBlock(label=_("Columns"))
+    columns = CustomMultiColumnsBlock(label=_("Columns"), group=_("Page structure"))
 
     class Meta:
         icon = "dots-horizontal"
+
+
+class SpacerBlock(blocks.StructBlock):
+    marginTop = blocks.DecimalBlock(required=False, label=_("Margin top"), help_text=_("In rem"))
+    marginBottom = blocks.DecimalBlock(required=False, label=_("Margin bottom"), help_text=_("In rem"))
+
+    class Meta:
+        template = "numerique_gouv/blocks/spacer.html"
+        icon = "dots-horizontal"
+        label = "Spacer"
 
 
 class CustomFullWidthBlock(FullWidthBlock):
@@ -134,13 +176,14 @@ class CustomFullWidthBlock(FullWidthBlock):
         required=False, label=_("Numeric direction card"), group=_("Numerique components")
     )
     custom_ajustable_column = CustomAdjustableColumnBlock(
-        required=False, label=_("Custom adjustable column"), group=_("Numerique components")
+        required=False, label=_("Custom adjustable column"), group=_("Page structure")
     )
     horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
-    multicolumns = MultiColumnsWithTitleBlock(
-        required=False, label=_("Multi columns"), group=_("Numerique components")
+    multicolumns = CustomMultiColumnsWithTitleBlock(
+        required=False, label=_("Multi columns"), group=_("Page structure")
     )
     stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
+    spacer = SpacerBlock(label=_("Spacer"), group=_("Page structure"))
 
 
 class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
