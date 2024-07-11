@@ -1,9 +1,9 @@
 {# djlint: off #}
 {% if value.title %}
-  <{{ value.heading_tag | default:"h3" }} class="fr-tile__title
+  <{{ value.heading_tag | default:"h3" }}
     {% if value.heading_size %}
-        fr-{{ value.heading_size }}
-    {% endif %}"
+          class="fr-{{ value.heading_size }}"
+    {% endif %}
   {% if value.title_color_class %}style="color:var(--background-flat-{{ value.title_color_class }});"{% endif %}>
   {{ value.title }}
 </{{ value.heading_tag | default:"h3" }}>
