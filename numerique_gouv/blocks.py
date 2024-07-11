@@ -110,8 +110,8 @@ class CustomMultiColumnsBlock(MultiColumnsBlock):
     numeric_direction_card = NumericDirectionCardBlock(
         required=False, label=_("Numeric direction card"), group=_("Numerique components")
     )
-    custom_ajustable_column = CustomAdjustableColumnBlock(
-        required=False, label=_("Custom adjustable column"), group=_("Numerique components")
+    column = CustomAdjustableColumnBlock(
+        required=False, label=_("Custom adjustable column"), group=_("Page structure")
     )
     horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
     stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
