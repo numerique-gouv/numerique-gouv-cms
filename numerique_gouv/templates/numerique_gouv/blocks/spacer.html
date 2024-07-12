@@ -1,0 +1,2 @@
+{% load numerique_filters %}
+<div style="{% if value.marginTop %}margin-top: {{ value.marginTop|replace:',|.' }}rem;{% endif %} {% if value.marginBottom %}margin-bottom: {{ value.marginBottom|replace:',|.' }}rem;{% endif %}"></div>

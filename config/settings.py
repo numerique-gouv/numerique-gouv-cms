@@ -14,11 +14,11 @@ https://github.com/betagouv/tous-a-bord/blob/main/config/settings.py
 """
 
 import os
+import sys
 from pathlib import Path
 
 import dj_database_url
 from dotenv import load_dotenv
-
 
 load_dotenv()
 
@@ -39,11 +39,18 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1, localhost").replace(" ", 
 
 HOST_URL = os.getenv("HOST_URL", "localhost")
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+TESTING = "test" in sys.argv
+
 # Application definition
 
 INSTALLED_APPS = [
     "storages",
     "dashboard",
+    "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.settings",
     "wagtail.embeds",
@@ -71,13 +78,15 @@ INSTALLED_APPS = [
     "content_manager",
     "blog",
     "numerique_gouv",
+    "forms",
 ]
 
-# Only add these on a dev machine
-if DEBUG and "localhost" in HOST_URL:
+# Only add these on a dev machine, outside of tests
+if not TESTING and DEBUG and "localhost" in HOST_URL:
     INSTALLED_APPS += [
         "django_extensions",
         "wagtail.contrib.styleguide",
+        "debug_toolbar",
     ]
 
 MIDDLEWARE = [
@@ -91,6 +100,24 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
+
+# Only add this on a dev machine, outside of tests
+if not TESTING and DEBUG and "localhost" in HOST_URL:
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
+
+    # Don't show the toolbar on admin previews
+    def show_toolbar(request):
+        request.META["wsgi.multithread"] = True
+        request.META["wsgi.multiprocess"] = True
+        excluded_urls = ["/pages/preview/", "/pages/preview_loading/", "/edit/preview/"]
+        excluded = any(request.path.endswith(url) for url in excluded_urls)
+        return DEBUG and not excluded
+
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK": show_toolbar,
+    }
 
 ROOT_URLCONF = "config.urls"
 
@@ -118,7 +145,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -152,9 +178,6 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
-WAGTAIL_PASSWORD_RESET_ENABLED = os.getenv("WAGTAIL_PASSWORD_RESET_ENABLED", False)
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -219,6 +242,7 @@ else:
 # Django Sass
 SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, "static/css")
 SASS_PROCESSOR_AUTO_INCLUDE = False
+SASS_OUTPUT_STYLE = "compressed"
 
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
@@ -242,6 +266,8 @@ WAGTAILADMIN_BASE_URL = f"{os.getenv('HOST_PROTO', 'https')}://{HOST_URL}"
 HOST_PORT = os.getenv("HOST_PORT", "")
 if HOST_PORT != "":
     WAGTAILADMIN_BASE_URL = f"{WAGTAILADMIN_BASE_URL}:{HOST_PORT}"
+
+WAGTAILADMIN_PATH = os.getenv("WAGTAILADMIN_PATH", "cms-admin/")
 
 # Disable Gravatar service
 WAGTAIL_GRAVATAR_PROVIDER_URL = None
@@ -283,8 +309,24 @@ WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
 
 WAGTAILIMAGES_EXTENSIONS = ["gif", "jpg", "jpeg", "png", "webp", "svg"]
 
+# Email settings
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "")
+
+if DEFAULT_FROM_EMAIL:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.getenv("EMAIL_HOST", None)
+    EMAIL_PORT = os.getenv("EMAIL_PORT", None)
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", None)
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", None)
+    EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", None)
+    EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", None)
+    EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", 30))
+    EMAIL_SSL_KEYFILE = os.getenv("EMAIL_SSL_KEYFILE", None)
+    EMAIL_SSL_CERTFILE = os.getenv("EMAIL_SSL_CERTFILE", None)
+
+WAGTAIL_PASSWORD_RESET_ENABLED = os.getenv("WAGTAIL_PASSWORD_RESET_ENABLED", False)
+
+# CSRF
 CSRF_TRUSTED_ORIGINS = []
 for host in ALLOWED_HOSTS:
     CSRF_TRUSTED_ORIGINS.append("https://" + host)
-
-SF_ALLOW_RAW_HTML_BLOCKS = os.getenv("SF_ALLOW_RAW_HTML_BLOCKS", "False").lower() == "true"
