@@ -61,4 +61,5 @@ def import_document(full_path: str, title: str) -> Document:
             file_hash=file_hash,
         )
         document.save()
+        document.tags.add("ancienne version")
         return document
