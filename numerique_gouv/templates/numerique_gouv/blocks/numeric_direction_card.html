@@ -7,9 +7,11 @@
         <li>
           <a href="{{ value.main_link.url }}" class="fr-btn">{{ _("The direction") }}</a>
         </li>
+        {% if value.secondary_link %}
         <li>
           <a href="{{ value.secondary_link.url }}" class="fr-btn fr-btn--secondary">{{ _("The road map") }}</a>
         </li>
+        {% endif %}
       </ul>
     </div>
   </div>
