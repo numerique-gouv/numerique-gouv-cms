@@ -23,8 +23,10 @@ from wagtail.snippets.models import register_snippet
 from blog.blocks import COLOPHON_BLOCKS
 from blog.managers import CategoryManager
 from content_manager.abstract import SitesFacilesBasePage
+from content_manager.blocks import STREAMFIELD_COMMON_BLOCKS
 from content_manager.constants import LIMITED_RICHTEXTFIELD_FEATURES
 from content_manager.models import Tag
+from numerique_gouv.blocks import STREAMFIELD_NUMERIQUE_BLOCKS
 
 User = get_user_model()
 
@@ -258,6 +260,12 @@ class BlogEntryPage(SitesFacilesBasePage):
             heading=_("Tags and Categories"),
         ),
     ]
+
+    body = StreamField(
+        STREAMFIELD_COMMON_BLOCKS + STREAMFIELD_NUMERIQUE_BLOCKS,
+        blank=True,
+        use_json_field=True,
+    )
 
     def get_absolute_url(self):
         return self.url
