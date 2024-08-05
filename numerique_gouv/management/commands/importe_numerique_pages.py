@@ -108,11 +108,11 @@ class Command(BaseCommand):
             Repo.clone_from(git_url, path_to_clone)
 
         # categories = ["publications", "communiques", "actualites"]
-        categories = ["actualites"]
+        categories = ["communiques", "actualites"]
         for category in categories:
             # Get a list of all files in the 'numerique_files' directory
             files = os.listdir("numerique_gouv/numerique_files/_" + category)
-
+            files = files[-20:]
             for file_name in files:
                 file_path = os.path.join("numerique_gouv/numerique_files/_" + category, file_name)
 
@@ -160,7 +160,8 @@ class Command(BaseCommand):
                                 print(
                                     "La chaîne de caractères ne correspond pas au format attendu (YYYY-MM-DD HH:MM:SS)"
                                 )
-                        created_at = tz.localize(created_at)
+                        if created_at.tzinfo is None:
+                            created_at = tz.localize(created_at)
                         if created_at < reference_date:
                             continue
                     except Exception as e:
