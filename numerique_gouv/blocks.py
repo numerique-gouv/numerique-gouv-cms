@@ -61,7 +61,7 @@ class NumericDirectionCardBlock(blocks.StructBlock):
     alt = blocks.CharBlock(required=True, label=_("Alt text"))
     text = blocks.RichTextBlock(required=True, label=_("Text"))
     main_link = blocks.PageChooserBlock(required=True, label=_("Main link"))
-    secondary_link = blocks.URLBlock(required=True, help_text=_("Link to an external URL"), label=_("Secondary link"))
+    secondary_link = blocks.URLBlock(required=False, help_text=_("Link to an external URL"), label=_("Secondary link"))
 
     class Meta:
         template = "numerique_gouv/blocks/numeric_direction_card.html"
