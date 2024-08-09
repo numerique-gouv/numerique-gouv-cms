@@ -11,6 +11,7 @@ from content_manager.blocks import (
     HorizontalCardBlock,
     MultiColumnsBlock,
     MultiColumnsWithTitleBlock,
+    VerticalCardBlock,
 )
 from content_manager.constants import HEADING_CHOICES
 from numerique_gouv.constants import HEADING_SIZE_CHOICES
@@ -54,6 +55,17 @@ class ThreeCardsBlock(blocks.StructBlock):
         template = "numerique_gouv/blocks/three_cards.html"
         icon = "image"
         label = "Headline cards"
+
+
+class HighlightCards(blocks.StructBlock):
+    main_card = HorizontalCardBlock(lrequired=True, abel=_("Main card"), group=_("DSFR components"))
+    secondary_card = VerticalCardBlock(lrequired=True, abel=_("Secondary card"), group=_("DSFR components"))
+    tertiary_card = VerticalCardBlock(required=True, label=_("Secondary card"), group=_("DSFR components"))
+
+    class Meta:
+        template = "numerique_gouv/blocks/highlight_cards.html"
+        icon = "image"
+        label = "highlight  cards"
 
 
 class NumericDirectionCardBlock(blocks.StructBlock):
@@ -203,4 +215,5 @@ STREAMFIELD_NUMERIQUE_BLOCKS = [
     ),
     ("spacer", SpacerBlock(label=_("Spacer"), group=_("Page structure"))),
     ("stylized_column", StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))),
+    ("highlight_cards", HighlightCards(label=_("Highlight cards"), group=_("Numerique components"))),
 ]
