@@ -33,6 +33,7 @@ beautifulsoup4 = "^4.12.3"
 django-taggit = "^5.0.1"
 wagtail-localize = "^1.9"
 
+
 [tool.poetry.group.dev.dependencies]
 black = "^24.3.0"
 flake8 = "^6.1.0"
