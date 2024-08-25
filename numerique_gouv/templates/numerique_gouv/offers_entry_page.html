@@ -48,47 +48,64 @@
 
   <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
     <div class="fr-container">
-      <h1 class="fr-text-title--blue-france">{{ page.title }}</h1>
-      {% for offertype in page.types.all %}
-        <p class="fr-badge fr-badge--{{ offertype.color }} fr-my-3v">{{ offertype }}</p>
-      {% endfor %}
-    <ul style="list-style: none">
-      {% for target_audience in page.target_audiences.all %}
-        <li class="fr-mb-3v">
-          <span class="fr-h5">
-            {% if page.target_audiences.count == 1 %}
-              {{ _("Target audience") }}
-            {% else %}
-              {{ _("Target audiences") }}
+      <div class="fr-col">
+        <h1 class="fr-text-title--blue-france">{{ page.title }}</h1>
+        {% for offertype in page.types.all %}
+          <p class="fr-badge fr-badge--{{ offertype.color }} fr-my-5v">{{ offertype }}</p>
+        {% endfor %}
+        {% if page.target_audiences.count > 0 or page.themes.count > 0 or page.categories.count > 0  %}
+          <ul style="list-style: none">
+            {% if page.target_audiences.count > 0 %}
+              <li class="fr-mb-5v">
+                <span class="fr-h5">
+                  {% if page.target_audiences.count == 1 %}
+                    {{ _("Target audience") }}
+                  {% else %}
+                    {{ _("Target audiences") }}
+                  {% endif %}
+                </span> :
+                {% for target_audience in page.target_audiences.all %}
+                    <span class="fr-badge fr-badge--{{ target_audience.color }}">{{ target_audience }}</span>
+                {% endfor %}
+              </li>
             {% endif %}
-          </span> : <span class="fr-badge fr-badge--{{ target_audience.color }}">{{ target_audience }}</span>
-        </li>
-      {% endfor %}
-      {% for theme in page.themes.all %}
-        <li class="fr-mb-3v">
-          <span class="fr-h5">
-            {% if page.themes.count == 1 %}
-              {{ _("Theme") }}
-            {% else %}
-              {{ _("Themes") }}
+            {% if page.themes.count > 0 %}
+              <li class="fr-mb-3v">
+                  <span class="fr-h5">
+                    {% if page.themes.count == 1 %}
+                      {{ _("Theme") }}
+                    {% else %}
+                      {{ _("Themes") }}
+                    {% endif %}
+                  </span> :
+                {% for theme in page.themes.all %}
+                  <span class="fr-badge fr-badge--{{ theme.color }}">{{ theme }}</span>
+                {% endfor %}
+              </li>
             {% endif %}
-          </span> : <span class="fr-badge fr-badge--{{ theme.color }}">{{ theme }}</span>
-        </li>
-      {% endfor %}
-      {% for category in page.categories.all %}
-        <li class="fr-mb-3v">
-          <span class="fr-h5">
-            {% if page.categories.count == 1 %}
-              {{ _("Category") }}
-            {% else %}
-              {{ _("Categories") }}
+            {% if page.categories.count > 0 %}
+              <li class="fr-mb-3v">
+                <span class="fr-h5">
+                  {% if page.categories.count == 1 %}
+                    {{ _("Category") }}
+                  {% else %}
+                    {{ _("Categories") }}
+                  {% endif %}
+                </span> :
+                {% for category in page.categories.all %}
+                   <span class="fr-badge fr-badge--{{ category.color }}">{{ category }}</span>
+                {% endfor %}
+              </li>
             {% endif %}
-          </span> : <span class="fr-badge fr-badge--{{ category.color }}">{{ category }}</span>
-        </li>
-      {% endfor %}
-    </ul>
-
-    </div>
+          </ul>
+        {% endif %}
+  
+        {% if page.text_and_cta %}
+          <div class="fr-mt-6w">
+            {{ page.text_and_cta }}
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 

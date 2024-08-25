@@ -3,10 +3,11 @@ from django.utils.translation import gettext_lazy as _
 from dsfr.constants import COLOR_CHOICES_ILLUSTRATION
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.fields import StreamField
 from wagtail.images import get_image_model_string
 from wagtail.snippets.models import register_snippet
 
-from content_manager.blocks import ButtonsHorizontalListBlock
+from content_manager.blocks import ButtonsHorizontalListBlock, TextAndCTA
 from numerique_gouv.abstract import NumeriqueBasePage
 
 
@@ -55,6 +56,12 @@ class OffersIndexPage(NumeriqueBasePage):
     #     )
 
 
+class TextAndCTAStreamField(StreamField):
+    def __init__(self, *args, **kwargs):
+        kwargs["block_types"] = [("text_and_cta", TextAndCTA())]
+        super().__init__(*args, **kwargs)
+
+
 class OffersEntryPage(NumeriqueBasePage):
     types = ParentalManyToManyField("numerique_gouv.Offertype", blank=True, verbose_name=_("Type"))
 
@@ -64,11 +71,8 @@ class OffersEntryPage(NumeriqueBasePage):
     )
     themes = ParentalManyToManyField("numerique_gouv.OfferTheme", blank=True, verbose_name=_("Theme"))
     buttons = ButtonsHorizontalListBlock(label=_("Buttons"))
-    # introductory_text = StreamField(
-    #     STREAMFIELD_COMMON_BLOCKS,
-    #     blank=True,
-    #     use_json_field=True,
-    # )
+    text_and_cta = TextAndCTAStreamField(blank=True, verbose_name=_("Text and CTA"))
+
     card_description = models.TextField(blank=True, verbose_name=_("Description"))
     card_image = models.ForeignKey(
         get_image_model_string(),
@@ -84,9 +88,7 @@ class OffersEntryPage(NumeriqueBasePage):
 
     content_panels = NumeriqueBasePage.content_panels + [
         MultiFieldPanel(
-            [
-                # FieldPanel("types"),
-            ],
+            [],
             heading=_("General information"),
         ),
     ]
@@ -102,6 +104,7 @@ class OffersEntryPage(NumeriqueBasePage):
                 FieldPanel("categories"),
                 FieldPanel("target_audiences"),
                 FieldPanel("themes"),
+                FieldPanel("text_and_cta"),
             ],
             heading=_("Header"),
         ),
