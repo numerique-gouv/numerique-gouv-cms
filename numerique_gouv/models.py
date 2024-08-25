@@ -56,13 +56,13 @@ class OffersIndexPage(NumeriqueBasePage):
 
 
 class OffersEntryPage(NumeriqueBasePage):
-    type = ParentalManyToManyField("numerique_gouv.Offertype", blank=True, verbose_name=_("Type"))
+    types = ParentalManyToManyField("numerique_gouv.Offertype", blank=True, verbose_name=_("Type"))
 
     categories = ParentalManyToManyField("numerique_gouv.OfferCategory", blank=True, verbose_name=_("Categories"))
-    target_audience = ParentalManyToManyField(
+    target_audiences = ParentalManyToManyField(
         "numerique_gouv.OfferTargetAudience", blank=True, verbose_name=_("Target Audience")
     )
-    theme = ParentalManyToManyField("numerique_gouv.OfferTheme", blank=True, verbose_name=_("Theme"))
+    themes = ParentalManyToManyField("numerique_gouv.OfferTheme", blank=True, verbose_name=_("Theme"))
     buttons = ButtonsHorizontalListBlock(label=_("Buttons"))
     # introductory_text = StreamField(
     #     STREAMFIELD_COMMON_BLOCKS,
@@ -85,7 +85,7 @@ class OffersEntryPage(NumeriqueBasePage):
     content_panels = NumeriqueBasePage.content_panels + [
         MultiFieldPanel(
             [
-                FieldPanel("type"),
+                # FieldPanel("types"),
             ],
             heading=_("General information"),
         ),
@@ -93,15 +93,15 @@ class OffersEntryPage(NumeriqueBasePage):
     settings_panels = NumeriqueBasePage.settings_panels + [
         MultiFieldPanel(
             [
-                FieldPanel("type"),
+                FieldPanel("types"),
             ],
             heading=_("General information"),
         ),
         MultiFieldPanel(
             [
                 FieldPanel("categories"),
-                FieldPanel("target_audience"),
-                FieldPanel("theme"),
+                FieldPanel("target_audiences"),
+                FieldPanel("themes"),
             ],
             heading=_("Header"),
         ),

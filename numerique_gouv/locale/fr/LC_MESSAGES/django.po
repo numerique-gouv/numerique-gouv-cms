@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-09 15:53+0200\n"
-"PO-Revision-Date: 2024-08-09 15:50+0200\n"
+"POT-Creation-Date: 2024-08-25 22:25+0200\n"
+"PO-Revision-Date: 2024-08-25 22:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -287,9 +287,83 @@ msgstr "En-tête 5"
 msgid "Heading 6"
 msgstr "En-tête 6"
 
-#: numerique_gouv/models.py:8
+#: numerique_gouv/models.py:15
 msgid "Numerique page"
 msgstr "Page Numérique.gouv.fr"
+
+#: numerique_gouv/models.py:22
+msgid "Offers index"
+msgstr "Index offres"
+
+#: numerique_gouv/models.py:59
+msgid "Type"
+msgstr "Type d’offre"
+
+#: numerique_gouv/models.py:61
+#: numerique_gouv/templates/numerique_gouv/offers_entry_page.html:84
+msgid "Categories"
+msgstr "Catégories"
+
+#: numerique_gouv/models.py:63
+msgid "Target Audience"
+msgstr "Public cible"
+
+#: numerique_gouv/models.py:65
+#: numerique_gouv/templates/numerique_gouv/offers_entry_page.html:71
+msgid "Theme"
+msgstr "Thèmeatique"
+
+#: numerique_gouv/models.py:66
+msgid "Buttons"
+msgstr "Boutons"
+
+#: numerique_gouv/models.py:72
+msgid "Description"
+msgstr "Description"
+
+#: numerique_gouv/models.py:79
+msgid "Card image"
+msgstr "Image de la carte principale"
+
+#: numerique_gouv/models.py:90 numerique_gouv/models.py:98
+msgid "General information"
+msgstr "Informations générales"
+
+#: numerique_gouv/models.py:106
+msgid "Header"
+msgstr "Unes"
+
+#: numerique_gouv/models.py:113
+msgid "card information"
+msgstr "informations sur la carte"
+
+#: numerique_gouv/models.py:121
+msgid "Offer page"
+msgstr "Page d’offre"
+
+#: numerique_gouv/models.py:125
+msgid "Category name"
+msgstr "Nom"
+
+#: numerique_gouv/models.py:127
+msgid "Color"
+msgstr "Couleur"
+
+#: numerique_gouv/models.py:145
+msgid "Offer Category"
+msgstr "Offres - Catégories"
+
+#: numerique_gouv/models.py:151
+msgid "Offer Target Audience"
+msgstr "Offres - Publics cibles"
+
+#: numerique_gouv/models.py:157
+msgid "Offer Theme"
+msgstr "Offre - Thématiques"
+
+#: numerique_gouv/models.py:163
+msgid "Offer Type"
+msgstr "Offres - Types"
 
 #: numerique_gouv/templates/numerique_gouv/blocks/numeric_direction_card.html:8
 msgid "The direction"
@@ -302,6 +376,22 @@ msgstr "La feuille de route"
 #: numerique_gouv/templates/numerique_gouv/blocks/overwrites/card_horizontal.html:11
 msgid "Opens a new window"
 msgstr "Ouvre une nouvel fenêtre"
+
+#: numerique_gouv/templates/numerique_gouv/offers_entry_page.html:60
+msgid "Target audience"
+msgstr "Public cible"
+
+#: numerique_gouv/templates/numerique_gouv/offers_entry_page.html:62
+msgid "Target audiences"
+msgstr "Publics cibles"
+
+#: numerique_gouv/templates/numerique_gouv/offers_entry_page.html:73
+msgid "Themes"
+msgstr "Thématiques"
+
+#: numerique_gouv/templates/numerique_gouv/offers_entry_page.html:82
+msgid "Category"
+msgstr "Catégories"
 
 #~ msgid "Link to page"
 #~ msgstr "Utilisez soit ce champ soit le champ URL externe"
