@@ -17,6 +17,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="offersentrypage",
             name="text_and_cta",
-            field=numerique_gouv.models.TextAndCTAStreamField(blank=True, verbose_name="Text and CTA"),
+            field=numerique_gouv.models.TextAndCTAStreamField(blank=True, verbose_name=("Text and CTA")),
         ),
     ]

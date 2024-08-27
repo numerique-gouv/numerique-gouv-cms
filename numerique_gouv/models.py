@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from dsfr.constants import COLOR_CHOICES_ILLUSTRATION
 from modelcluster.fields import ParentalManyToManyField
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, HelpPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.images import get_image_model_string
 from wagtail.snippets.models import register_snippet
@@ -58,12 +58,14 @@ class OffersIndexPage(NumeriqueBasePage):
 
 class TextAndCTAStreamField(StreamField):
     def __init__(self, *args, **kwargs):
-        kwargs["block_types"] = [("text_and_cta", TextAndCTA())]
-        super().__init__(*args, **kwargs)
+        block_types = [("text_and_cta", TextAndCTA())]
+        super().__init__(block_types, *args)
 
 
 class OffersEntryPage(NumeriqueBasePage):
-    types = ParentalManyToManyField("numerique_gouv.Offertype", blank=True, verbose_name=_("Type"))
+    type = models.ForeignKey(
+        "numerique_gouv.Offertype", blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("Type")
+    )
 
     categories = ParentalManyToManyField("numerique_gouv.OfferCategory", blank=True, verbose_name=_("Categories"))
     target_audiences = ParentalManyToManyField(
@@ -83,21 +85,29 @@ class OffersEntryPage(NumeriqueBasePage):
         verbose_name=_("Card image"),
     )
 
+    # organization
+    organization_title = models.TextField(blank=True, verbose_name=_("Organization title"))
+    block_one_title = models.TextField(blank=True, verbose_name=_("Block one title"))
+    block_one_column_one = models.TextField(blank=True, verbose_name=_("Block one column one"))
+    block_one_column_two = models.TextField(blank=True, verbose_name=_("Block one column two"))
+    block_one_column_three = models.TextField(blank=True, verbose_name=_("Block one column three"))
+    block_two_title = models.TextField(blank=True, verbose_name=_("Block two title"))
+    block_two_column_one = models.TextField(blank=True, verbose_name=_("Block two column one"))
+    block_two_column_two = models.TextField(blank=True, verbose_name=_("Block two column two"))
+    block_two_column_three = models.TextField(blank=True, verbose_name=_("Block two column three"))
+    block_three_title = models.TextField(blank=True, verbose_name=_("Block three title"))
+    block_three_subtitle = models.TextField(blank=True, verbose_name=_("Block three subtitle"))
+    block_three_column_one = models.TextField(blank=True, verbose_name=_("Block three column one"))
+    block_three_column_two = models.TextField(blank=True, verbose_name=_("Block three column two"))
+    block_three_column_three = models.TextField(blank=True, verbose_name=_("Block three column three"))
+
     parent_page_types = ["numerique_gouv.OffersIndexPage"]
     subpage_types = []
 
-    content_panels = NumeriqueBasePage.content_panels + [
-        MultiFieldPanel(
-            [],
-            heading=_("General information"),
-        ),
-    ]
-    settings_panels = NumeriqueBasePage.settings_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel("types"),
-            ],
-            heading=_("General information"),
+    header_panels = [
+        FieldPanel(
+            "type",
+            heading=_("Offer type"),
         ),
         MultiFieldPanel(
             [
@@ -116,6 +126,58 @@ class OffersEntryPage(NumeriqueBasePage):
             heading=_("card information"),
         ),
     ]
+
+    organization_panel = [
+        FieldPanel(
+            "organization_title",
+            heading=_("title"),
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("block_one_title"),
+                FieldPanel("block_one_column_one"),
+                FieldPanel("block_one_column_two"),
+                FieldPanel("block_one_column_three"),
+            ],
+            heading=_("Block one"),
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("block_two_title"),
+                FieldPanel("block_two_column_one"),
+                FieldPanel("block_two_column_two"),
+                FieldPanel("block_two_column_three"),
+            ],
+            heading=_("Block two"),
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("block_three_title"),
+                FieldPanel("block_three_subtitle"),
+                FieldPanel("block_three_column_one"),
+                FieldPanel("block_three_column_two"),
+                FieldPanel("block_three_column_three"),
+            ],
+            heading=_("Block three"),
+        ),
+    ]
+
+    card_panel = [
+        HelpPanel(_("This is the card that will be displayed on the offer index page.")),
+        FieldPanel("card_image"),
+        FieldPanel("card_description"),
+    ]
+
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(NumeriqueBasePage.content_panels, heading=_("Content")),
+            ObjectList(header_panels, heading=_("Header")),
+            ObjectList(organization_panel, heading=_("Organization")),
+            ObjectList(card_panel, heading=_("Card")),
+            ObjectList(NumeriqueBasePage.promote_panels, heading=_("Promote")),
+            ObjectList(NumeriqueBasePage.settings_panels, heading=_("Settings")),
+        ]
+    )
 
     def get_absolute_url(self):
         return self.url
