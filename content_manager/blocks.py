@@ -358,7 +358,7 @@ class HorizontalCardBlock(CardBlock):
 
     class Meta:
         icon = "tablet-alt"
-        template = "numerique_gouv/blocks/overwrites/card_horizontal.html"
+        template = "content_manager/blocks/card_horizontal.html"
         value_class = CardstructValue
 
 
