@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "dashboard",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
+    "wagtail.contrib.routable_page",
     "wagtail.contrib.settings",
     "wagtail.embeds",
     "wagtail.sites",
@@ -78,6 +79,7 @@ INSTALLED_APPS = [
     "content_manager",
     "blog",
     "numerique_gouv",
+    "events",
     "forms",
 ]
 
@@ -188,8 +190,6 @@ TIME_ZONE = "Europe/Paris"
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 WAGTAIL_I18N_ENABLED = True
@@ -198,6 +198,8 @@ WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
     ("en", "English"),
     ("fr", "French"),
 ]
+
+LOCALE_PATHS = ["locale"]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

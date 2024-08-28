@@ -12,6 +12,7 @@ from wagtailmarkdown.blocks import MarkdownBlock
 from content_manager.constants import (
     BUTTON_ICON_SIDE,
     BUTTON_TYPE_CHOICES,
+    GRID_3_4_6_CHOICES,
     HEADING_CHOICES,
     HEADING_CHOICES_2_5,
     HORIZONTAL_CARD_IMAGE_RATIOS,
@@ -703,29 +704,42 @@ class VideoBlock(blocks.StructBlock):
 
 
 ## Other apps-related blocks
-class BlogRecentEntriesStructValue(blocks.StructValue):
+class RecentEntriesStructValue(blocks.StructValue):
+    """
+    Get and filter the recent entries for either a blog index or an events page index
+    """
+
     def posts(self):
-        blog = self.get("blog")
-        blog_posts = blog.posts
+        index_page = self.get("index_page")
+        is_blog = False
+
+        if not index_page:
+            is_blog = True
+            index_page = self.get("blog")
+
+        posts = index_page.posts
 
         category_filter = self.get("category_filter")
         if category_filter:
-            blog_posts = blog_posts.filter(blog_categories=category_filter)
+            if is_blog:
+                posts = posts.filter(blog_categories=category_filter)
+            else:
+                posts = posts.filter(event_categories=category_filter)
 
         tag_filter = self.get("tag_filter")
         if tag_filter:
-            blog_posts = blog_posts.filter(tags=tag_filter)
+            posts = posts.filter(tags=tag_filter)
 
         author_filter = self.get("author_filter")
         if author_filter:
-            blog_posts = blog_posts.filter(authors=author_filter)
+            posts = posts.filter(authors=author_filter)
 
         source_filter = self.get("source_filter")
         if source_filter:
-            blog_posts = blog_posts.filter(authors__organization=source_filter)
+            posts = posts.filter(authors__organization=source_filter)
 
         entries_count = self.get("entries_count")
-        return blog_posts[:entries_count]
+        return posts[:entries_count]
 
     def current_filters(self) -> dict:
         filters = {}
@@ -749,6 +763,9 @@ class BlogRecentEntriesStructValue(blocks.StructValue):
         return filters
 
     def sub_heading_tag(self):
+        """
+        Used for the filters section titles
+        """
         heading_tag = self.get("heading_tag")
         if heading_tag == "h2":
             return "h3"
@@ -787,7 +804,37 @@ class BlogRecentEntriesBlock(blocks.StructBlock):
     class Meta:
         icon = "placeholder"
         template = ("content_manager/blocks/blog_recent_entries.html",)
-        value_class = BlogRecentEntriesStructValue
+        value_class = RecentEntriesStructValue
+
+
+class EventsRecentEntriesBlock(blocks.StructBlock):
+    title = blocks.CharBlock(label=_("Title"), required=False)
+    heading_tag = blocks.ChoiceBlock(
+        label=_("Heading level"),
+        choices=HEADING_CHOICES_2_5,
+        required=False,
+        default="h2",
+        help_text=_("Adapt to the page layout. Defaults to heading 2."),
+    )
+    index_page = blocks.PageChooserBlock(label=_("Event calendar"), page_type="events.EventsIndexPage")
+    entries_count = blocks.IntegerBlock(
+        label=_("Number of entries"), required=False, min_value=1, max_value=8, default=3
+    )
+    category_filter = SnippetChooserBlock("blog.Category", label=_("Filter by category"), required=False)
+    tag_filter = SnippetChooserBlock("content_manager.Tag", label=_("Filter by tag"), required=False)
+    author_filter = SnippetChooserBlock("blog.Person", label=_("Filter by author"), required=False)
+    source_filter = SnippetChooserBlock(
+        "blog.Organization",
+        label=_("Filter by source"),
+        help_text=_("The source is the organization of the post author"),
+        required=False,
+    )
+    show_filters = BooleanBlock(label=_("Show filters"), default=False, required=False)
+
+    class Meta:
+        icon = "placeholder"
+        template = ("content_manager/blocks/events_recent_entries.html",)
+        value_class = RecentEntriesStructValue
 
 
 ## Page structure blocks
@@ -804,6 +851,9 @@ class CommonStreamBlock(blocks.StreamBlock):
     iframe = IframeBlock(label=_("Iframe"), group=_("DSFR components"))
     tile = TileBlock(label=_("Tile"), group=_("DSFR components"))
     blog_recent_entries = BlogRecentEntriesBlock(label=_("Blog recent entries"), group=_("Website structure"))
+    events_recent_entries = EventsRecentEntriesBlock(
+        label=_("Event calendar recent entries"), group=_("Website structure")
+    )
 
     class Meta:
         icon = "dots-horizontal"
@@ -811,6 +861,19 @@ class CommonStreamBlock(blocks.StreamBlock):
 
 class ColumnBlock(CommonStreamBlock):
     card = VerticalCardBlock(label=_("Vertical card"), group=_("DSFR components"))
+
+
+class ItemGridBlock(blocks.StructBlock):
+    column_width = blocks.ChoiceBlock(
+        label=_("Column width"),
+        choices=GRID_3_4_6_CHOICES,
+        default="4",
+    )
+    items = ColumnBlock(label=_("Items"))
+
+    class Meta:
+        icon = "grip"
+        template = "content_manager/blocks/item_grid.html"
 
 
 class AdjustableColumnBlock(blocks.StructBlock):
@@ -876,6 +939,7 @@ class MultiColumnsWithTitleBlock(blocks.StructBlock):
 class FullWidthBlock(CommonStreamBlock):
     image_and_text = ImageAndTextBlock(label=_("Image and text"))
     card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
+    item_grid = ItemGridBlock(label=_("Item grid"), group=_("Page structure"))
 
     class Meta:
         icon = "minus"
@@ -893,6 +957,41 @@ class FullWidthBackgroundBlock(blocks.StructBlock):
     class Meta:
         icon = "minus"
         template = "content_manager/blocks/full_width_background.html"
+
+
+class PageTreeBlock(blocks.StructBlock):
+    page = blocks.PageChooserBlock(label=_("Parent page"))
+
+    class Meta:
+        icon = "minus"
+        template = "content_manager/blocks/pagetree.html"
+
+
+class SideMenuBlock(blocks.StreamBlock):
+    html = blocks.RawHTMLBlock(
+        label="HTML",
+        help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
+    )
+    pagetree = PageTreeBlock(label=_("Page tree"))
+
+    class Meta:
+        icon = "minus"
+
+
+class FullWidthBackgroundWithSidemenuBlock(blocks.StructBlock):
+    bg_image = ImageChooserBlock(label=_("Background image"), required=False)
+    bg_color_class = BackgroundColorChoiceBlock(
+        label=_("Background color"),
+        required=False,
+        help_text=_("Uses the French Design System colors"),
+    )
+    main_content = FullWidthBlock(label=_("Main content"))
+    sidemenu_title = blocks.CharBlock(label=_("Side menu title"), required=False)
+    sidemenu_content = SideMenuBlock(label=_("Side menu content"))
+
+    class Meta:
+        icon = "minus"
+        template = "content_manager/blocks/full_width_background_with_sidemenu.html"
 
 
 STREAMFIELD_COMMON_BLOCKS = [
@@ -916,7 +1015,14 @@ STREAMFIELD_COMMON_BLOCKS = [
     ("iframe", IframeBlock(label=_("Iframe"), group=_("Expert syntax"))),
     ("separator", SeparatorBlock(label=_("Separator"), group=_("Page structure"))),
     ("multicolumns", MultiColumnsWithTitleBlock(label=_("Multiple columns"), group=_("Page structure"))),
+    ("item_grid", ItemGridBlock(label=_("Item grid"), group=_("Page structure"))),
     ("fullwidthbackground", FullWidthBackgroundBlock(label=_("Full width background"), group=_("Page structure"))),
+    (
+        "fullwidthbackgroundwithsidemenu",
+        FullWidthBackgroundWithSidemenuBlock(
+            label=_("Full width background with side menu"), group=_("Page structure")
+        ),
+    ),
     (
         "subpageslist",
         blocks.StaticBlock(
@@ -929,6 +1035,10 @@ STREAMFIELD_COMMON_BLOCKS = [
     (
         "blog_recent_entries",
         BlogRecentEntriesBlock(label=_("Blog recent entries"), group=_("Website structure")),
+    ),
+    (
+        "events_recent_entries",
+        EventsRecentEntriesBlock(label=_("Event calendar recent entries"), group=_("Website structure")),
     ),
 ]
 

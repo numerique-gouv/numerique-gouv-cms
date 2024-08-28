@@ -78,7 +78,7 @@ class BlogIndexPage(SitesFacilesBasePage):
         posts = self.posts
         locale = Locale.objects.get(language_code=get_language())
 
-        breadcrumb = None
+        extra_breadcrumbs = None
         extra_title = ""
 
         if tag is None:
@@ -86,7 +86,7 @@ class BlogIndexPage(SitesFacilesBasePage):
         if tag:
             tag = get_object_or_404(Tag, slug=tag)
             posts = posts.filter(tags=tag)
-            breadcrumb = {
+            extra_breadcrumbs = {
                 "links": [
                     {"url": self.get_url(), "title": self.title},
                     {
@@ -104,7 +104,7 @@ class BlogIndexPage(SitesFacilesBasePage):
             category = get_object_or_404(Category, slug=category, locale=locale)
             posts = posts.filter(blog_categories=category)
 
-            breadcrumb = {
+            extra_breadcrumbs = {
                 "links": [
                     {"url": self.get_url(), "title": self.title},
                     {
@@ -121,7 +121,7 @@ class BlogIndexPage(SitesFacilesBasePage):
         if source:
             source = get_object_or_404(Organization, slug=source)
             posts = posts.filter(authors__organization=source)
-            breadcrumb = {
+            extra_breadcrumbs = {
                 "links": [
                     {"url": self.get_url(), "title": self.title},
                 ],
@@ -134,7 +134,7 @@ class BlogIndexPage(SitesFacilesBasePage):
         if author:
             author = get_object_or_404(Person, id=author)
 
-            breadcrumb = {
+            extra_breadcrumbs = {
                 "links": [
                     {"url": self.get_url(), "title": self.title},
                 ],
@@ -174,8 +174,8 @@ class BlogIndexPage(SitesFacilesBasePage):
         context["sources"] = self.get_sources()
         context["tags"] = self.get_tags()
 
-        if breadcrumb:
-            context["breadcrumb"] = breadcrumb
+        if extra_breadcrumbs:
+            context["extra_breadcrumbs"] = extra_breadcrumbs
 
         return context
 
