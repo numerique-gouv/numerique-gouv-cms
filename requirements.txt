@@ -6,7 +6,7 @@ wagtail-markdown
 wagtailmenus
 wagtail_localize
 django-widget-tweaks
-django-dsfr>=1.3.1,
+django-dsfr>=1.3.1
 django-sass-processor
 django_extensions
 django-debug-toolbar
