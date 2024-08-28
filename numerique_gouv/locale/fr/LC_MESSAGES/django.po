@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-28 15:37+0200\n"
-"PO-Revision-Date: 2024-08-28 15:37+0200\n"
+"PO-Revision-Date: 2024-08-28 22:18+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -454,7 +454,7 @@ msgstr "Offres - Thématique"
 
 #: numerique_gouv/models.py:223
 msgid "Offer Type"
-msgstr "Offres - Types"
+msgstr "Offres - Type"
 
 #: numerique_gouv/templates/numerique_gouv/blocks/numeric_direction_card.html:8
 msgid "The direction"
