@@ -1,0 +1,90 @@
+<div class="fr-container fr-px-3w fr-pb-3w" style="
+font-weight: bold;
+border: 1px solid var(--border-default-grey);
+background-color: var(--grey-1000-50);
+height: 100%;
+display: flex;
+flex-direction: column;
+text-align: center;
+justify-content: space-around;">
+  <div class="fr-grid-row">
+    <div class="fr-col"><h2 class="fr-h4 fr-text-title--blue-france fr-my-3v">{{ page.organization_title }}</h2></div>
+  </div>
+  {% if page.block_one_title %}
+  <div class="fr-grid-row fr-mb-2v fr-mb-md-1v" style="background-color: var(--background-open-red-marianne-active)">
+    <div class="fr-col"><h3 class="fr-h6 fr-my-3v">{{ page.block_one_title }}</h3></div>
+  </div>
+  {% endif %}
+  {% if page.block_one_column_one %}
+  <div class="fr-grid-row fr-mb-2v fr-mb-md-1v">
+    <div class="fr-col" style="background-color: var(--background-contrast-red-marianne)">
+      <p class="fr-my-3v">{{ page.block_one_column_one }}</p>
+    </div>
+    {% if page.block_one_column_two %}
+    <div class="fr-col fr-ml-2v" style="background-color: var(--background-contrast-red-marianne)">
+      <p class="fr-my-3v">{{ page.block_one_column_two }}</p>
+    </div>
+    {% endif %}
+    {% if page.block_one_column_three %}
+    <div class="fr-col" style="background-color: var(--background-contrast-red-marianne)">
+      <p class="fr-my-3v fr-ml-2v">{{ page.block_one_column_three }}</p>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  <div class="fr-grid-row fr-mb-2v fr-mb-md-1v">
+    <div class="fr-col"><span class="fr-icon-arrow-down-line" aria-hidden="true"></span></div>
+  </div>
+  {% if page.block_two_title %}
+  <div class="fr-grid-row fr-mb-2v fr-mb-md-1v" style="background-color: var(--background-open-blue-france-active)">
+    <div class="fr-col"><h3 class="fr-h6 fr-my-3v">{{ page.block_two_title }}</h3></div>
+  </div>
+  {% endif %}
+  {% if page.block_two_column_one %}
+  <div class="fr-grid-row fr-mb-2v fr-mb-md-1v">
+    <div class="fr-col" style="background-color: var(--background-contrast-blue-france)">
+      <p class="fr-my-3v">{{ page.block_two_column_one }}</p>
+    </div>
+    {% if page.block_two_column_two %}
+    <div class="fr-col fr-ml-2v" style="background-color: var(--background-contrast-blue-france)">
+      <p class="fr-my-3v">{{ page.block_two_column_two }}</p>
+    </div>
+    {% endif %}
+    {% if page.block_two_column_three %}
+    <div class="fr-col fr-ml-2v" style="background-color: var(--background-contrast-blue-france)">
+      <p class="fr-my-3v">{{ page.block_two_column_three }}</p>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  <div class="fr-grid-row fr-mb-2v fr-mb-md-1v">
+    <div class="fr-col"><span class="fr-icon-arrow-down-line" aria-hidden="true"></span></div>
+  </div>
+  {% if page.block_three_title %}
+  <div class="fr-grid-row fr-mb-2v fr-mb-md-1v" style="background-color: var(--background-alt-green-emeraude-active)">
+    <div class="fr-col"><h3 class="fr-h6 fr-my-3v">{{ page.block_three_title }}</h3></div>
+  </div>
+  {% endif %}
+  {% if page.block_three_subtitle %}
+  <div class="fr-grid-row fr-mb-2v fr-mb-md-1v" style="background-color: var(--background-contrast-green-emeraude)">
+    <div class="fr-col"><p class="fr-my-3v">{{ page.block_three_subtitle }}</p></div>
+  </div>
+  {% endif %}
+  {% if page.block_three_column_one %}
+  <div class="fr-grid-row fr-mb-2v">
+    <div class="fr-col" style="background-color: var(--background-contrast-green-emeraude)">
+      <p class="fr-my-3v">{{ page.block_three_column_one }}</p>
+    </div>
+    {% if page.block_three_column_two %}
+    <div class="fr-col fr-ml-2v" style="background-color: var(--background-contrast-green-emeraude)">
+      <p class="fr-my-3v">{{ page.block_three_column_two }}</p>
+    </div>
+    {% endif %}
+    {% if page.block_three_column_three %}
+    <div class="fr-col fr-ml-2v" style="background-color: var(--background-contrast-green-emeraude)">
+      <p class="fr-my-3v">{{ page.block_three_column_three }}</p>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>

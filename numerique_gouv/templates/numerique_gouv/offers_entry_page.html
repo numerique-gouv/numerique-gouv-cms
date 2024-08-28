@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% load static dsfr_tags wagtailcore_tags wagtailimages_tags i18n %}
+
+{% block title %}
+  <title>{{ page.seo_title|default:page.title }} — {{ settings.content_manager.CmsDsfrConfig.site_title }}</title>
+{% endblock title %}
+
+{% block description %}
+  {% if page.search_description %}<meta name="description" content="{{ page.search_description }}" />{% endif %}
+{% endblock description %}
+
+{% block social_media %}
+  <meta property="og:site_name" content="{{ request.get_host }}" />
+  <meta property="og:title"
+        content="{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="{{ page.full_url }}" />
+  <meta property="og:description" content="{{ page.search_description }}" />
+  <meta property="og:locale" content="{{ LANGUAGE_CODE }}" />
+
+  {% if page.get_translations.live %}
+    {% for translation in page.get_translations.live %}
+      <meta property="og:locale:alternate"
+            content="{{ translation.locale.language_code }}" />
+    {% endfor %}
+  {% endif %}
+
+  <meta name="twitter:title"
+        content="{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}" />
+  <meta name="twitter:description" content="{{ page.search_description }}" />
+
+  {% if page.header_image %}
+    <meta name="twitter:card" content="summary_large_image" />
+    {% image page.header_image fill-1200x627 as header_image %}
+    <meta property="og:image" content="{{ header_image.full_url }}" />
+    <meta name="twitter:image" content="{{ header_image.full_url }}" />
+  {% else %}
+    <meta name="twitter:card" content="summary" />
+  {% endif %}
+{% endblock social_media %}
+
+{% block content %}
+  <div class="fr-container fr-pt-4w">
+    {% include "content_manager/blocks/breadcrumbs.html" %}
+    {% if not page.header_with_title %}{% endif %}
+  </div>
+
+  <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
+    <div class="fr-container">
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="{% if page.block_one_title %}fr-col-md-8{% endif %}">
+          <h1 class="fr-text-title--blue-france">{{ page.title }}</h1>
+          <p class="fr-badge fr-badge--{{ page.type.color }} fr-my-5v">{{ page.type }}</p>
+          {% if page.target_audiences.count > 0 or page.themes.count > 0 or page.categories.count > 0  %}
+            <ul style="list-style: none">
+              {% if page.target_audiences.count > 0 %}
+                <li class="fr-mb-5v">
+                  <span class="fr-h5">
+                    {% if page.target_audiences.count == 1 %}
+                      {{ _("Target audience") }}
+                    {% else %}
+                      {{ _("Target audiences") }}
+                    {% endif %}
+                  </span> :
+                  {% for target_audience in page.target_audiences.all %}
+                      <span class="fr-badge fr-badge--{{ target_audience.color }}">{{ target_audience }}</span>
+                  {% endfor %}
+                </li>
+              {% endif %}
+              {% if page.themes.count > 0 %}
+                <li class="fr-mb-3v">
+                    <span class="fr-h5">
+                      {% if page.themes.count == 1 %}
+                        {{ _("Theme") }}
+                      {% else %}
+                        {{ _("Themes") }}
+                      {% endif %}
+                    </span> :
+                  {% for theme in page.themes.all %}
+                    <span class="fr-badge fr-badge--{{ theme.color }}">{{ theme }}</span>
+                  {% endfor %}
+                </li>
+              {% endif %}
+              {% if page.categories.count > 0 %}
+                <li class="fr-mb-3v">
+                  <span class="fr-h5">
+                    {% if page.categories.count == 1 %}
+                      {{ _("Category") }}
+                    {% else %}
+                      {{ _("Categories") }}
+                    {% endif %}
+                  </span> :
+                  {% for category in page.categories.all %}
+                     <span class="fr-badge fr-badge--{{ category.color }}">{{ category }}</span>
+                  {% endfor %}
+                </li>
+              {% endif %}
+            </ul>
+          {% endif %}
+
+          {% if page.text_and_cta %}
+            <div class="fr-mt-6w">
+              {{ page.text_and_cta }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="fr-col-md-4">
+          {% include "numerique_gouv/blocks/offers_organization.html" with page=page %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include "content_manager/blocks/messages.html" %}
+
+  {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}
+
+  <div class="fr-container fr-my-6w">
+    {% for tag in page.tags.all|dictsort:"slug" %}
+      <a class="fr-tag" target="_self" href="{% url 'global_tag' tag.slug %}">{{ tag }}</a>
+    {% endfor %}
+  </div>
+{% endblock content %}
+
+

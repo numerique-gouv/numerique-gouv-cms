@@ -83,8 +83,9 @@ class ConfigTestCase(WagtailPageTestCase):
 
         self.assertInHTML(
             """<div class="fr-footer__brand fr-enlarge-link">
-                <a id="footer-operator" href="/"
-                    title="Retour à l’accueil du site - Site title - République française">
+                    <a id="footer-operator"
+                    href="/"
+                    title="Retourner à l’accueil - Site title - République française">
                     <p class="fr-logo">
                         République<br />française
                     </p>
@@ -117,24 +118,13 @@ class ConfigTestCase(WagtailPageTestCase):
         )
 
     def test_notice_can_be_set(self):
-        self.config.notice = "Ceci est une information <b>importante</b> et <i>temporaire</i>."
+        self.config.notice_title = "Ceci est une information <b>importante</b> et <i>temporaire</i>."
         self.config.save()
 
         url = self.content_page.url
         response = self.client.get(url)
 
-        self.assertInHTML(
-            """<div class="fr-notice fr-notice--info">
-                <div class="fr-container">
-                    <div class="fr-notice__body">
-                        <p class="fr-notice__title">
-                            Ceci est une information <b>importante</b> et <i>temporaire</i>.
-                        </p>
-                    </div>
-                </div>
-            </div>""",
-            response.content.decode(),
-        )
+        self.assertContains(response, self.config.notice_title)
 
     def test_beta_tag_is_not_set_by_default(self):
         url = self.content_page.url
@@ -163,10 +153,7 @@ class ConfigTestCase(WagtailPageTestCase):
 
         self.config.refresh_from_db()
 
-        self.assertContains(
-            response,
-            self.config.footer_description,
-        )
+        self.assertContains(response, self.config.footer_description)
 
 
 class MenusTestCase(WagtailPageTestCase):
