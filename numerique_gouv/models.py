@@ -73,9 +73,10 @@ class OffersEntryPage(NumeriqueBasePage):
     )
     themes = ParentalManyToManyField("numerique_gouv.OfferTheme", blank=True, verbose_name=_("Theme"))
     buttons = ButtonsHorizontalListBlock(label=_("Buttons"))
-    text_and_cta = TextAndCTAStreamField(blank=True, verbose_name=_("Text and CTA"))
+    text_and_cta = TextAndCTAStreamField(blank=True, verbose_name=_("Text and cta"))
 
     card_description = models.TextField(blank=True, verbose_name=_("Description"))
+    card_text = models.TextField(blank=True, verbose_name=_("Text"))
     card_image = models.ForeignKey(
         get_image_model_string(),
         null=True,
@@ -118,13 +119,6 @@ class OffersEntryPage(NumeriqueBasePage):
             ],
             heading=_("Header"),
         ),
-        MultiFieldPanel(
-            [
-                FieldPanel("card_image"),
-                FieldPanel("card_description"),
-            ],
-            heading=_("card information"),
-        ),
     ]
 
     organization_panel = [
@@ -166,6 +160,7 @@ class OffersEntryPage(NumeriqueBasePage):
         HelpPanel(_("This is the card that will be displayed on the offer index page.")),
         FieldPanel("card_image"),
         FieldPanel("card_description"),
+        FieldPanel("card_text"),
     ]
 
     edit_handler = TabbedInterface(
