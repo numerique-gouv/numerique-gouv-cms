@@ -170,7 +170,6 @@ class OffersEntryPage(NumeriqueBasePage):
             ObjectList(organization_panel, heading=_("Organization")),
             ObjectList(card_panel, heading=_("Card")),
             ObjectList(NumeriqueBasePage.promote_panels, heading=_("Promote")),
-            ObjectList(NumeriqueBasePage.settings_panels, heading=_("Settings")),
         ]
     )
 

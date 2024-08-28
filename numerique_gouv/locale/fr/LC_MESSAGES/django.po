@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-28 15:15+0200\n"
-"PO-Revision-Date: 2024-08-28 15:16+0200\n"
+"POT-Creation-Date: 2024-08-28 15:37+0200\n"
+"PO-Revision-Date: 2024-08-28 15:37+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -428,10 +428,6 @@ msgstr "Carte"
 msgid "Promote"
 msgstr "Promotion"
 
-#: numerique_gouv/models.py:173
-msgid "Settings"
-msgstr "Configurations"
-
 #: numerique_gouv/models.py:181
 msgid "Offer page"
 msgstr "Page d’offre"
@@ -487,6 +483,9 @@ msgstr "Thématiques"
 #: numerique_gouv/templates/numerique_gouv/offers_entry_page.html:89
 msgid "Category"
 msgstr "Catégories"
+
+#~ msgid "Settings"
+#~ msgstr "Configurations"
 
 #~ msgid "General information"
 #~ msgstr "Informations générales"
