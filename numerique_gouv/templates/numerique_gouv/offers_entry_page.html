@@ -106,9 +106,11 @@
           {% endif %}
         </div>
 
-        <div class="fr-col-md-4">
-          {% include "numerique_gouv/blocks/offers_organization.html" with page=page %}
-        </div>
+        {% if page.organization_title %}
+          <div class="fr-col-md-4">
+            {% include "numerique_gouv/blocks/offers_organization.html" with page=page %}
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
