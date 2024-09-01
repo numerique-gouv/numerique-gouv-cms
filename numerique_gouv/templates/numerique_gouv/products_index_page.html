@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load static dsfr_tags wagtailcore_tags wagtailimages_tags i18n %}
+
+{% include "content_manager/blocks/head.html" with stream=page.body %}
+
+{% block content %}
+  {% include "content_manager/blocks/heading.html" %}
+  <div class="fr-container fr-pt-4w">
+    {% include "content_manager/blocks/breadcrumbs.html" %}
+    {% if not page.header_with_title %}<h1>{{ page.title }}</h1>{% endif %}
+  </div>
+
+  {% include "content_manager/blocks/messages.html" %}
+
+  {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}
+
+<div class="fr-container fr-py-5w fr-my-5w">
+  <h2 class="fr-h2">{{ _('Digital technology to improve the efficiency of public officials') }}</h2>
+  <div class="fr-grid-row fr-grid-row--gutters">
+    {% for subpage in page.get_all_subpages %}
+      {% include "numerique_gouv/blocks/product_card.html" with page=subpage %}
+    {% endfor %}
+  </div>
+</div>
+  
+<div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
+  <div class="fr-container">
+    <h2 class="fr-h2">{{ _('Digital technology to simplify citizen procedures') }}</h2>
+    <div class="fr-grid-row fr-grid-row--gutters">
+      {% for subpage in page.get_all_subpages %}
+        {% include "numerique_gouv/blocks/product_card.html" with page=subpage %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="fr-container fr-py-5w fr-my-5w">
+  <h2 class="fr-h2">{{ _('Le numérique au service des entreprises') }}</h2>
+  <div class="fr-grid-row fr-grid-row--gutters">
+    {% for subpage in page.get_all_subpages %}
+      {% include "numerique_gouv/blocks/product_card.html" with page=subpage %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}
