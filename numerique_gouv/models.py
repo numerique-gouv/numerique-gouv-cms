@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from dsfr.constants import COLOR_CHOICES_ILLUSTRATION
 from modelcluster.fields import ParentalManyToManyField
@@ -14,6 +15,25 @@ from numerique_gouv.abstract import NumeriqueBasePage
 class NumeriquePage(NumeriqueBasePage):
     class Meta:
         verbose_name = _("Numerique page")
+
+
+class ProductsIndexPage(NumeriqueBasePage):
+    subpage_types = ["numerique_gouv.ProductsEntryPage"]
+
+    class Meta:
+        verbose_name = _("Products index")
+
+    def get_agents_publics_subpages(self):
+        return self.get_children().live().specific().filter(target_audience__slug="agents_publics")
+
+    def get_citizens_subpages(self):
+        return self.get_children().live().specific().filter(target_audience__slug="citoyens")
+
+    def get_companies_subpages(self):
+        return self.get_children().live().specific().filter(target_audience__slug="entreprises")
+
+    def get_all_subpages(self):
+        return self.get_children().live().specific()
 
 
 class OffersIndexPage(NumeriqueBasePage):
@@ -67,7 +87,7 @@ class OffersEntryPage(NumeriqueBasePage):
         "numerique_gouv.Offertype", blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("Type")
     )
 
-    categories = ParentalManyToManyField("numerique_gouv.OfferCategory", blank=True, verbose_name=_("Categories"))
+    categories = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.OfferTargetAudience", blank=True, verbose_name=_("Target Audience")
     )
@@ -180,6 +200,49 @@ class OffersEntryPage(NumeriqueBasePage):
         verbose_name = _("Offer page")
 
 
+class ProductsEntryPage(NumeriqueBasePage):
+    target_audience = models.ForeignKey(
+        "numerique_gouv.ProductTargetAudience",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("Target Audience"),
+    )
+    tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
+    product_url = models.URLField(blank=True, verbose_name=_("Product URL"))
+    the_service = models.TextField(blank=True, verbose_name=_("The service"))
+    the_problem = models.TextField(blank=True, verbose_name=_("The problem"))
+    image = models.ForeignKey(
+        get_image_model_string(),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name=_("Card image"),
+    )
+    image_alt = models.CharField(max_length=255, blank=True, verbose_name=_("Image alt"))
+
+    parent_page_types = ["numerique_gouv.ProductsIndexPage"]
+    subpage_types = []
+
+    content_panels = NumeriqueBasePage.content_panels + [
+        FieldPanel("target_audience"),
+        FieldPanel("product_url"),
+        FieldPanel("the_service"),
+        FieldPanel("the_problem"),
+        FieldPanel("tags"),
+        FieldPanel("image"),
+        FieldPanel("image_alt"),
+    ]
+
+    def serve(self, request):
+        parent = self.get_parent().specific
+        return redirect(parent.url)
+
+    class Meta:
+        verbose_name = _("Product page")
+
+
 class BaseCategory(models.Model):
     name = models.CharField(max_length=80, unique=True, verbose_name=_("Category name"))
     slug = models.SlugField(unique=True, max_length=80)
@@ -199,9 +262,9 @@ class BaseCategory(models.Model):
 
 
 @register_snippet
-class OfferCategory(BaseCategory):
+class PageTag(BaseCategory):
     class Meta:
-        verbose_name = _("Offer Category")
+        verbose_name = _("Page tag")
 
 
 @register_snippet
@@ -220,3 +283,9 @@ class OfferTheme(BaseCategory):
 class Offertype(BaseCategory):
     class Meta:
         verbose_name = _("Offer Type")
+
+
+@register_snippet
+class ProductTargetAudience(BaseCategory):
+    class Meta:
+        verbose_name = _("Product Target Audience")

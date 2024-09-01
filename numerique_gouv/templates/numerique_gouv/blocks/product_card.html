@@ -1,0 +1,40 @@
+{% load i18n wagtailimages_tags %}
+
+<div class="fr-col-md-4 fr-col">
+  <div class="fr-card">
+    <div class="fr-card__body">
+      <div class="fr-card__content fr-p-3w">
+        <h3 class="fr-card__title" style="color: var(--blue-france-sun-113-625);">
+          {{ page.title }}
+        </h3>
+        <div class="fr-card__desc">
+          <div class="fr-callout fr-p-2w">
+            <div class="fr-callout__text">
+              <h4 class="fr-text--bold fr-text--md" style="display: contents;">Problématique : </h4>
+              <p style="display: contents;">{{ page.the_problem }}</p>
+            </div>
+          </div>
+          <h4 class="fr-text--bold fr-text--md fr-m-0" style="display: contents; text-decoration: underline">Le service : </h4>
+          <p style="display: contents;">{{ page.the_service }}</p>
+        </div>
+        <div class="fr-card__start">
+          <ul class="fr-badge-group">
+            {% for tag in page.tags.all %}
+              <li><p class="fr-badge fr-badge--{{ tag.color }} fr-my-5v">{{ tag.name }}</p></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="fr-card__footer">
+        <a href="{{ page.product_url }}" target="_blank" class="fr-btn">
+          {{ _('Discover service') }}
+        </a>
+      </div>
+    </div>
+    <div class="fr-card__header">
+      <div class="fr-card__img">
+        {% image page.image original class="fr-responsive-img" alt=page.image_alt %}
+      </div>
+    </div>
+  </div>
+</div>
