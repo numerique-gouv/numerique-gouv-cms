@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load wagtail_dsfr_tags %}
+{% load wagtailcore_tags %}
 
 {% load static dsfr_tags wagtailcore_tags wagtailimages_tags i18n %}
 
@@ -186,103 +188,109 @@
     </div>
   </div>
 {##}
-{#  <div class="fr-container" id="categories">#}
-{#    <h2>{{ _('Offers by Category') }}</h2>#}
-{#    <div class="fr-grid-row fr-grid-row--gutters">#}
-{#      <ul class="fr-tags-group">#}
-{#        {% for category in get_categories %}#}
-{#          <li>#}
-{#               {% if category.slug == current_category.slug %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>#}
-{#              {{ category.name }}#}
-{#          </li>#}
-{#        {% endfor %}#}
-{#      #}
-{#        {% for category in get_categories %}#}
-{#          <h3>{{ category.name }}</h3>#}
-{#          {% with page.get_offers_by_category(category.slug) as offers %}#}
-{#            {% for offer in offers %}#}
-{#              {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}#}
-{#            {% endfor %}#}
-{#          {% endwith %}#}
-{#        {% endfor %}#}
-{#      </ul>#}
-{#    </div>#}
-{#  </div>#}
-{##}
-{#  <div class="fr-container" id="target_audiences">#}
-{#    <h2>{{ _('Offers by Target Audience') }}</h2>#}
-{#    <div class="fr-grid-row fr-grid-row--gutters">#}
-{#      {% for target_audience in target_audiences %}#}
-{#        <h3>{{ target_audience.name }}</h3>#}
-{#        {% with page.get_offers_by_target_audience(target_audience.slug) as offers %}#}
-{#          {% for offer in offers %}#}
-{#            {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}#}
-{#          {% endfor %}#}
-{#        {% endwith %}#}
-{#      {% endfor %}#}
-{#    </div>#}
-{#  </div>#}
-{##}
-{#  <div class="fr-container" id="themes">#}
-{#    <h2>{{ _('Offers by Theme') }}</h2>#}
-{#    <div class="fr-grid-row fr-grid-row--gutters">#}
-{#      {% for theme in themes %}#}
-{#        <h3>{{ theme.name }}</h3>#}
-{#        {% with page.get_offers_by_theme(theme.slug) as offers %}#}
-{#          {% for offer in offers %}#}
-{#            {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}#}
-{#          {% endfor %}#}
-{#        {% endwith %}#}
-{#      {% endfor %}#}
-{#    </div>#}
-{#  </div>#}
+  <div class="fr-container">
+    <h2 class="fr-h6">{{ _('Offers by Category') }}</h2>
+    <div class="fr-grid-row fr-grid-row--gutters">
+    <div class="fr-col">
+      <ul class="fr-tags-group">
+        {% for category in page.get_categories %}
+          <li>
+            <a class="fr-tag"
+               href="{% pageurl page %}{% toggle_url_filter category=category %}"
+               {% if category.slug == current_category.slug %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
+              {{ category.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    </div>
+  </div>
+  <div class="fr-container">
+    <h2 class="fr-h6">{{ _('Offers by Target Audience') }}</h2>
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <div class="fr-col">
+        <ul class="fr-tags-group">
+          {% for target_audience in page.get_target_audiences %}
+            <li>
+              <a class="fr-tag"
+                 href="{% pageurl page %}{% toggle_url_filter target_audience=target_audience %}"
+                 {% if target_audience.slug == current_target_audience.slug %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
+                {{ target_audience.name }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="fr-container">
+    <h2 class="fr-h6">{{ _('Offers by Theme') }}</h2>
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <div class="fr-col">
+        <ul class="fr-tags-group">
+          {% for theme in page.get_themes %}
+            <li>
+              <a class="fr-tag"
+                 href="{% pageurl page %}{% toggle_url_filter theme=theme %}"
+                 {% if theme.slug == current_theme.slug %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
+                {{ theme.name }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
   
-  <div class="fr-container" id="expertise">
-    <h2>{{ _('Request DINUM’s expertise') }}</h2>
-    <div class="fr-grid-row fr-grid-row--gutters">
-      {% for offer in page.get_all_subpages %}
-        {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
-      {% endfor %}
-    </div>
-  </div>
-
   <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
-    <div class="fr-container" id="document">
-      <h2>{{ _('Consult a reference document') }}</h2>
+    <div class="fr-container" id="expertise">
+      <h2>{{ _('Request DINUM’s expertise') }}</h2>
       <div class="fr-grid-row fr-grid-row--gutters">
-        {% for offer in page.get_all_subpages %}
+        {% for offer in page.get_expertise_subpages %}
           {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
         {% endfor %}
       </div>
     </div>
   </div>
 
-  <div class="fr-container" id="fincancing">
-    <h2>{{ _('Financing a digital project') }}</h2>
+  <div class="fr-container" id="document">
+    <h2>{{ _('Consult a reference document') }}</h2>
     <div class="fr-grid-row fr-grid-row--gutters">
-      {% for offer in page.get_all_subpages %}
+      {% for offer in page.get_document_subpages %}
         {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
       {% endfor %}
     </div>
   </div>
-
+  
   <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
-    <div class="fr-container" id="tools">
-      <h2>{{ _('Access the management tools') }}</h2>
+    <div class="fr-container" id="fincancing">
+      <h2>{{ _('Financing a digital project') }}</h2>
       <div class="fr-grid-row fr-grid-row--gutters">
-        {% for offer in page.get_all_subpages %}
+        {% for offer in page.get_financement_subpages %}
           {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
         {% endfor %}
       </div>
     </div>
   </div>
 
-  <div class="fr-container fr-py-5w fr-my-5w" id="major-project">
-    <h2>{{ _('Leading a major IT project') }}</h2>
+  <div class="fr-container" id="tools">
+    <h2>{{ _('Access the management tools') }}</h2>
     <div class="fr-grid-row fr-grid-row--gutters">
-      {% for offer in page.get_all_subpages %}
+      {% for offer in page.get_outils_subpages %}
         {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
       {% endfor %}
+    </div>
+  </div>
+  
+  <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
+    <div class="fr-container fr-py-5w fr-my-5w" id="major-project">
+      <h2>{{ _('Leading a major IT project') }}</h2>
+      <div class="fr-grid-row fr-grid-row--gutters">
+        {% for offer in page.get_pilotage_subpages %}
+          {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
+        {% endfor %}
+      </div>
     </div>
   </div>
 {% endblock content %}

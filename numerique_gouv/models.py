@@ -54,32 +54,34 @@ class OffersIndexPage(NumeriqueBasePage):
     class Meta:
         verbose_name = _("Offers index")
 
-    def get_offers_by_category(self, category_slug):
+    def get_outils_subpages(self):
+        return self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="outils")
+
+    def get_financement_subpages(self):
         return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(numeriquebasepage__offersentrypage__categories__slug=category_slug)
+            self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="financement")
         )
 
-    def get_offers_by_target_audience(self, target_audience_slug):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(numeriquebasepage__offersentrypage__target_audiences__slug=target_audience_slug)
-        )
+    def get_expertise_subpages(self):
+        return self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="expertise")
 
-    def get_offers_by_theme(self, theme_slug):
-        return (
-            self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__themes__slug=theme_slug)
-        )
+    def get_document_subpages(self):
+        return self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="document")
+
+    def get_pilotage_subpages(self):
+        return self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="pilotage")
 
     def get_all_subpages(self):
         return self.get_children().live().specific()
 
     def get_categories(self):
         return PageTag.objects.all()
+
+    def get_target_audiences(self):
+        return OfferTargetAudience.objects.all()
+
+    def get_themes(self):
+        return OfferTheme.objects.all()
 
 
 class TextAndCTAStreamField(StreamField):
