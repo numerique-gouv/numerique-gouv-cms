@@ -24,16 +24,28 @@ class ProductsIndexPage(NumeriqueBasePage):
         verbose_name = _("Products index")
 
     def get_agents_publics_subpages(self):
-        return self.get_children().live().specific().filter(target_audience__slug="agents_publics")
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__productsentrypage__target_audience__slug="agents_public")
+        )
 
     def get_citizens_subpages(self):
-        return self.get_children().live().specific().filter(target_audience__slug="citoyens")
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__productsentrypage__target_audience__slug="citoyens")
+        )
 
     def get_companies_subpages(self):
-        return self.get_children().live().specific().filter(target_audience__slug="entreprises")
-
-    def get_all_subpages(self):
-        return self.get_children().live().specific()
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__productsentrypage__target_audience__slug="entreprises")
+        )
 
 
 class OffersIndexPage(NumeriqueBasePage):
@@ -42,38 +54,32 @@ class OffersIndexPage(NumeriqueBasePage):
     class Meta:
         verbose_name = _("Offers index")
 
-    # @property
-    # def posts(self):
-    #     # Get list of blog pages that are descendants of this page
-    #     posts = BlogEntryPage.objects.descendant_of(self).live()
-    #     posts = (
-    #         posts.order_by("-date").select_related("owner").prefetch_related("tags", "blog_categories", "date__year")
-    #     )
-    #     return posts
+    def get_offers_by_category(self, category_slug):
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__offersentrypage__categories__slug=category_slug)
+        )
 
-    # def get_categories(self) -> QuerySet:
-    #     ids = self.posts.specific().values_list("blog_categories", flat=True)
-    #     return Category.objects.filter(id__in=ids).order_by("name")
+    def get_offers_by_target_audience(self, target_audience_slug):
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__offersentrypage__target_audiences__slug=target_audience_slug)
+        )
 
-    # def get_sources(self) -> QuerySet:
-    #     ids = self.posts.specific().values_list("authors__organization", flat=True)
-    #     return Organization.objects.filter(id__in=ids).order_by("name")
-    #
-    # def get_tags(self) -> QuerySet:
-    #     ids = self.posts.specific().values_list("tags", flat=True)
-    #     return Tag.objects.filter(id__in=ids).order_by("name")
+    def get_offers_by_theme(self, theme_slug):
+        return (
+            self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__themes__slug=theme_slug)
+        )
 
-    # def list_categories(self) -> list:
-    #     posts = self.posts.specific()
-    #     return (
-    #         posts.values(
-    #             cat_slug=F("blog_categories__slug"),
-    #             cat_name=F("blog_categories__name"),
-    #         )
-    #         .annotate(cat_count=Count("cat_slug"))
-    #         .filter(cat_count__gte=1)
-    #         .order_by("-cat_count")
-    #     )
+    def get_all_subpages(self):
+        return self.get_children().live().specific()
+
+    def get_categories(self):
+        return PageTag.objects.all()
 
 
 class TextAndCTAStreamField(StreamField):
@@ -105,6 +111,7 @@ class OffersEntryPage(NumeriqueBasePage):
         related_name="+",
         verbose_name=_("Card image"),
     )
+    card_alt_image = models.CharField(max_length=255, blank=True, verbose_name=_("Image alt"))
 
     # organization
     organization_title = models.TextField(blank=True, verbose_name=_("Organization title"))
@@ -179,7 +186,7 @@ class OffersEntryPage(NumeriqueBasePage):
     card_panel = [
         HelpPanel(_("This is the card that will be displayed on the offer index page.")),
         FieldPanel("card_image"),
-        FieldPanel("card_description"),
+        FieldPanel("card_alt_image"),
         FieldPanel("card_text"),
     ]
 
