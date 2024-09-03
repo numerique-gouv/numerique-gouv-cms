@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-03 21:42+0200\n"
-"PO-Revision-Date: 2024-09-03 21:42+0200\n"
+"POT-Creation-Date: 2024-09-03 21:58+0200\n"
+"PO-Revision-Date: 2024-09-03 21:59+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -511,6 +511,31 @@ msgstr "Thématiques"
 #: numerique_gouv/templates/numerique_gouv/offers_entry_page.html:53
 msgid "Category"
 msgstr "Catégories"
+
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:26
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:241
+msgid "Request DINUM’s expertise"
+msgstr "Solliciter l’expertise de la DINUM"
+
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:71
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:251
+msgid "Consult a reference document"
+msgstr "Consulter un document de référence"
+
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:102
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:261
+msgid "Financing a digital project"
+msgstr "Financer un projet numérique"
+
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:131
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:271
+msgid "Access the management tools"
+msgstr "Accéder aux outils de pilotage"
+
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:160
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:281
+msgid "Leading a major IT project"
+msgstr "Mener un grand projet de SI"
 
 #: numerique_gouv/templates/numerique_gouv/products_index_page.html:19
 msgid "Digital technology to simplify citizen procedures"
