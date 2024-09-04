@@ -275,16 +275,16 @@
   </div>
 
   <div class="fr-container" id="tools">
-    <h2>{{ _('Access the management tools') }}</h2>
+    <h2>{{ _('Observe the quality of digital') }}</h2>
     <div class="fr-grid-row fr-grid-row--gutters">
-      {% for offer in page.get_outils_subpages %}
+      {% for offer in page.get_observatoire_subpages %}
         {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
       {% endfor %}
     </div>
   </div>
   
   <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
-    <div class="fr-container fr-py-5w fr-my-5w" id="major-project">
+    <div class="fr-container" id="major-project">
       <h2>{{ _('Leading a major IT project') }}</h2>
       <div class="fr-grid-row fr-grid-row--gutters">
         {% for offer in page.get_pilotage_subpages %}
