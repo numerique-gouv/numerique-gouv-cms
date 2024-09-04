@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Case, IntegerField, Value, When
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from dsfr.constants import COLOR_CHOICES_ILLUSTRATION
@@ -29,6 +30,14 @@ class ProductsIndexPage(NumeriqueBasePage):
             .live()
             .specific()
             .filter(numeriquebasepage__productsentrypage__target_audience__slug="agents_public")
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__productsentrypage__position")
         )
 
     def get_citizens_subpages(self):
@@ -37,6 +46,14 @@ class ProductsIndexPage(NumeriqueBasePage):
             .live()
             .specific()
             .filter(numeriquebasepage__productsentrypage__target_audience__slug="citoyens")
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__productsentrypage__position")
         )
 
     def get_companies_subpages(self):
@@ -45,6 +62,14 @@ class ProductsIndexPage(NumeriqueBasePage):
             .live()
             .specific()
             .filter(numeriquebasepage__productsentrypage__target_audience__slug="entreprises")
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__productsentrypage__position")
         )
 
 
@@ -240,12 +265,14 @@ class ProductsEntryPage(NumeriqueBasePage):
         verbose_name=_("Card image"),
     )
     image_alt = models.CharField(max_length=255, blank=True, verbose_name=_("Image alt"))
+    position = models.IntegerField(default=0)
 
     parent_page_types = ["numerique_gouv.ProductsIndexPage"]
     subpage_types = []
 
     content_panels = NumeriqueBasePage.content_panels + [
         FieldPanel("target_audience"),
+        FieldPanel("position"),
         FieldPanel("product_url"),
         FieldPanel("the_service"),
         FieldPanel("the_problem"),
