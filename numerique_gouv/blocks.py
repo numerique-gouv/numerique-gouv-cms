@@ -9,6 +9,7 @@ from content_manager.blocks import (
     FullWidthBackgroundBlock,
     FullWidthBlock,
     HorizontalCardBlock,
+    ItemGridBlock,
     MultiColumnsBlock,
     MultiColumnsWithTitleBlock,
     VerticalCardBlock,
@@ -202,6 +203,10 @@ class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
     content = CustomFullWidthBlock(label=_("Content"))
 
 
+class CustomItemGridBlock(ItemGridBlock):
+    items = CustomColumnBlock(label=_("Items"))
+
+
 STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("three_cards", ThreeCardsBlock(label=_("Headline cards"), group=_("Numerique components"))),
     ("multicolumns", CustomMultiColumnsWithTitleBlock(label=_("Multi columns"), group=_("Page structure"))),
@@ -216,4 +221,5 @@ STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("spacer", SpacerBlock(label=_("Spacer"), group=_("Page structure"))),
     ("stylized_column", StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))),
     ("highlight_cards", HighlightCards(label=_("Highlight cards"), group=_("Numerique components"))),
+    ("item_grid", CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))),
 ]
