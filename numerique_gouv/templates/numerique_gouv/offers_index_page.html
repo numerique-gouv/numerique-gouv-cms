@@ -185,25 +185,7 @@
       </div>
     </div>
   </div>
-{##}
-  <div class="fr-container">
-    <h2 class="fr-h6">{{ _('Offers by Category') }}</h2>
-    <div class="fr-grid-row fr-grid-row--gutters">
-    <div class="fr-col">
-      <ul class="fr-tags-group">
-        {% for category in page.get_categories %}
-          <li>
-            <a class="fr-tag"
-               href="{% pageurl page %}{% toggle_url_filter category=category %}"
-               {% if category.slug == current_category.slug %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
-              {{ category.name }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-    </div>
-  </div>
+
   <div class="fr-container">
     <h2 class="fr-h6">{{ _('Offers by Target Audience') }}</h2>
     <div class="fr-grid-row fr-grid-row--gutters">

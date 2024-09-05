@@ -118,9 +118,6 @@ class OffersIndexPage(NumeriqueBasePage):
     def get_target_audiences(self):
         return OfferTargetAudience.objects.all()
 
-    def get_themes(self):
-        return OfferTheme.objects.all()
-
 
 class TextAndCTAStreamField(StreamField):
     def __init__(self, *args, **kwargs):
