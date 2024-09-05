@@ -79,10 +79,8 @@ class OffersIndexPage(NumeriqueBasePage):
     class Meta:
         verbose_name = _("Offers index")
 
-    def get_observatoire_subpages(self):
-        return (
-            self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="observatoire")
-        )
+    def get_tool_subpages(self):
+        return self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="outil")
 
     def get_financement_subpages(self):
         return (
@@ -94,17 +92,22 @@ class OffersIndexPage(NumeriqueBasePage):
             self.get_children()
             .live()
             .specific()
+            .filter(models.Q(numeriquebasepage__offersentrypage__type__slug="expertise"))
+        )
+
+    def get_pilotage_subpages(self):
+        return (
+            self.get_children()
+            .live()
+            .specific()
             .filter(
-                models.Q(numeriquebasepage__offersentrypage__type__slug="expertise")
-                | models.Q(numeriquebasepage__offersentrypage__type__slug="outil")
+                models.Q(numeriquebasepage__offersentrypage__type__slug="pilotage")
+                | models.Q(numeriquebasepage__offersentrypage__type__slug="observatoire")
             )
         )
 
     def get_document_subpages(self):
         return self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="document")
-
-    def get_pilotage_subpages(self):
-        return self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="pilotage")
 
     def get_all_subpages(self):
         return self.get_children().live().specific()
