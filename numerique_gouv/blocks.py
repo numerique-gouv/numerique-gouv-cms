@@ -121,6 +121,7 @@ class CustomColumnBlock(ColumnBlock):
         required=False, label=_("Numeric direction card"), group=_("Numerique components")
     )
     horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
+    item_grid = ItemGridBlock(label=_("Item grid"), group=_("Page structure"))
 
 
 class CustomAdjustableColumnBlock(AdjustableColumnBlock):
@@ -179,6 +180,10 @@ class SpacerBlock(blocks.StructBlock):
         label = "Spacer"
 
 
+class CustomItemGridBlock(ItemGridBlock):
+    items = CustomColumnBlock(label=_("Items"))
+
+
 class CustomFullWidthBlock(FullWidthBlock):
     html = blocks.RawHTMLBlock(
         required=False,
@@ -197,14 +202,11 @@ class CustomFullWidthBlock(FullWidthBlock):
     )
     stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
     spacer = SpacerBlock(label=_("Spacer"), group=_("Page structure"))
+    custom_item_grid = CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))
 
 
 class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
     content = CustomFullWidthBlock(label=_("Content"))
-
-
-class CustomItemGridBlock(ItemGridBlock):
-    items = CustomColumnBlock(label=_("Items"))
 
 
 STREAMFIELD_NUMERIQUE_BLOCKS = [
