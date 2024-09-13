@@ -11,6 +11,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RenameModel(
             old_name="OfferTheme",
-            new_name="MajorArea",
+            new_name="DinumTag",
         ),
     ]

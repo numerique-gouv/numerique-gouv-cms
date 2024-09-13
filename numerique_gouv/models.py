@@ -138,7 +138,8 @@ class OffersEntryPage(NumeriqueBasePage):
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audience")
     )
-    themes = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Theme"))
+    major_area = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Dinum Tags"))
+    themes = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Theme"))
     buttons = ButtonsHorizontalListBlock(label=_("Buttons"))
     text_and_cta = TextAndCTAStreamField(blank=True, verbose_name=_("Text and cta"))
 
@@ -182,6 +183,7 @@ class OffersEntryPage(NumeriqueBasePage):
             [
                 FieldPanel("categories"),
                 FieldPanel("target_audiences"),
+                FieldPanel("major_area"),
                 FieldPanel("themes"),
                 FieldPanel("text_and_cta"),
             ],
@@ -293,13 +295,72 @@ class ProductsEntryPage(NumeriqueBasePage):
         verbose_name = _("Product page")
 
 
-# class ThemePage(NumeriqueBasePage):
-#     subpage_types = ["numerique_gouv.ProductsIndexPage", "numerique_gouv.OffersIndexPage"]
-#     tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
-#     # target_audiences = ParentalManyToManyField(
-#
-#     class Meta:
-#         verbose_name = _("Hub page")
+class HubPages(NumeriqueBasePage):
+    subpage_types = [
+        "numerique_gouv.ProductsIndexPage",
+        "numerique_gouv.OffersIndexPage",
+        "numerique_gouv.NumeriquePage",
+    ]
+    display_actualites = models.BooleanField(default=True, verbose_name=_("Display actualites"))
+    display_events = models.BooleanField(default=True, verbose_name=_("Display events"))
+    display_products = models.BooleanField(default=True, verbose_name=_("Display products"))
+    display_offers = models.BooleanField(default=True, verbose_name=_("Display offers"))
+
+    major_areas = ParentalManyToManyField(
+        "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
+    )
+    dinum_tags = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Dinum Tags"))
+    tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Tags"))
+    target_audiences = ParentalManyToManyField(
+        "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
+    )
+
+    CHOICES = [
+        ("major_areas", _("Major Areas of Actions")),
+        ("dinum_tags", _("Dinum Tags")),
+        ("tags", _("Tags")),
+        ("target_audiences", _("Target Audiences")),
+    ]
+    content_source = models.CharField(max_length=20, choices=CHOICES, verbose_name=_("Content Source"))
+
+    class Meta:
+        verbose_name = _("Hub page")
+
+    content_panels = NumeriqueBasePage.content_panels + [
+        FieldPanel("display_actualites"),
+        FieldPanel("display_events"),
+        FieldPanel("display_products"),
+        FieldPanel("display_offers"),
+        FieldPanel("content_source"),
+        FieldPanel("major_areas"),
+        FieldPanel("dinum_tags"),
+        FieldPanel("tags"),
+        FieldPanel("target_audiences"),
+    ]
+
+    configuration_panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel("display_actualites"),
+                FieldPanel("display_events"),
+                FieldPanel("display_products"),
+                FieldPanel("display_offers"),
+                FieldPanel("content_source"),
+                FieldPanel("major_areas"),
+                FieldPanel("dinum_tags"),
+                FieldPanel("tags"),
+                FieldPanel("target_audiences"),
+            ],
+        ),
+    ]
+
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(NumeriqueBasePage.content_panels, heading=_("Content")),
+            ObjectList(configuration_panels, heading=_("Configuration")),
+            ObjectList(NumeriqueBasePage.promote_panels, heading=_("Promote")),
+        ]
+    )
 
 
 class BaseCategory(models.Model):
@@ -349,3 +410,9 @@ class Offertype(BaseCategory):
 class TargetAudience(BaseCategory):
     class Meta:
         verbose_name = _("Target Audience")
+
+
+@register_snippet
+class DinumTag(BaseCategory):
+    class Meta:
+        verbose_name = _("Dinum Tag")
