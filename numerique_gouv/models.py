@@ -116,7 +116,7 @@ class OffersIndexPage(NumeriqueBasePage):
         return PageTag.objects.all()
 
     def get_target_audiences(self):
-        return OfferTargetAudience.objects.all()
+        return TargetAudience.objects.all()
 
 
 class TextAndCTAStreamField(StreamField):
@@ -131,10 +131,14 @@ class OffersEntryPage(NumeriqueBasePage):
     )
 
     categories = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
-    target_audiences = ParentalManyToManyField(
+    # a supprimer
+    target_audiences_old = ParentalManyToManyField(
         "numerique_gouv.OfferTargetAudience", blank=True, verbose_name=_("Target Audience")
     )
-    themes = ParentalManyToManyField("numerique_gouv.OfferTheme", blank=True, verbose_name=_("Theme"))
+    target_audiences = ParentalManyToManyField(
+        "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audience")
+    )
+    themes = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Theme"))
     buttons = ButtonsHorizontalListBlock(label=_("Buttons"))
     text_and_cta = TextAndCTAStreamField(blank=True, verbose_name=_("Text and cta"))
 
@@ -246,7 +250,7 @@ class OffersEntryPage(NumeriqueBasePage):
 
 class ProductsEntryPage(NumeriqueBasePage):
     target_audience = models.ForeignKey(
-        "numerique_gouv.ProductTargetAudience",
+        "numerique_gouv.TargetAudience",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
@@ -289,6 +293,15 @@ class ProductsEntryPage(NumeriqueBasePage):
         verbose_name = _("Product page")
 
 
+# class ThemePage(NumeriqueBasePage):
+#     subpage_types = ["numerique_gouv.ProductsIndexPage", "numerique_gouv.OffersIndexPage"]
+#     tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
+#     # target_audiences = ParentalManyToManyField(
+#
+#     class Meta:
+#         verbose_name = _("Hub page")
+
+
 class BaseCategory(models.Model):
     name = models.CharField(max_length=80, unique=True, verbose_name=_("Category name"))
     slug = models.SlugField(unique=True, max_length=80)
@@ -313,16 +326,17 @@ class PageTag(BaseCategory):
         verbose_name = _("Page tag")
 
 
+# A supprimer
 @register_snippet
 class OfferTargetAudience(BaseCategory):
     class Meta:
-        verbose_name = _("Offer Target Audience")
+        verbose_name = _("Offer Target Audience ( a supprimer )")
 
 
 @register_snippet
-class OfferTheme(BaseCategory):
+class MajorArea(BaseCategory):
     class Meta:
-        verbose_name = _("Offer Theme")
+        verbose_name = _("Major Area of Action")
 
 
 @register_snippet
@@ -332,6 +346,6 @@ class Offertype(BaseCategory):
 
 
 @register_snippet
-class ProductTargetAudience(BaseCategory):
+class TargetAudience(BaseCategory):
     class Meta:
-        verbose_name = _("Product Target Audience")
+        verbose_name = _("Target Audience")
