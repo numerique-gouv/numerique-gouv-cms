@@ -12,3 +12,8 @@ def replace(value, args=",|."):
         value = str(value)
     old_char, new_char = args.split("|")
     return value.replace(old_char, new_char)
+
+
+@register.filter
+def get_entries(value, key):
+    return value.get_entries(key)

@@ -4,11 +4,12 @@ from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from dsfr.constants import COLOR_CHOICES_ILLUSTRATION
 from modelcluster.fields import ParentalManyToManyField
-from wagtail.admin.panels import FieldPanel, HelpPanel, MultiFieldPanel, ObjectList, TabbedInterface
+from wagtail.admin.panels import FieldPanel, FieldRowPanel, HelpPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.images import get_image_model_string
 from wagtail.snippets.models import register_snippet
 
+from blog.models import BlogEntryPage, BlogIndexPage
 from content_manager.blocks import ButtonsHorizontalListBlock, TextAndCTA
 from numerique_gouv.abstract import NumeriqueBasePage
 
@@ -130,7 +131,7 @@ class OffersEntryPage(NumeriqueBasePage):
         "numerique_gouv.Offertype", blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("Type")
     )
 
-    categories = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
+    page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
     # a supprimer
     target_audiences_old = ParentalManyToManyField(
         "numerique_gouv.OfferTargetAudience", blank=True, verbose_name=_("Target Audience")
@@ -181,7 +182,7 @@ class OffersEntryPage(NumeriqueBasePage):
         ),
         MultiFieldPanel(
             [
-                FieldPanel("categories"),
+                FieldPanel("page_tags"),
                 FieldPanel("target_audiences"),
                 FieldPanel("major_area"),
                 FieldPanel("themes"),
@@ -258,7 +259,7 @@ class ProductsEntryPage(NumeriqueBasePage):
         on_delete=models.SET_NULL,
         verbose_name=_("Target Audience"),
     )
-    tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
+    page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
     product_url = models.URLField(blank=True, verbose_name=_("Product URL"))
     the_service = models.TextField(blank=True, verbose_name=_("The service"))
     the_problem = models.TextField(blank=True, verbose_name=_("The problem"))
@@ -282,7 +283,7 @@ class ProductsEntryPage(NumeriqueBasePage):
         FieldPanel("product_url"),
         FieldPanel("the_service"),
         FieldPanel("the_problem"),
-        FieldPanel("tags"),
+        FieldPanel("page_tags"),
         FieldPanel("image"),
         FieldPanel("image_alt"),
     ]
@@ -293,6 +294,61 @@ class ProductsEntryPage(NumeriqueBasePage):
 
     class Meta:
         verbose_name = _("Product page")
+
+
+class NumeriqueBlogEntryPage(BlogEntryPage):
+    major_areas = ParentalManyToManyField(
+        "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
+    )
+    dinum_tags = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Dinum Tags"))
+    page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
+    target_audiences = ParentalManyToManyField(
+        "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
+    )
+
+    parent_page_types = ["numerique_gouv.NumeriqueBlogIndexPage"]
+
+    template = "blog/blog_entry_page.html"
+
+    settings_panels = NumeriqueBasePage.settings_panels + [
+        FieldPanel("date"),
+        MultiFieldPanel(
+            [
+                FieldRowPanel(
+                    [
+                        FieldPanel("go_live_at"),
+                        FieldPanel("expire_at"),
+                    ],
+                    classname="label-above",
+                ),
+            ],
+            _("Scheduled publishing"),
+            classname="publishing",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("blog_categories"),
+                FieldPanel("page_tags"),
+                FieldPanel("major_areas"),
+                FieldPanel("dinum_tags"),
+                FieldPanel("target_audiences"),
+            ],
+            heading=_("Tags and Categories"),
+        ),
+        FieldPanel("authors"),
+    ]
+
+    class Meta:
+        verbose_name = _("Numerique blog entry page")
+
+
+class NumeriqueBlogIndexPage(BlogIndexPage):
+    subpage_types = ["numerique_gouv.NumeriqueBlogEntryPage"]
+
+    template = "blog/blog_index_page.html"
+
+    class Meta:
+        verbose_name = _("Numerique blog index page")
 
 
 class HubPages(NumeriqueBasePage):
@@ -361,6 +417,23 @@ class HubPages(NumeriqueBasePage):
             ObjectList(NumeriqueBasePage.promote_panels, heading=_("Promote")),
         ]
     )
+
+    def get_entries(self, entry_type):
+        if entry_type == "blog":
+            entries = NumeriqueBlogEntryPage.objects.live().specific()
+        elif entry_type == "offers":
+            entries = OffersEntryPage.objects.live().specific()
+        elif entry_type == "products":
+            entries = ProductsEntryPage.objects.live().specific()
+
+        if self.content_source == "major_areas":
+            return entries.filter(major_area__in=self.major_areas.all())
+        elif self.content_source == "dinum_tags":
+            return entries.filter(dinum_tags__in=self.dinum_tags.all())
+        elif self.content_source == "tags":
+            return entries.filter(page_tags__in=self.tags.all())
+        elif self.content_source == "target_audiences":
+            return entries.filter(target_audiences__in=self.target_audiences.all())
 
 
 class BaseCategory(models.Model):
