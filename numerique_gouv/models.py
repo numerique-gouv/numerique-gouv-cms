@@ -1,6 +1,7 @@
 from django.db import models
-from django.db.models import Case, IntegerField, Value, When
-from django.shortcuts import redirect
+from django.db.models import Case, IntegerField, QuerySet, Value, When
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from dsfr.constants import COLOR_CHOICES_ILLUSTRATION
 from modelcluster.fields import ParentalManyToManyField
@@ -345,10 +346,59 @@ class NumeriqueBlogEntryPage(BlogEntryPage):
 class NumeriqueBlogIndexPage(BlogIndexPage):
     subpage_types = ["numerique_gouv.NumeriqueBlogEntryPage"]
 
-    template = "blog/blog_index_page.html"
+    template = "numerique_gouv/blog_index_page.html"
 
     class Meta:
         verbose_name = _("Numerique blog index page")
+
+    @property
+    def posts(self):
+        # Get list of blog pages that are descendants of this page
+        posts = NumeriqueBlogEntryPage.objects.descendant_of(self).live()
+        posts = posts.select_related("owner").prefetch_related("page_tags", "blog_categories", "date__year")
+        return posts
+
+    def get_context(self, request, page_tag=None, category=None, author=None, source=None, year=None, *args, **kwargs):
+        context = super(BlogIndexPage, self).get_context(request, *args, **kwargs)
+        posts = self.posts
+
+        if page_tag is None:
+            page_tag = request.GET.get("page_tag")
+        if page_tag:
+            page_tag = get_object_or_404(PageTag, slug=page_tag)
+            posts = posts.filter(page_tags=page_tag)
+            extra_breadcrumbs = {
+                "links": [
+                    {"url": self.get_url(), "title": self.title},
+                    {
+                        "url": reverse("blog:tags_list", kwargs={"blog_slug": self.slug}),
+                        "title": _("Page tags"),
+                    },
+                ],
+                "current": page_tag,
+            }
+            extra_title = _("Posts tagged with %(tag)s") % {"tag": page_tag}
+
+        if year:
+            posts = posts.filter(date__year=year)
+            extra_title = _("Posts published in %(year)s") % {"year": year}
+
+        context["posts"] = posts
+        context["current_page_tag"] = page_tag
+        context["year"] = year
+        context["extra_title"] = extra_title
+
+        # Filters
+        context["page_tags"] = self.get_page_tags()
+
+        # if extra_breadcrumbs:
+        context["extra_breadcrumbs"] = extra_breadcrumbs
+
+        return context
+
+    def get_page_tags(self) -> QuerySet:
+        ids = self.posts.specific().values_list("page_tags", flat=True)
+        return PageTag.objects.filter(id__in=ids).order_by("name")
 
 
 class HubPages(NumeriqueBasePage):
@@ -366,7 +416,7 @@ class HubPages(NumeriqueBasePage):
         "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
     )
     dinum_tags = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Dinum Tags"))
-    tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Tags"))
+    page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
     )
@@ -374,25 +424,14 @@ class HubPages(NumeriqueBasePage):
     CHOICES = [
         ("major_areas", _("Major Areas of Actions")),
         ("dinum_tags", _("Dinum Tags")),
-        ("tags", _("Tags")),
+        ("page_tags", _("Page tags")),
         ("target_audiences", _("Target Audiences")),
     ]
     content_source = models.CharField(max_length=20, choices=CHOICES, verbose_name=_("Content Source"))
+    introduction_text = models.TextField(blank=True, verbose_name=_("Introduction text"))
 
     class Meta:
         verbose_name = _("Hub page")
-
-    content_panels = NumeriqueBasePage.content_panels + [
-        FieldPanel("display_actualites"),
-        FieldPanel("display_events"),
-        FieldPanel("display_products"),
-        FieldPanel("display_offers"),
-        FieldPanel("content_source"),
-        FieldPanel("major_areas"),
-        FieldPanel("dinum_tags"),
-        FieldPanel("tags"),
-        FieldPanel("target_audiences"),
-    ]
 
     configuration_panels = [
         MultiFieldPanel(
@@ -404,17 +443,20 @@ class HubPages(NumeriqueBasePage):
                 FieldPanel("content_source"),
                 FieldPanel("major_areas"),
                 FieldPanel("dinum_tags"),
-                FieldPanel("tags"),
+                FieldPanel("page_tags"),
                 FieldPanel("target_audiences"),
             ],
         ),
+    ]
+    promote_panels = NumeriqueBasePage.promote_panels + [
+        FieldPanel("introduction_text"),
     ]
 
     edit_handler = TabbedInterface(
         [
             ObjectList(NumeriqueBasePage.content_panels, heading=_("Content")),
             ObjectList(configuration_panels, heading=_("Configuration")),
-            ObjectList(NumeriqueBasePage.promote_panels, heading=_("Promote")),
+            ObjectList(promote_panels, heading=_("Promote")),
         ]
     )
 
@@ -430,8 +472,8 @@ class HubPages(NumeriqueBasePage):
             return entries.filter(major_area__in=self.major_areas.all())
         elif self.content_source == "dinum_tags":
             return entries.filter(dinum_tags__in=self.dinum_tags.all())
-        elif self.content_source == "tags":
-            return entries.filter(page_tags__in=self.tags.all())
+        elif self.content_source == "page_tags":
+            return entries.filter(page_tags__in=self.page_tags.all())
         elif self.content_source == "target_audiences":
             return entries.filter(target_audiences__in=self.target_audiences.all())
 

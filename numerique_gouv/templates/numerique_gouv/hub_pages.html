@@ -5,7 +5,7 @@
 {% include "content_manager/blocks/head.html" with stream=page.body %}
 
 {% block content %}
-  {% include "content_manager/blocks/heading.html" %}
+  {% include "numerique_gouv/blocks/hub_pages_heading.html" %}
   <div class="fr-container fr-pt-4w">
     {% include "content_manager/blocks/breadcrumbs.html" %}
     {% if not page.header_with_title %}<h1>{{ page.title }}</h1>{% endif %}
@@ -15,15 +15,22 @@
 
   <div class="fr-container">
     <h2 class="fr-h2">{{ _('News') }}</h2>
-    <div class="fr-grid-row fr-grid-row--gutters">
-      {% with entries=page|get_entries:'blog' %}
+    {% with entries=page|get_entries:'blog' %}
+      <div class="fr-grid-row fr-grid-row--gutters">
         {% for subpage in entries  %}
           <div class="fr-col-12 fr-col-md-4">
             {% include "numerique_gouv/blocks/card_vertical.html" with page=subpage %}
           </div>
         {% endfor %}
-      {% endwith %}
-    </div>
+      </div>
+      {% if entries|length > 3 %}
+        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center fr-mt-4w">
+          <div class="fr-col-4">
+            <a href="/actualités/=" class="fr-btn">Voir plus d’actualités</a>
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
   </div>
 
   <div class="fr-container fr-mt-6w">
