@@ -23,13 +23,15 @@
           </div>
         {% endfor %}
       </div>
-      {% if entries|length > 3 %}
-        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center fr-mt-4w">
-          <div class="fr-col-4">
-            <a href="/actualités/=" class="fr-btn">Voir plus d’actualités</a>
-          </div>
+      <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center fr-mt-4w">
+        <div class="fr-col-4" style="text-align: center">
+          {% if entries|length == 3 %}
+            <a href="/actualités/?{{ page.content_source }}={{ page.get_content_source_name }}" class="fr-btn">{{ _("See more news") }}</a>
+          {% else %}
+            <a href="/actualités/" class="fr-btn">{{ _("See all news") }}</a>
+          {% endif %}
         </div>
-      {% endif %}
+      </div>
     {% endwith %}
   </div>
 
@@ -42,17 +44,29 @@
         {% endfor %}
       {% endwith %}
     </div>
+    <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center fr-mt-4w">
+      <div class="fr-col-4" style="text-align: center">
+        <a href="/offre-de-la-dinum/" class="fr-btn">{{ _("See all offers") }}</a>
+      </div>
+    </div>
   </div>
 
   <div class="fr-container fr-my-6w">
     <h2 class="fr-h2">{{ _('Products') }}</h2>
-    <div class="fr-grid-row fr-grid-row--gutters">
-      {% with entries=page|get_entries:'products' %}
+    {% with entries=page|get_entries:'products' %}
+      <div class="fr-grid-row fr-grid-row--gutters">
         {% for subpage in entries  %}
-          {% include "numerique_gouv/blocks/product_card.html" with page=subpage %}
+          <div class="fr-col-12 fr-col-md-4">
+            {% include "numerique_gouv/blocks/product_card.html" with page=subpage %}
+          </div>
         {% endfor %}
-      {% endwith %}
-    </div>
+      </div>
+      <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center fr-mt-4w">
+        <div class="fr-col-4" style="text-align: center">
+          <a href="/produits-à-impact/" class="fr-btn">{{ _("See all services") }}</a>
+        </div>
+      </div>
+    {% endwith %}
   </div>
 
   {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}

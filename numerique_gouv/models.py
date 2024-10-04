@@ -20,61 +20,6 @@ class NumeriquePage(NumeriqueBasePage):
         verbose_name = _("Numerique page")
 
 
-class ProductsIndexPage(NumeriqueBasePage):
-    subpage_types = ["numerique_gouv.ProductsEntryPage"]
-
-    class Meta:
-        verbose_name = _("Products index")
-
-    def get_agents_publics_subpages(self):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(numeriquebasepage__productsentrypage__target_audience__slug="agents_public")
-            .annotate(
-                custom_order=Case(
-                    When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("custom_order", "numeriquebasepage__productsentrypage__position")
-        )
-
-    def get_citizens_subpages(self):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(numeriquebasepage__productsentrypage__target_audience__slug="citoyens")
-            .annotate(
-                custom_order=Case(
-                    When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("custom_order", "numeriquebasepage__productsentrypage__position")
-        )
-
-    def get_companies_subpages(self):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(numeriquebasepage__productsentrypage__target_audience__slug="entreprises")
-            .annotate(
-                custom_order=Case(
-                    When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("custom_order", "numeriquebasepage__productsentrypage__position")
-        )
-
-
 class OffersIndexPage(NumeriqueBasePage):
     subpage_types = ["numerique_gouv.OffersEntryPage"]
 
@@ -297,6 +242,70 @@ class ProductsEntryPage(NumeriqueBasePage):
         verbose_name = _("Product page")
 
 
+class ProductsIndexPage(NumeriqueBasePage):
+    subpage_types = ["numerique_gouv.ProductsEntryPage"]
+
+    class Meta:
+        verbose_name = _("Products index")
+
+    def get_context(self, request, *args, **kwargs):
+        context = super(ProductsIndexPage, self).get_context(request, *args, **kwargs)
+
+        context["agents_publics_subpages"] = self.get_agents_publics_subpages()
+        context["citizens_subpages"] = self.get_citizens_subpages()
+        context["companies_subpages"] = self.get_companies_subpages()
+
+        return context
+
+    def get_agents_publics_subpages(self):
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__productsentrypage__target_audience__slug="agents_public")
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__productsentrypage__position")
+        )
+
+    def get_citizens_subpages(self):
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__productsentrypage__target_audience__slug="citoyens")
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__productsentrypage__position")
+        )
+
+    def get_companies_subpages(self):
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__productsentrypage__target_audience__slug="entreprises")
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__productsentrypage__position")
+        )
+
+
 class NumeriqueBlogEntryPage(BlogEntryPage):
     major_areas = ParentalManyToManyField(
         "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
@@ -412,20 +421,40 @@ class HubPages(NumeriqueBasePage):
     display_products = models.BooleanField(default=True, verbose_name=_("Display products"))
     display_offers = models.BooleanField(default=True, verbose_name=_("Display offers"))
 
-    major_areas = ParentalManyToManyField(
-        "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
+    major_area = models.ForeignKey(
+        "numerique_gouv.MajorArea",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("Major Area of Actions"),
     )
-    dinum_tags = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Dinum Tags"))
-    page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
-    target_audiences = ParentalManyToManyField(
-        "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
+    dinum_tag = models.ForeignKey(
+        "numerique_gouv.DinumTag",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("Dinum Tags"),
+    )
+    page_tag = models.ForeignKey(
+        "numerique_gouv.PageTag",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("Page tags"),
+    )
+    target_audience = models.ForeignKey(
+        "numerique_gouv.TargetAudience",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("Target Audience"),
     )
 
     CHOICES = [
-        ("major_areas", _("Major Areas of Actions")),
-        ("dinum_tags", _("Dinum Tags")),
-        ("page_tags", _("Page tags")),
-        ("target_audiences", _("Target Audiences")),
+        ("major_area", _("Major Areas of Actions")),
+        ("dinum_tag", _("Dinum Tags")),
+        ("page_tag", _("Page tags")),
+        ("target_audience", _("Target Audiences")),
     ]
     content_source = models.CharField(max_length=20, choices=CHOICES, verbose_name=_("Content Source"))
     introduction_text = models.TextField(blank=True, verbose_name=_("Introduction text"))
@@ -441,10 +470,10 @@ class HubPages(NumeriqueBasePage):
                 FieldPanel("display_products"),
                 FieldPanel("display_offers"),
                 FieldPanel("content_source"),
-                FieldPanel("major_areas"),
-                FieldPanel("dinum_tags"),
-                FieldPanel("page_tags"),
-                FieldPanel("target_audiences"),
+                FieldPanel("major_area"),
+                FieldPanel("dinum_tag"),
+                FieldPanel("page_tag"),
+                FieldPanel("target_audience"),
             ],
         ),
     ]
@@ -468,14 +497,24 @@ class HubPages(NumeriqueBasePage):
         elif entry_type == "products":
             entries = ProductsEntryPage.objects.live().specific()
 
-        if self.content_source == "major_areas":
-            return entries.filter(major_area__in=self.major_areas.all())
-        elif self.content_source == "dinum_tags":
-            return entries.filter(dinum_tags__in=self.dinum_tags.all())
-        elif self.content_source == "page_tags":
-            return entries.filter(page_tags__in=self.page_tags.all())
-        elif self.content_source == "target_audiences":
-            return entries.filter(target_audiences__in=self.target_audiences.all())
+        if self.content_source == "major_area":
+            return entries.filter(major_areas=self.major_area).order_by("-id")[:3]
+        elif self.content_source == "dinum_tag":
+            return entries.filter(dinum_tags=self.dinum_tag).order_by("-id")[:3]
+        elif self.content_source == "page_tag":
+            return entries.filter(page_tags=self.page_tag).order_by("-id")[:3]
+        elif self.content_source == "target_audience":
+            return entries.filter(target_audiences=self.target_audience).order_by("-id")[:3]
+
+    def get_content_source_name(self):
+        if self.content_source == "major_area":
+            return self.major_area.name.lower()
+        elif self.content_source == "dinum_tag":
+            return self.dinum_tag.name.lower()
+        elif self.content_source == "page_tag":
+            return self.page_tag.name.lower()
+        elif self.content_source == "target_audience":
+            return self.target_audience.name.lower()
 
 
 class BaseCategory(models.Model):
