@@ -1,0 +1,53 @@
+{% load dsfr_tags wagtailcore_tags wagtailimages_tags numerique_filters %}
+
+<div class="fr-card fr-enlarge-link">
+  <div class="fr-card__body">
+    <div class="fr-card__content">
+      <h3 class="fr-card__title">
+        <a href="{{ page.url }}">{{ page.title }}</a>
+      </h3>
+      <div class="fr-card__desc">
+        {% with page.body|first as first_block %}
+          {{ first_block.value|truncatechars:200 }}
+        {% endwith %}
+      </div>
+      {% if page.major_areas.all or page.dinum_tags.all %}
+        <div class="fr-card__start">
+          <ul class="fr-badges-group">
+            {% for major_areas in page.major_areas.all %}
+              <li>
+                <p class="fr-badge fr-badge--{{ major_areas.color }} fr-my-5v">{{ major_areas.name }}</p>
+              </li>
+            {% endfor %}
+            {% for dinum_tags in page.dinum_tags.all %}
+              <li>
+                <p class="fr-badge fr-badge--{{ dinum_tags.color }} fr-my-5v">{{ dinum_tags.name }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+          {% if page|is_numerique_blog_entry_page %}
+            <p class="fr-card__detail">Publié le {{ page.date |date:'l j F Y' }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  {% if page.header_image %}
+    <div class="fr-card__header">
+      <div class="fr-card__img">
+        <img class="fr-responsive-img"
+             src="{{ page.header_image.file.url }}"
+             alt="">
+      </div>
+      {%  if page.page_tags.all %}
+        <ul class="fr-badges-group">
+          {% for page_tag in page.page_tags.all %}
+            <li>
+              <p class="fr-badge fr-badge--{{ page_tag.color }} fr-my-5v">{{ page_tag.name }}</p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
