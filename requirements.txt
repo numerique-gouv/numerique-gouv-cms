@@ -16,3 +16,4 @@ gitpython
 python-slugify
 unidecode
 icalendar
+boto3
