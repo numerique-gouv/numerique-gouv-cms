@@ -17,3 +17,4 @@ python-slugify
 unidecode
 icalendar
 boto3
+dj-database-url
