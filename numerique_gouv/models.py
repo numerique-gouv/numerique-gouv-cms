@@ -1,7 +1,6 @@
 from django.db import models
 from django.db.models import Case, IntegerField, QuerySet, Value, When
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from dsfr.constants import COLOR_CHOICES_ILLUSTRATION
 from modelcluster.fields import ParentalManyToManyField
@@ -16,6 +15,14 @@ from numerique_gouv.abstract import NumeriqueBasePage
 
 
 class NumeriquePage(NumeriqueBasePage):
+    subpage_types = [
+        "numerique_gouv.NumeriquePage",
+        "numerique_gouv.NumeriqueBlogIndexPage",
+        "numerique_gouv.HubPages",
+        "numerique_gouv.OffersIndexPage",
+        "numerique_gouv.ProductsIndexPage",
+    ]
+
     class Meta:
         verbose_name = _("Numerique page")
 
@@ -85,7 +92,7 @@ class OffersEntryPage(NumeriqueBasePage):
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audience")
     )
-    major_area = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Dinum Tags"))
+    major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Dinum Tags"))
     themes = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Theme"))
     buttons = ButtonsHorizontalListBlock(label=_("Buttons"))
     text_and_cta = TextAndCTAStreamField(blank=True, verbose_name=_("Text and cta"))
@@ -130,7 +137,7 @@ class OffersEntryPage(NumeriqueBasePage):
             [
                 FieldPanel("page_tags"),
                 FieldPanel("target_audiences"),
-                FieldPanel("major_area"),
+                FieldPanel("major_areas"),
                 FieldPanel("themes"),
                 FieldPanel("text_and_cta"),
             ],
@@ -206,6 +213,8 @@ class ProductsEntryPage(NumeriqueBasePage):
         verbose_name=_("Target Audience"),
     )
     page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
+    major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Dinum Tags"))
+
     product_url = models.URLField(blank=True, verbose_name=_("Product URL"))
     the_service = models.TextField(blank=True, verbose_name=_("The service"))
     the_problem = models.TextField(blank=True, verbose_name=_("The problem"))
@@ -229,6 +238,7 @@ class ProductsEntryPage(NumeriqueBasePage):
         FieldPanel("product_url"),
         FieldPanel("the_service"),
         FieldPanel("the_problem"),
+        FieldPanel("major_areas"),
         FieldPanel("page_tags"),
         FieldPanel("image"),
         FieldPanel("image_alt"),
@@ -362,12 +372,11 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
 
     @property
     def posts(self):
-        # Get list of blog pages that are descendants of this page
         posts = NumeriqueBlogEntryPage.objects.descendant_of(self).live()
-        posts = posts.select_related("owner").prefetch_related("page_tags", "blog_categories", "date__year")
+        posts = posts.select_related("owner").prefetch_related("major_areas", "page_tags", "date__year")
         return posts
 
-    def get_context(self, request, page_tag=None, category=None, author=None, source=None, year=None, *args, **kwargs):
+    def get_context(self, request, page_tag=None, major_area=None, year=None, *args, **kwargs):
         context = super(BlogIndexPage, self).get_context(request, *args, **kwargs)
         posts = self.posts
 
@@ -376,38 +385,34 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
         if page_tag:
             page_tag = get_object_or_404(PageTag, slug=page_tag)
             posts = posts.filter(page_tags=page_tag)
-            extra_breadcrumbs = {
-                "links": [
-                    {"url": self.get_url(), "title": self.title},
-                    {
-                        "url": reverse("blog:tags_list", kwargs={"blog_slug": self.slug}),
-                        "title": _("Page tags"),
-                    },
-                ],
-                "current": page_tag,
-            }
-            extra_title = _("Posts tagged with %(tag)s") % {"tag": page_tag}
+
+        if major_area is None:
+            major_area = request.GET.get("major_area")
+        if major_area:
+            major_area = get_object_or_404(MajorArea, slug=major_area)
+            posts = posts.filter(major_areas=major_area)
 
         if year:
             posts = posts.filter(date__year=year)
-            extra_title = _("Posts published in %(year)s") % {"year": year}
 
         context["posts"] = posts
         context["current_page_tag"] = page_tag
+        context["current_major_area"] = major_area
         context["year"] = year
-        context["extra_title"] = extra_title
 
         # Filters
         context["page_tags"] = self.get_page_tags()
-
-        # if extra_breadcrumbs:
-        context["extra_breadcrumbs"] = extra_breadcrumbs
+        context["major_areas"] = self.get_major_areas()
 
         return context
 
     def get_page_tags(self) -> QuerySet:
         ids = self.posts.specific().values_list("page_tags", flat=True)
         return PageTag.objects.filter(id__in=ids).order_by("name")
+
+    def get_major_areas(self) -> QuerySet:
+        ids = self.posts.specific().values_list("major_areas", flat=True)
+        return MajorArea.objects.filter(id__in=ids).order_by("name")
 
 
 class HubPages(NumeriqueBasePage):

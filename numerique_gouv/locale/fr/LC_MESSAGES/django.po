@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-04 11:42+0200\n"
-"PO-Revision-Date: 2024-10-04 11:46+0200\n"
+"POT-Creation-Date: 2024-10-06 12:59+0200\n"
+"PO-Revision-Date: 2024-10-06 13:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -222,7 +222,7 @@ msgid "Center content"
 msgstr "Centrer le contenu"
 
 #: numerique_gouv/blocks.py:142 numerique_gouv/blocks.py:209
-#: numerique_gouv/models.py:185 numerique_gouv/models.py:476
+#: numerique_gouv/models.py:185 numerique_gouv/models.py:512
 msgid "Content"
 msgstr "Contenu de la colonne"
 
@@ -311,20 +311,21 @@ msgstr "Index offres de la DINUM"
 msgid "Type"
 msgstr "Type d’offre"
 
-#: numerique_gouv/models.py:80 numerique_gouv/models.py:312
-#: numerique_gouv/models.py:382 numerique_gouv/models.py:435
-#: numerique_gouv/models.py:446
+#: numerique_gouv/models.py:80 numerique_gouv/models.py:317
+#: numerique_gouv/models.py:387 numerique_gouv/models.py:469
+#: numerique_gouv/models.py:482
 msgid "Page tags"
 msgstr "Tags"
 
 #: numerique_gouv/models.py:83 numerique_gouv/models.py:86
-#: numerique_gouv/models.py:206 numerique_gouv/models.py:440
-#: numerique_gouv/models.py:557
+#: numerique_gouv/models.py:206 numerique_gouv/models.py:476
+#: numerique_gouv/models.py:592
 msgid "Target Audience"
 msgstr "Public cible"
 
-#: numerique_gouv/models.py:88 numerique_gouv/models.py:311
-#: numerique_gouv/models.py:430 numerique_gouv/models.py:445
+#: numerique_gouv/models.py:88 numerique_gouv/models.py:209
+#: numerique_gouv/models.py:316 numerique_gouv/models.py:462
+#: numerique_gouv/models.py:481
 msgid "Dinum Tags"
 msgstr "DINUM Tags"
 
@@ -345,11 +346,11 @@ msgstr "Texte et appel à action"
 msgid "Description"
 msgstr "Description"
 
-#: numerique_gouv/models.py:101 numerique_gouv/models.py:218
+#: numerique_gouv/models.py:101 numerique_gouv/models.py:220
 msgid "Card image"
 msgstr "Image de la carte principale"
 
-#: numerique_gouv/models.py:103 numerique_gouv/models.py:220
+#: numerique_gouv/models.py:103 numerique_gouv/models.py:222
 msgid "Image alt"
 msgstr "Alt de l’image"
 
@@ -447,7 +448,7 @@ msgstr "Organisation"
 msgid "Card"
 msgstr "Carte"
 
-#: numerique_gouv/models.py:189 numerique_gouv/models.py:478
+#: numerique_gouv/models.py:189 numerique_gouv/models.py:514
 msgid "Promote"
 msgstr "Promotion"
 
@@ -460,121 +461,122 @@ msgstr "Page d’offre"
 msgid "Categories"
 msgstr "Catégories"
 
-#: numerique_gouv/models.py:209
+#: numerique_gouv/models.py:211
 msgid "Product URL"
 msgstr "Url du produit"
 
-#: numerique_gouv/models.py:210
+#: numerique_gouv/models.py:212
 msgid "The service"
 msgstr "Le service"
 
-#: numerique_gouv/models.py:211
+#: numerique_gouv/models.py:213
 msgid "The problem"
 msgstr "Le problème"
 
-#: numerique_gouv/models.py:242
+#: numerique_gouv/models.py:245
 msgid "Product page"
 msgstr "Page produit"
 
-#: numerique_gouv/models.py:248
+#: numerique_gouv/models.py:252
 msgid "Products index"
 msgstr "Index produits à impact"
 
-#: numerique_gouv/models.py:309 numerique_gouv/models.py:444
+#: numerique_gouv/models.py:314 numerique_gouv/models.py:404
+#: numerique_gouv/models.py:480
 msgid "Major Areas of Actions"
 msgstr "Grands domaines d’action"
 
-#: numerique_gouv/models.py:314 numerique_gouv/models.py:447
+#: numerique_gouv/models.py:319 numerique_gouv/models.py:483
 msgid "Target Audiences"
 msgstr "Publics cibles"
 
-#: numerique_gouv/models.py:333
+#: numerique_gouv/models.py:338
 msgid "Scheduled publishing"
 msgstr "Publication programmée"
 
-#: numerique_gouv/models.py:344
+#: numerique_gouv/models.py:349
 msgid "Tags and Categories"
 msgstr "Tags et Catégories"
 
-#: numerique_gouv/models.py:350
+#: numerique_gouv/models.py:355
 msgid "Numerique blog entry page"
 msgstr "Page actualité Numérique.gouv.fr"
 
-#: numerique_gouv/models.py:359
+#: numerique_gouv/models.py:364
 msgid "Numerique blog index page"
 msgstr "Page index des actualités Numérique.gouv.fr"
 
-#: numerique_gouv/models.py:387
+#: numerique_gouv/models.py:392 numerique_gouv/models.py:409
 #, python-format
 msgid "Posts tagged with %(tag)s"
 msgstr "Actualités taguées avec %(tag)s"
 
-#: numerique_gouv/models.py:391
+#: numerique_gouv/models.py:413
 #, python-format
 msgid "Posts published in %(year)s"
 msgstr "Actualités publiées en  %(year)s"
 
-#: numerique_gouv/models.py:417
+#: numerique_gouv/models.py:445
 msgid "Display actualites"
 msgstr "Afficher les actualités"
 
-#: numerique_gouv/models.py:418
+#: numerique_gouv/models.py:446
 msgid "Display events"
 msgstr "Afficher les évènements"
 
-#: numerique_gouv/models.py:419
+#: numerique_gouv/models.py:447
 msgid "Display products"
 msgstr "Afficher les produits"
 
-#: numerique_gouv/models.py:420
+#: numerique_gouv/models.py:448
 msgid "Display offers"
 msgstr "Afficher les offres"
 
-#: numerique_gouv/models.py:425
+#: numerique_gouv/models.py:455
 msgid "Major Area of Actions"
 msgstr "Grands domaines d’action"
 
-#: numerique_gouv/models.py:449
+#: numerique_gouv/models.py:485
 msgid "Content Source"
 msgstr "Source du contenu"
 
-#: numerique_gouv/models.py:450
+#: numerique_gouv/models.py:486
 msgid "Introduction text"
 msgstr "Index produits à impact"
 
-#: numerique_gouv/models.py:453
+#: numerique_gouv/models.py:489
 msgid "Hub page"
 msgstr "Page carrefour"
 
-#: numerique_gouv/models.py:477
+#: numerique_gouv/models.py:513
 msgid "Configuration"
 msgstr "Configuration"
 
-#: numerique_gouv/models.py:512
+#: numerique_gouv/models.py:547
 msgid "Category name"
 msgstr "Nom"
 
-#: numerique_gouv/models.py:514
+#: numerique_gouv/models.py:549
 msgid "Color"
 msgstr "Couleur"
 
-#: numerique_gouv/models.py:532
+#: numerique_gouv/models.py:567
 msgid "Page tag"
 msgstr "Tag"
 
-#: numerique_gouv/models.py:539
+#: numerique_gouv/models.py:574
 msgid "Offer Target Audience ( a supprimer )"
 msgstr "Offres - Publics cible ( a supprimer )"
 
-#: numerique_gouv/models.py:545
+#: numerique_gouv/models.py:580
 msgid "Major Area of Action"
 msgstr "Grands domaines d’action"
 
-#: numerique_gouv/models.py:551
+#: numerique_gouv/models.py:586
 msgid "Offer Type"
 msgstr "Offres - Type"
 
-#: numerique_gouv/models.py:563
+#: numerique_gouv/models.py:598
 msgid "Dinum Tag"
 msgstr "Tags DINUM"
 
@@ -596,12 +598,12 @@ msgid "Filters"
 msgstr "Filtres"
 
 #: numerique_gouv/templates/numerique_gouv/blog_index_page.html:39
-msgid "Filter by category"
-msgstr "Filtrer par catégorie"
+msgid "Filter by major area"
+msgstr "Filtrer par domaine d’action"
 
-#: numerique_gouv/templates/numerique_gouv/blog_index_page.html:56
+#: numerique_gouv/templates/numerique_gouv/blog_index_page.html:55
 msgid "Filter by page tag"
-msgstr "Filtrer par tag"
+msgstr "Filtrer par catégorie"
 
 #: numerique_gouv/templates/numerique_gouv/hub_pages.html:17
 msgid "News"
