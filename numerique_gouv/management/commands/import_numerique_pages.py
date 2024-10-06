@@ -12,9 +12,10 @@ from wagtail.images.models import Image
 from wagtail.models import Site
 from wagtail.rich_text import RichText
 
-from blog.models import BlogEntryPage, BlogIndexPage, Category
+from blog.models import Category
 from content_manager.models import ContentPage
 from content_manager.utils import import_image
+from numerique_gouv.models import NumeriqueBlogEntryPage, NumeriqueBlogIndexPage, NumeriquePage
 
 
 def update_documents_links(text):
@@ -73,7 +74,6 @@ def import_content_images(text):
         file_name = image_link[0]
         file_name = file_name.replace("%20", " ")
         file_name = file_name.replace("%C3%A9", "é")
-        # file_name = file_name.replace("%25", "%")
         extension = image_link[1]
         path = "numerique_gouv/numerique_files/_uploads/" + file_name
         parts = path.split("/")
@@ -90,7 +90,6 @@ def import_content_images(text):
         if image:
             old_path = "/uploads/" + file_name
 
-            # new_link = rendition.url
             new_link = f"/medias/images/{image.title}.original.{extension}"
             text = re.sub(old_path, new_link, text)
 
@@ -107,12 +106,12 @@ class Command(BaseCommand):
             git_url = "https://github.com/numerique-gouv/numerique.gouv.fr"
             Repo.clone_from(git_url, path_to_clone)
 
-        # categories = ["publications", "communiques", "actualites"]
-        categories = ["communiques", "actualites"]
+        categories = ["publications", "communiques", "actualites"]
+        # categories = ["communiques", "actualites"]
         for category in categories:
             # Get a list of all files in the 'numerique_files' directory
             files = os.listdir("numerique_gouv/numerique_files/_" + category)
-            files = files[-20:]
+            # files = files[-20:]
             for file_name in files:
                 file_path = os.path.join("numerique_gouv/numerique_files/_" + category, file_name)
 
@@ -208,37 +207,46 @@ class Command(BaseCommand):
         home_page = Site.objects.filter(is_default_site=True).first().root_page
 
         if category == "actualites" or category == "communiques":
-            category_page = BlogIndexPage.objects.filter(slug=category).first()
+            category_page = NumeriqueBlogIndexPage.objects.filter(slug=category).first()
+            if category == "actualites":
+                title = "Actualités"
+            else:
+                title = "Communiqués"
             if not category_page:
                 category_page = home_page.add_child(
-                    instance=BlogIndexPage(title=category, body=[], slug=category, show_in_menus=True)
+                    instance=NumeriqueBlogIndexPage(
+                        title=category.capitalize(), body=[], slug=category, show_in_menus=True
+                    )
                 )
 
-            new_page = BlogEntryPage.objects.filter(slug=slug).first()
+            new_page = NumeriqueBlogEntryPage.objects.filter(slug=slug).first()
             if not new_page:
                 new_page = category_page.add_child(
-                    instance=BlogEntryPage(title=title, body=body, slug=slug, show_in_menus=False, date=created_at)
+                    instance=NumeriqueBlogEntryPage(
+                        title=title, body=body, slug=slug, show_in_menus=False, date=created_at
+                    )
                 )
 
             import_page_categories(new_page, page_categories)
 
         else:
             # create category page if not exist
-            category_page = ContentPage.objects.filter(slug=category).first()
+            category_page = NumeriquePage.objects.filter(slug=category).first()
             if not category_page:
                 category_page = home_page.add_child(
-                    instance=ContentPage(title=category, body=[], slug=category, show_in_menus=True)
+                    instance=NumeriquePage(title=category.capitalize(), body=[], slug=category, show_in_menus=True)
                 )
 
-            new_page = ContentPage.objects.filter(slug=slug).first()
+            new_page = NumeriquePage.objects.filter(slug=slug).first()
             if not new_page:
                 new_page = category_page.add_child(
-                    instance=ContentPage(
+                    instance=NumeriquePage(
                         title=title, body=body, slug=slug, show_in_menus=False, last_published_at=created_at
                     )
                 )
 
-        import_tags(new_page, tags)
+        if category == "actualites":
+            import_tags(new_page, tags)
 
         self.stdout.write(self.style.SUCCESS(f"Page {slug} created with id {new_page.id}"))
         return new_page
