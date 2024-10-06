@@ -16,6 +16,14 @@ from numerique_gouv.abstract import NumeriqueBasePage
 
 
 class NumeriquePage(NumeriqueBasePage):
+    subpage_types = [
+        "numerique_gouv.NumeriquePage",
+        "numerique_gouv.NumeriqueBlogIndexPage",
+        "numerique_gouv.HubPages",
+        "numerique_gouv.OffersIndexPage",
+        "numerique_gouv.ProductsIndexPage",
+    ]
+
     class Meta:
         verbose_name = _("Numerique page")
 
