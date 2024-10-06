@@ -56,13 +56,14 @@
       </div>
       <p>
         Publié le <a href="{% pageurl page.get_parent %}{% toggle_url_filter year=page.date.year %}">{{ page.date |date:'l j F Y' }}</a>
-        {% if categories %}
-          |
-          {% for category in categories %}
-            <a href="{% pageurl page.get_parent %}{% toggle_url_filter category=category %}">{{ category.name }}</a>
-            {% if not forloop.last %},{% endif %}
-          {% endfor %}
-        {% endif %}
+{#        N'affiche pas les categorie pour numerique#}
+{#        {% if categories %}#}
+{#          |#}
+{#          {% for category in categories %}#}
+{#            <a href="{% pageurl page.get_parent %}{% toggle_url_filter category=category %}">{{ category.name }}</a>#}
+{#            {% if not forloop.last %},{% endif %}#}
+{#          {% endfor %}#}
+{#        {% endif %}#}
       </p>
     </div>
 

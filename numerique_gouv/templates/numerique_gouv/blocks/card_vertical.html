@@ -11,7 +11,7 @@
           {{ first_block.value|truncatechars:200 }}
         {% endwith %}
       </div>
-      {% if page.major_areas.all or page.dinum_tags.all %}
+      {% if page.major_areas.all or page.dinum_tags.all or page|is_numerique_blog_entry_page %}
         <div class="fr-card__start">
           <ul class="fr-badges-group">
             {% for major_areas in page.major_areas.all %}
