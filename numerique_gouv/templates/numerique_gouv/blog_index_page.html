@@ -33,27 +33,26 @@
                       aria-controls="fr-sidemenu-wrapper-{{ page.slug }}"
                       aria-expanded="false">{% translate "Filters" %}</button>
               <div class="fr-collapse" id="fr-sidemenu-wrapper-{{ page.slug }}">
-                <div class="fr-sidemenu__title" id="fr-sidemenu-title">{% translate "Filters" %}</div>
-                {% if categories and page.filter_by_category %}
+                <h2 class="fr-sidemenu__title fr-h6" id="fr-sidemenu-title">{% translate "Filters" %}</h2>
+                {% if major_areas %}
                   <div class="fr-my-3w">
-                    <h2 class="fr-h6">{% translate "Filter by category" %}</h2>
-                    <ul class="fr-tags-group fr-mt-4w">
-                      {% for category in categories %}
+                    <h3 class="fr-text--lg">{% translate "Filter by major area" %}</h3>
+                    <ul class="fr-tags-group fr-mt-2w">
+                      {% for major_area in major_areas %}
                         <li>
                           <a class="fr-tag"
-                             href="{% pageurl page %}{% toggle_url_filter category=category %}"
-                             {% if category.slug == current_category.slug %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
-                            {{ category.name }}
+                             href="{% pageurl page %}{% toggle_url_filter major_area=major_area %}"
+                             {% if major_area.id == current_major_area.id %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
+                            {{ major_area }}
                           </a>
                         </li>
                       {% endfor %}
                     </ul>
                   </div>
                 {% endif %}
-
                 {% if page_tags %}
                   <div class="fr-my-3w">
-                    <h2 class="fr-h6">{% translate "Filter by page tag" %}</h2>
+                    <h3 class="fr-text--lg">{% translate "Filter by page tag" %}</h3>
                     <ul class="fr-tags-group fr-mt-2w">
                       {% for page_tag in page_tags %}
                         <li>

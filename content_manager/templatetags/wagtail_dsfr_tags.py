@@ -65,7 +65,14 @@ def toggle_url_filter(context, *_, **kwargs):
     else:
         url_params = context["request"].GET.copy()
 
-    filters = [("author", "id"), ("category", "slug"), ("source", "slug"), ("page_tag", "slug"), ("year", "")]
+    filters = [
+        ("author", "id"),
+        ("category", "slug"),
+        ("source", "slug"),
+        ("year", ""),
+        ("page_tag", "slug"),
+        ("major_area", "slug"),
+    ]
 
     for f in filters:
         param = f[0]
