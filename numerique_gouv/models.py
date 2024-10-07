@@ -395,7 +395,7 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
         if year:
             posts = posts.filter(date__year=year)
 
-        context["posts"] = posts
+        context["posts"] = posts.order_by("-date")
         context["current_page_tag"] = page_tag
         context["current_major_area"] = major_area
         context["year"] = year
