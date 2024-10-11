@@ -205,12 +205,8 @@ class OffersEntryPage(NumeriqueBasePage):
 
 
 class ProductsEntryPage(NumeriqueBasePage):
-    target_audience = models.ForeignKey(
-        "numerique_gouv.TargetAudience",
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        verbose_name=_("Target Audience"),
+    target_audiences = ParentalManyToManyField(
+        "numerique_gouv.TargetAudience", blank=True, null=True, verbose_name=_("Target Audiences")
     )
     page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
     major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Dinum Tags"))
@@ -233,7 +229,7 @@ class ProductsEntryPage(NumeriqueBasePage):
     subpage_types = []
 
     content_panels = NumeriqueBasePage.content_panels + [
-        FieldPanel("target_audience"),
+        FieldPanel("target_audiences"),
         FieldPanel("position"),
         FieldPanel("product_url"),
         FieldPanel("the_service"),
@@ -463,6 +459,15 @@ class HubPages(NumeriqueBasePage):
     ]
     content_source = models.CharField(max_length=20, choices=CHOICES, verbose_name=_("Content Source"))
     introduction_text = models.TextField(blank=True, verbose_name=_("Introduction text"))
+
+    def get_context(self, request, *args, **kwargs):
+        context = super(HubPages, self).get_context(request, *args, **kwargs)
+
+        context["news"] = self.get_entries("blog")
+        context["offers"] = self.get_entries("offers")
+        context["products"] = self.get_entries("products")
+
+        return context
 
     class Meta:
         verbose_name = _("Hub page")
