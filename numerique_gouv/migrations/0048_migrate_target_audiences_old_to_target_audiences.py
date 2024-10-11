@@ -37,6 +37,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_target_audience_if_not_exists),
-        migrations.RunPython(migrate_target_audiences_old_to_target_audiences),
+        # migrations.RunPython(create_target_audience_if_not_exists),
+        # migrations.RunPython(migrate_target_audiences_old_to_target_audiences),
     ]
