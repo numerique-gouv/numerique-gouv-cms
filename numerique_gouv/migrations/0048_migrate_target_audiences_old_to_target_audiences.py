@@ -2,21 +2,17 @@
 from django.db import migrations
 
 
-# def create_target_audience_if_not_exists(apps, schema_editor):
-#     OfferTargetAudience = apps.get_model("numerique_gouv", "OfferTargetAudience")
-#     TargetAudience = apps.get_model("numerique_gouv", "TargetAudience")
-#
-#     for offer_target_audience in OfferTargetAudience.objects.all():
-#         try:
-#             TargetAudience.objects.get_or_create(
-#                 slug=offer_target_audience.slug,
-#                 defaults={
-#                     "name": offer_target_audience.name,
-#                     "color": offer_target_audience.color,
-#                 },
-#             )
-#         except TargetAudience.DoesNotExist:
-#             pass
+def create_target_audience_if_not_exists(apps, schema_editor):
+    OfferTargetAudience = apps.get_model("numerique_gouv", "OfferTargetAudience")
+    TargetAudience = apps.get_model("numerique_gouv", "TargetAudience")
+
+    for offer_target_audience in OfferTargetAudience.objects.all():
+        if not TargetAudience.objects.filter(slug=offer_target_audience.slug).exists():
+            TargetAudience.objects.create(
+                name=offer_target_audience.name,
+                slug=offer_target_audience.slug,
+                color=offer_target_audience.color,
+            )
 
 
 def migrate_target_audiences_old_to_target_audiences(apps, schema_editor):
@@ -39,6 +35,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # migrations.RunPython(create_target_audience_if_not_exists),
+        migrations.RunPython(create_target_audience_if_not_exists),
         migrations.RunPython(migrate_target_audiences_old_to_target_audiences),
     ]
