@@ -17,10 +17,5 @@ def replace(value, args=",|."):
 
 
 @register.filter
-def get_entries(value, key):
-    return value.get_entries(key)
-
-
-@register.filter
 def is_numerique_blog_entry_page(value):
     return isinstance(value, NumeriqueBlogEntryPage)
