@@ -7,13 +7,12 @@ def create_target_audience_if_not_exists(apps, schema_editor):
     TargetAudience = apps.get_model("numerique_gouv", "TargetAudience")
 
     for offer_target_audience in OfferTargetAudience.objects.all():
-        TargetAudience.objects.get_or_create(
-            slug=offer_target_audience.slug,
-            defaults={
-                "name": offer_target_audience.name,
-                "color": offer_target_audience.color,
-            },
-        )
+        if not TargetAudience.objects.filter(slug=offer_target_audience.slug).exists():
+            TargetAudience.objects.create(
+                name=offer_target_audience.name,
+                slug=offer_target_audience.slug,
+                color=offer_target_audience.color,
+            )
 
 
 def migrate_target_audiences_old_to_target_audiences(apps, schema_editor):
@@ -24,6 +23,8 @@ def migrate_target_audiences_old_to_target_audiences(apps, schema_editor):
         for old_audience in offer_page.target_audiences_old.all():
             try:
                 new_audience = TargetAudience.objects.get(slug=old_audience.slug)
+                if offer_page.target_audiences.filter(slug=new_audience.slug).exists():
+                    continue
                 offer_page.target_audiences.add(new_audience)
             except TargetAudience.DoesNotExist:
                 pass
@@ -36,6 +37,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_target_audience_if_not_exists),
-        migrations.RunPython(migrate_target_audiences_old_to_target_audiences),
+        # migrations.RunPython(create_target_audience_if_not_exists),
+        # migrations.RunPython(migrate_target_audiences_old_to_target_audiences),
     ]
