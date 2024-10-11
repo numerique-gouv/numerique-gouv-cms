@@ -23,6 +23,8 @@ def migrate_target_audiences_old_to_target_audiences(apps, schema_editor):
         for old_audience in offer_page.target_audiences_old.all():
             try:
                 new_audience = TargetAudience.objects.get(slug=old_audience.slug)
+                if offer_page.target_audiences.filter(slug=new_audience.slug).exists():
+                    continue
                 offer_page.target_audiences.add(new_audience)
             except TargetAudience.DoesNotExist:
                 pass
