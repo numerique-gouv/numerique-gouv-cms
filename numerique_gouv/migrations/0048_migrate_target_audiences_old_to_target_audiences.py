@@ -7,7 +7,7 @@ def create_target_audience_if_not_exists(apps, schema_editor):
     TargetAudience = apps.get_model("numerique_gouv", "TargetAudience")
 
     for offer_target_audience in OfferTargetAudience.objects.all():
-        TargetAudience.objects.get_or_create(
+        TargetAudience.objects.update_or_create(
             slug=offer_target_audience.slug,
             defaults={
                 "name": offer_target_audience.name,
