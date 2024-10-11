@@ -1,10 +1,12 @@
 from django.utils.translation import gettext_lazy as _
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
 
 from content_manager.blocks import (
     AdjustableColumnBlock,
     BackgroundColorChoiceBlock,
+    BlogRecentEntriesBlock,
     ColumnBlock,
     FullWidthBackgroundBlock,
     FullWidthBlock,
@@ -12,6 +14,7 @@ from content_manager.blocks import (
     ItemGridBlock,
     MultiColumnsBlock,
     MultiColumnsWithTitleBlock,
+    RecentEntriesStructValue,
     VerticalCardBlock,
 )
 from content_manager.constants import HEADING_CHOICES
@@ -209,6 +212,54 @@ class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
     content = CustomFullWidthBlock(label=_("Content"))
 
 
+class CustomRecentEntriesStructValue(RecentEntriesStructValue):
+    def posts(self):
+        index_page = self.get("index_page")
+
+        if not index_page:
+            index_page = self.get("blog")
+
+        posts = index_page.posts
+
+        page_tag_filter = self.get("page_tag_filter")
+        if page_tag_filter:
+            posts = posts.filter(page_tags=page_tag_filter)
+
+        author_filter = self.get("author_filter")
+        if author_filter:
+            posts = posts.filter(authors=author_filter)
+
+        source_filter = self.get("source_filter")
+        if source_filter:
+            posts = posts.filter(authors__organization=source_filter)
+
+        entries_count = self.get("entries_count")
+        return posts.order_by("-date")[:entries_count]
+
+    def current_filters(self) -> dict:
+        filters = super().current_filters()
+
+        page_tag_filter = self.get("page_tag_filter")
+        if page_tag_filter:
+            filters["tag"] = page_tag_filter
+
+        return filters
+
+
+class CustomBlogRecentEntriesBlock(BlogRecentEntriesBlock):
+    blog = blocks.PageChooserBlock(label=_("Blog"), page_type="numerique_gouv.NumeriqueBlogIndexPage")
+    entries_count = blocks.IntegerBlock(
+        label=_("Number of entries"), required=False, min_value=1, max_value=12, default=3
+    )
+    category_filter = SnippetChooserBlock("blog.Category", label=_("Filter by category"), required=False)
+    page_tag_filter = SnippetChooserBlock("numerique_gouv.PageTag", label=_("Filter by tag"), required=False)
+
+    class Meta:
+        icon = "placeholder"
+        template = ("numerique_gouv/blocks/custom_blog_recent_entries.html",)
+        value_class = CustomRecentEntriesStructValue
+
+
 STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("three_cards", ThreeCardsBlock(label=_("Headline cards"), group=_("Numerique components"))),
     ("multicolumns", CustomMultiColumnsWithTitleBlock(label=_("Multi columns"), group=_("Page structure"))),
@@ -219,6 +270,10 @@ STREAMFIELD_NUMERIQUE_BLOCKS = [
     (
         "fullwidthbackground",
         CustomFullWidthBackgroundBlock(label=_("Full width background"), group=_("Page structure")),
+    ),
+    (
+        "blog_recent_entries",
+        CustomBlogRecentEntriesBlock(label=_("Blog recent entries"), group=_("Website structure")),
     ),
     ("spacer", SpacerBlock(label=_("Spacer"), group=_("Page structure"))),
     ("stylized_column", StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))),
