@@ -2,7 +2,7 @@
 {% if value.title %}
   <{{ value.heading_tag | default:"h3" }}
     {% if value.heading_size %}
-          class="fr-{{ value.heading_size }}"
+          class="fr-{{ value.heading_size }} fr-m-0"
     {% endif %}
   {% if value.title_color_class %}style="color:var(--background-flat-{{ value.title_color_class }});"{% endif %}>
   {{ value.title }}
