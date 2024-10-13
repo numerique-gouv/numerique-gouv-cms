@@ -268,7 +268,7 @@ class ProductsIndexPage(NumeriqueBasePage):
             self.get_children()
             .live()
             .specific()
-            .filter(numeriquebasepage__productsentrypage__target_audience__slug="agents_public")
+            .filter(numeriquebasepage__productsentrypage__target_audiences__slug="agents_public")
             .annotate(
                 custom_order=Case(
                     When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
@@ -284,7 +284,7 @@ class ProductsIndexPage(NumeriqueBasePage):
             self.get_children()
             .live()
             .specific()
-            .filter(numeriquebasepage__productsentrypage__target_audience__slug="citoyens")
+            .filter(numeriquebasepage__productsentrypage__target_audiences__slug="citoyens")
             .annotate(
                 custom_order=Case(
                     When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
@@ -300,7 +300,7 @@ class ProductsIndexPage(NumeriqueBasePage):
             self.get_children()
             .live()
             .specific()
-            .filter(numeriquebasepage__productsentrypage__target_audience__slug="entreprises")
+            .filter(numeriquebasepage__productsentrypage__target_audiences__slug="entreprises")
             .annotate(
                 custom_order=Case(
                     When(numeriquebasepage__productsentrypage__position=0, then=Value(1)),
