@@ -28,11 +28,11 @@
       <link href="{% sass_src 'css/style.sass' %}"
             rel="stylesheet"
             type="text/css" />
-      <link href="{% static 'css/numerique_gouv.css' %}"
-            rel="stylesheet"
-            type="text/css" />
 
       {% block extra_css %}
+        <link href="{% sass_src 'css/numerique_gouv.sass' %}"
+              rel="stylesheet"
+              type="text/css" />
       {% endblock extra_css %}
 
       {% block cookie_banner %}
