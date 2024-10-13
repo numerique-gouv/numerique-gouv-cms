@@ -174,8 +174,7 @@ class CustomMultiColumnsWithTitleBlock(MultiColumnsWithTitleBlock):
 
 
 class SpacerBlock(blocks.StructBlock):
-    marginTop = blocks.DecimalBlock(required=False, label=_("Margin top"), help_text=_("In rem"))
-    marginBottom = blocks.DecimalBlock(required=False, label=_("Margin bottom"), help_text=_("In rem"))
+    marginTop = blocks.DecimalBlock(required=False, label=_("Margin"), help_text=_("In rem"))
 
     class Meta:
         template = "numerique_gouv/blocks/spacer.html"
