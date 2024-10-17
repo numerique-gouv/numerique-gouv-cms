@@ -37,32 +37,35 @@
                 {{ page.event_date_start.date }} – {{ page.event_date_end.date }}
               {% endif %}
             </strong>
-            {% if categories %}
-              |
-              {% for category in categories %}
-                <a href="{% pageurl page.get_parent %}?category={{ category.slug }}">{{ category.name }}</a>
-                {% if not forloop.last %},{% endif %}
-              {% endfor %}
-            {% endif %}
+
           </p>
 
-          <ul>
+          <ul class="list-unstyled">
+            {% if categories %}
+              <li>
+                <strong>{% translate "Catégorie :" %}</strong>
+                {% for category in categories %}
+                  <a href="{% pageurl page.get_parent %}?category={{ category.slug }}">{{ category.name }}</a>
+                  {% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </li>
+            {% endif %}
             <li>
               <strong>{% translate "Thématiques :" %}</strong>
-              <ul class="fr-tags-group" style="display: inline-grid;}">
+              <ul class="fr-tags-group" style="display: ruby;}">
                 {% for page_tag in page.page_tags.all %}
                   <li>
-                    <p class="fr-badge fr-badge--{{ page_tag.color }} fr-m-1w">{{ page_tag.name }}</p>
+                    <p class="fr-badge fr-badge--{{ page_tag.color }} fr-mx1w">{{ page_tag.name }}</p>
                   </li>
                 {% endfor %}
               </ul>
             </li>
             <li>
               <strong>{% translate "Catégories :" %}</strong>
-              <ul class="fr-tags-group" style="display: inline-grid;}">
+              <ul class="fr-tags-group" style="display: ruby;}">
                 {% for dinum_tag in page.dinum_tags.all %}
                   <li>
-                    <p class="fr-badge fr-badge--{{ dinum_tag.color }} fr-m-1w">{{ dinum_tag.name }}</p>
+                    <p class="fr-badge fr-badge--{{ dinum_tag.color }} fr-mx-1w">{{ dinum_tag.name }}</p>
                   </li>
                 {% endfor %}
               </ul>
@@ -104,16 +107,6 @@
                 </li>
               {% endif %}
             </ul>
-
-            <div class="fr-card__start">
-              <ul class="fr-tags-group">
-                {% for tag in page.page_tags.all|dictsort:"slug" %}
-                  <a class="fr-tag"
-                     target="_self"
-                     href="{% pageurl page.get_parent %}?tag={{ tag.slug }}">{{ tag }}</a>
-                {% endfor %}
-              </ul>
-            </div>
           </div>
         </div>
 
