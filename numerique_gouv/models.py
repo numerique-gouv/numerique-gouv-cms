@@ -11,6 +11,7 @@ from wagtail.snippets.models import register_snippet
 
 from blog.models import BlogEntryPage, BlogIndexPage
 from content_manager.blocks import ButtonsHorizontalListBlock, TextAndCTA
+from events.models import EventEntryPage, EventsIndexPage
 from numerique_gouv.abstract import NumeriqueBasePage
 
 
@@ -21,6 +22,7 @@ class NumeriquePage(NumeriqueBasePage):
         "numerique_gouv.HubPages",
         "numerique_gouv.OffersIndexPage",
         "numerique_gouv.ProductsIndexPage",
+        "numerique_gouv.NumeriqueEventsIndexPage",
     ]
 
     class Meta:
@@ -525,6 +527,74 @@ class HubPages(NumeriqueBasePage):
             return self.page_tag.name.lower()
         elif self.content_source == "target_audience":
             return self.target_audience.name.lower()
+
+
+class NumeriqueEventsIndexPage(EventsIndexPage):
+    subpage_types = ["numerique_gouv.NumeriqueEventPage"]
+    template = "events/events_index_page.html"
+
+    class Meta:
+        verbose_name = _("Numerique events index page")
+
+
+class NumeriqueEventPage(EventEntryPage):
+    major_areas = ParentalManyToManyField(
+        "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
+    )
+    dinum_tags = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Dinum Tags"))
+    page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
+    target_audiences = ParentalManyToManyField(
+        "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
+    )
+    parent_page_types = ["numerique_gouv.NumeriqueEventsIndexPage"]
+    subpage_types = []
+
+    template = "numerique_gouv/event_entry_page.html"
+
+    settings_panels = NumeriqueBasePage.settings_panels + [
+        FieldPanel("authors"),
+        FieldPanel("date"),
+        MultiFieldPanel(
+            [
+                FieldRowPanel(
+                    [
+                        FieldPanel("event_date_start"),
+                        FieldPanel("event_date_end"),
+                    ],
+                    classname="label-above",
+                ),
+                FieldPanel("location"),
+                FieldPanel("registration_url"),
+            ],
+            _("Event date and place"),
+        ),
+        MultiFieldPanel(
+            [
+                FieldRowPanel(
+                    [
+                        FieldPanel("go_live_at"),
+                        FieldPanel("expire_at"),
+                    ],
+                    classname="label-above",
+                ),
+            ],
+            _("Scheduled publishing"),
+            classname="publishing",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("event_categories"),
+                FieldPanel("page_tags"),
+                FieldPanel("major_areas"),
+                FieldPanel("dinum_tags"),
+                FieldPanel("target_audiences"),
+            ],
+            heading=_("Tags and Categories"),
+        ),
+    ]
+
+    class Meta:
+        verbose_name = _("Numerique event page")
 
 
 class BaseCategory(models.Model):
