@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% load i18n static dsfr_tags wagtailcore_tags wagtailimages_tags wagtail_dsfr_tags %}
+
+{% include "content_manager/blocks/head.html" with stream=page.body %}
+
+{% block content %}
+  {% include "content_manager/blocks/messages.html" %}
+
+  {% with categories=page.blog_categories.all %}
+    <div class="fr-container fr-mt-6w">
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12">
+          {% include "content_manager/blocks/breadcrumbs.html" %}
+        </div>
+      </div>
+      <div class="fr-grid-row fr-grid-row--center fr-mb-3w">
+        <div class="fr-col fr-col-md-8">
+          <div>
+            {% if page.header_image %}
+              {% image page.header_image width-450 as header_image %}
+              <img class="fr-responsive-img" src="{{ header_image.full_url }}" alt="" />
+            {% endif %}
+          </div>
+          <h1 class="fr-my-2w">{{ page.title }}</h1>
+          <p>
+            Publié le <a href="{% pageurl page.get_parent %}{% toggle_url_filter year=page.date.year %}">{{ page.date |date:'l j F Y' }}</a>
+          </p>
+          {% if page.page_tags.all or page.major_areas.all or page.target_audiences.all %}
+            <ul class="list-unstyled">
+              {% if page.page_tags.all %}
+                <li>
+                  <strong>{% translate "Themes :" %}</strong>
+                  <ul class="fr-tags-group" style="display: ruby;}">
+                    {% for page_tag in page.page_tags.all %}
+                      <li>
+                        <p class="fr-badge fr-badge--{{ page_tag.color }} fr-mx-1w">{{ page_tag.name }}</p>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% endif %}
+              {% if page.major_areas.all %}
+                <li>
+                  <strong>{% translate "Categories :" %}</strong>
+                  <ul class="fr-tags-group" style="display: ruby;}">
+
+                    {% for major_area in page.major_areas.all %}
+                      <li>
+                        <p class="fr-badge fr-badge--{{ major_area.color }} fr-mx-1w">{{ major_area.name }}</p>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% endif %}
+              {% if page.target_audiences.all %}
+                <li>
+                  <strong>{% translate "Targets :" %}</strong>
+                  <ul class="fr-tags-group" style="display: ruby;}">
+                    {% for target_audience in page.target_audiences.all %}
+                      <li>
+                        <p class="fr-badge fr-badge--{{ target_audience.color }} fr-mx-1w">{{ target_audience.name }}</p>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </li>
+             {% endif %}
+            </ul>
+         {% endif %}
+
+        {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}
+      {% endwith %}
+
+      {% if settings.content_manager.CmsDsfrConfig.show_share_links and settings.content_manager.CmsDsfrConfig.share_links_blog_posts %}
+        {% include "blocks/share.html" %}
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock content %}

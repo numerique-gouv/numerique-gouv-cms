@@ -17,12 +17,12 @@
       </div>
       <div class="fr-grid-row fr-grid-row--center">
         <div class="fr-col fr-col-md-8">
-        <div>
-          {% if page.header_image %}
-            {% image page.header_image width-450 as header_image %}
-            <img class="fr-responsive-img" src="{{ header_image.full_url }}" alt="" />
-          {% endif %}
-        </div>
+          <div>
+            {% if page.header_image %}
+              {% image page.header_image width-450 as header_image %}
+              <img class="fr-responsive-img" src="{{ header_image.full_url }}" alt="" />
+            {% endif %}
+          </div>
           <h1 class="fr-my-2w">{{ page.title }}</h1>
           <p>
             <strong>
@@ -41,6 +41,16 @@
           </p>
 
           <ul class="list-unstyled">
+            <li>
+              <strong>{% translate "Thématiques :" %}</strong>
+              <ul class="fr-tags-group" style="display: ruby;}">
+                {% for page_tag in page.page_tags.all %}
+                  <li>
+                    <p class="fr-badge fr-badge--{{ page_tag.color }} fr-mx-1w">{{ page_tag.name }}</p>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
             {% if categories %}
               <li>
                 <strong>{% translate "Catégorie :" %}</strong>
@@ -50,16 +60,6 @@
                 {% endfor %}
               </li>
             {% endif %}
-            <li>
-              <strong>{% translate "Thématiques :" %}</strong>
-              <ul class="fr-tags-group" style="display: ruby;}">
-                {% for page_tag in page.page_tags.all %}
-                  <li>
-                    <p class="fr-badge fr-badge--{{ page_tag.color }} fr-mx1w">{{ page_tag.name }}</p>
-                  </li>
-                {% endfor %}
-              </ul>
-            </li>
             <li>
               <strong>{% translate "Catégories :" %}</strong>
               <ul class="fr-tags-group" style="display: ruby;}">

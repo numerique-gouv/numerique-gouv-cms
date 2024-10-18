@@ -326,7 +326,7 @@ class NumeriqueBlogEntryPage(BlogEntryPage):
 
     parent_page_types = ["numerique_gouv.NumeriqueBlogIndexPage"]
 
-    template = "blog/blog_entry_page.html"
+    template = "numerique_gouv/blog_entry_page.html"
 
     settings_panels = NumeriqueBasePage.settings_panels + [
         FieldPanel("date"),

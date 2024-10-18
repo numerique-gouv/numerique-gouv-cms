@@ -106,7 +106,7 @@ class Command(BaseCommand):
             git_url = "https://github.com/numerique-gouv/numerique.gouv.fr"
             Repo.clone_from(git_url, path_to_clone)
 
-        categories = ["publications", "communiques", "actualites"]
+        categories = ["communiques", "actualites"]
         # categories = ["communiques", "actualites"]
         for category in categories:
             # Get a list of all files in the 'numerique_files' directory
