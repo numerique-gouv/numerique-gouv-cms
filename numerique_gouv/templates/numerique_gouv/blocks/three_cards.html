@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <div class="fr-col-lg-3">
+        <div class="fr-col-lg-3" style="display: flex; align-items: stretch">
             <div class="fr-grid-row fr-grid-row--gutters">
                 <div class="fr-col-6 fr-col-md-12 ">
                     <div class="fr-card {% if not value.top_right_button_label %}fr-enlarge-link{% endif %}">
@@ -36,7 +36,7 @@
                                         <a href="{{ value.top_right_url_link }}">{{ value.top_right_title }}</a>
                                     </h2>
                                 {% endif %}
-                                <div class="fr-card__desc">
+                                <div class="fr-card__desc" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
                                     {{ value.top_right_text }}
                                     {% if value.top_right_button_label %}
                                         <div class="ng-text-center">
@@ -72,7 +72,7 @@
                                         <a href="{{ value.bottom_right_url_link }}">{{ value.bottom_right_title }}</a>
                                     </h2>
                                 {% endif %}
-                                <div class="fr-card__desc">
+                                <div class="fr-card__desc" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;>
                                     {{ value.bottom_right_text }}
                                     {% if value.bottom_right_button_label %}
                                         <div class="ng-text-center">
