@@ -208,10 +208,6 @@ class Command(BaseCommand):
 
         if category == "actualites" or category == "communiques":
             category_page = NumeriqueBlogIndexPage.objects.filter(slug=category).first()
-            if category == "actualites":
-                title = "Actualités"
-            else:
-                title = "Communiqués"
             if not category_page:
                 category_page = home_page.add_child(
                     instance=NumeriqueBlogIndexPage(
