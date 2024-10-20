@@ -278,4 +278,5 @@ STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("stylized_column", StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))),
     ("highlight_cards", HighlightCards(label=_("Highlight cards"), group=_("Numerique components"))),
     ("item_grid", CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))),
+    ("recent_entries", CustomBlogRecentEntriesBlock(label=_("Recent entries"), group=_("Website structure"))),
 ]
