@@ -68,7 +68,7 @@ class OffersIndexPage(NumeriqueBasePage):
     def get_all_subpages(self):
         return self.get_children().live().specific()
 
-    def get_categories(self):
+    def get_page_tags(self):
         return PageTag.objects.all()
 
     def get_target_audiences(self):
