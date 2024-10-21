@@ -244,6 +244,9 @@ class CustomRecentEntriesStructValue(RecentEntriesStructValue):
 
         return filters
 
+    class Meta:
+        template = "numerique_gouv/blocks/custom_blog_recent_entries.html"
+
 
 class CustomBlogRecentEntriesBlock(BlogRecentEntriesBlock):
     blog = blocks.PageChooserBlock(label=_("Blog"), page_type="numerique_gouv.NumeriqueBlogIndexPage")
