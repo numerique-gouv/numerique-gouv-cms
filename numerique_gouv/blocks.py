@@ -256,7 +256,7 @@ class CustomFullWidthBlock(FullWidthBlock):
     stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
     spacer = SpacerBlock(label=_("Spacer"), group=_("Page structure"))
     custom_item_grid = CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))
-    custome_blog_recent_entries = CustomBlogRecentEntriesBlock(label=_("Recent entries"), group=_("Website structure"))
+    blog_recent_entries = CustomBlogRecentEntriesBlock(label=_("Blog recent entries"), group=_("Website structure"))
 
 
 class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
@@ -282,5 +282,4 @@ STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("stylized_column", StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))),
     ("highlight_cards", HighlightCards(label=_("Highlight cards"), group=_("Numerique components"))),
     ("item_grid", CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))),
-    ("recent_entries", CustomBlogRecentEntriesBlock(label=_("Recent entries"), group=_("Website structure"))),
 ]

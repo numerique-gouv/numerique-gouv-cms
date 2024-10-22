@@ -37,39 +37,40 @@
                 {{ page.event_date_start.date }} – {{ page.event_date_end.date }}
               {% endif %}
             </strong>
-
+            {% if categories %}
+              |
+              {% for category in categories %}
+                <a href="{% pageurl page.get_parent %}?category={{ category.slug }}">{{ category.name }}</a>
+                {% if not forloop.last %},{% endif %}
+              {% endfor %}
+            {% endif %}
           </p>
 
           <ul class="list-unstyled">
-            <li>
-              <strong>{% translate "Thématiques :" %}</strong>
-              <ul class="fr-tags-group" style="display: ruby;}">
-                {% for page_tag in page.page_tags.all %}
-                  <li>
-                    <p class="fr-badge fr-badge--{{ page_tag.color }} fr-mx-1w">{{ page_tag.name }}</p>
-                  </li>
-                {% endfor %}
-              </ul>
-            </li>
-            {% if categories %}
+            {% if page.page_tags.all %}
               <li>
-                <strong>{% translate "Catégorie :" %}</strong>
-                {% for category in categories %}
-                  <a href="{% pageurl page.get_parent %}?category={{ category.slug }}">{{ category.name }}</a>
-                  {% if not forloop.last %},{% endif %}
-                {% endfor %}
+                <strong>{% translate "Thématiques :" %}</strong>
+                <ul class="fr-tags-group" style="display: ruby;}">
+                  {% for page_tag in page.page_tags.all %}
+                    <li>
+                      <p class="fr-badge fr-badge--{{ page_tag.color }} fr-mx-1w">{{ page_tag.name }}</p>
+                    </li>
+                  {% endfor %}
+                </ul>
               </li>
             {% endif %}
-            <li>
-              <strong>{% translate "Catégories :" %}</strong>
-              <ul class="fr-tags-group" style="display: ruby;}">
-                {% for dinum_tag in page.dinum_tags.all %}
-                  <li>
-                    <p class="fr-badge fr-badge--{{ dinum_tag.color }} fr-mx-1w">{{ dinum_tag.name }}</p>
-                  </li>
-                {% endfor %}
-              </ul>
-            </li>
+            {% if page.dinum_tags.all %}
+              <li>
+                <strong>{% translate "Catégories :" %}</strong>
+                <ul class="fr-tags-group" style="display: ruby;}">
+                  {% for dinum_tag in page.dinum_tags.all %}
+                    <li>
+                      <p class="fr-badge fr-badge--{{ dinum_tag.color }} fr-mx-1w">{{ dinum_tag.name }}</p>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endif %}
           </ul>
 
         {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}
@@ -89,18 +90,24 @@
       {% endwith %}
 
     <div class="fr-container fr-my-6w">
-
       <div class="fr-card{% if page.header_image %} fr-card--horizontal{% else %} fr-card--download{% endif %}">
         <div class="fr-card__body">
           <div class="fr-card__content">
             <h2 class="fr-card__title">{{ page.title }}</h2>
             <ul class="fr-card__desc">
               <li>
-                <strong>{% translate "Date:" %}</strong> {{ page.event_date_start }} - {{ page.event_date_end }}
+                <strong>{% translate "Date:" %}</strong> 
+                {% if page.event_date_start.day == page.event_date_end.day %}
+                  {{ page.event_date_start|date:"d F Y" }}
+                {% else %}
+                  {{ page.event_date_start|date:"d F Y" }} - {{ page.event_date_end|date:"d F Y" }}
+                {% endif %}
               </li>
-              <li>
-                <strong>{% translate "Location:" %}</strong> {{ page.location }}
-              </li>
+              {% if page.location %}
+                <li>
+                  <strong>{% translate "Location:" %}</strong> {{ page.location }}
+                </li>
+              {% endif %}
               {% if page.registration_url %}
                 <li>
                   <strong>{% translate "Registration link:" %}</strong> <a href="{{ page.registration_url }}">{{ page.registration_url }}</a>
@@ -127,6 +134,7 @@
       </div>
     </div>
     {% if settings.content_manager.CmsDsfrConfig.show_share_links and settings.content_manager.CmsDsfrConfig.share_links_events %}
+      {% include "blocks/share.html" %}
       {% include "blocks/share.html" %}
     {% endif %}
         </div>
