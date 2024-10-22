@@ -186,31 +186,6 @@ class CustomItemGridBlock(ItemGridBlock):
     items = CustomColumnBlock(label=_("Items"))
 
 
-class CustomFullWidthBlock(FullWidthBlock):
-    html = blocks.RawHTMLBlock(
-        required=False,
-        help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
-        group=_("Expert syntax"),
-    )
-    numeric_direction_card = NumericDirectionCardBlock(
-        required=False, label=_("Numeric direction card"), group=_("Numerique components")
-    )
-    custom_ajustable_column = CustomAdjustableColumnBlock(
-        required=False, label=_("Custom adjustable column"), group=_("Page structure")
-    )
-    horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
-    multicolumns = CustomMultiColumnsWithTitleBlock(
-        required=False, label=_("Multi columns"), group=_("Page structure")
-    )
-    stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
-    spacer = SpacerBlock(label=_("Spacer"), group=_("Page structure"))
-    custom_item_grid = CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))
-
-
-class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
-    content = CustomFullWidthBlock(label=_("Content"))
-
-
 class CustomRecentEntriesStructValue(RecentEntriesStructValue):
     def posts(self):
         index_page = self.get("index_page")
@@ -257,6 +232,32 @@ class CustomBlogRecentEntriesBlock(BlogRecentEntriesBlock):
         icon = "placeholder"
         template = ("numerique_gouv/blocks/custom_blog_recent_entries.html",)
         value_class = CustomRecentEntriesStructValue
+
+
+class CustomFullWidthBlock(FullWidthBlock):
+    html = blocks.RawHTMLBlock(
+        required=False,
+        help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
+        group=_("Expert syntax"),
+    )
+    numeric_direction_card = NumericDirectionCardBlock(
+        required=False, label=_("Numeric direction card"), group=_("Numerique components")
+    )
+    custom_ajustable_column = CustomAdjustableColumnBlock(
+        required=False, label=_("Custom adjustable column"), group=_("Page structure")
+    )
+    horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
+    multicolumns = CustomMultiColumnsWithTitleBlock(
+        required=False, label=_("Multi columns"), group=_("Page structure")
+    )
+    stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
+    spacer = SpacerBlock(label=_("Spacer"), group=_("Page structure"))
+    custom_item_grid = CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))
+    blog_recent_entries = CustomBlogRecentEntriesBlock(label=_("Blog recent entries"), group=_("Website structure"))
+
+
+class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
+    content = CustomFullWidthBlock(label=_("Content"))
 
 
 STREAMFIELD_NUMERIQUE_BLOCKS = [
