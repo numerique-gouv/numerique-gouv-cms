@@ -25,6 +25,13 @@
           <h1 class="fr-my-2w">{{ page.title }}</h1>
           <p>
             Publié le <a href="{% pageurl page.get_parent %}{% toggle_url_filter year=page.date.year %}">{{ page.date |date:'l j F Y' }}</a>
+            {% if categories %}
+              |
+              {% for category in categories %}
+                <a href="{% pageurl page.get_parent %}{% toggle_url_filter category=category %}">{{ category.name }}</a>
+                {% if not forloop.last %},{% endif %}
+              {% endfor %}
+            {% endif %}
           </p>
           {% if page.page_tags.all or page.major_areas.all or page.target_audiences.all %}
             <ul class="list-unstyled">
@@ -40,31 +47,19 @@
                   </ul>
                 </li>
               {% endif %}
-              {% if page.major_areas.all %}
+              {% if page.dinum_tags.all %}
                 <li>
                   <strong>{% translate "Categories :" %}</strong>
                   <ul class="fr-tags-group" style="display: ruby;}">
 
-                    {% for major_area in page.major_areas.all %}
+                    {% for dinum_tag in page.dinum_tags.all %}
                       <li>
-                        <p class="fr-badge fr-badge--{{ major_area.color }} fr-mx-1w">{{ major_area.name }}</p>
+                        <p class="fr-badge fr-badge--{{ dinum_tag.color }} fr-mx-1w">{{ dinum_tag.name }}</p>
                       </li>
                     {% endfor %}
                   </ul>
                 </li>
               {% endif %}
-              {% if page.target_audiences.all %}
-                <li>
-                  <strong>{% translate "Targets :" %}</strong>
-                  <ul class="fr-tags-group" style="display: ruby;}">
-                    {% for target_audience in page.target_audiences.all %}
-                      <li>
-                        <p class="fr-badge fr-badge--{{ target_audience.color }} fr-mx-1w">{{ target_audience.name }}</p>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                </li>
-             {% endif %}
             </ul>
          {% endif %}
 
