@@ -36,11 +36,35 @@ class OffersIndexPage(NumeriqueBasePage):
         verbose_name = _("Offers index")
 
     def get_tool_subpages(self):
-        return self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="outil")
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__offersentrypage__type__slug="outil")
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
+        )
 
     def get_financement_subpages(self):
         return (
-            self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="financement")
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__offersentrypage__type__slug="financement")
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
         )
 
     def get_expertise_subpages(self):
@@ -49,6 +73,14 @@ class OffersIndexPage(NumeriqueBasePage):
             .live()
             .specific()
             .filter(models.Q(numeriquebasepage__offersentrypage__type__slug="expertise"))
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
         )
 
     def get_pilotage_subpages(self):
@@ -60,13 +92,46 @@ class OffersIndexPage(NumeriqueBasePage):
                 models.Q(numeriquebasepage__offersentrypage__type__slug="pilotage")
                 | models.Q(numeriquebasepage__offersentrypage__type__slug="observatoire")
             )
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
         )
 
     def get_document_subpages(self):
-        return self.get_children().live().specific().filter(numeriquebasepage__offersentrypage__type__slug="document")
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .filter(numeriquebasepage__offersentrypage__type__slug="document")
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
+        )
 
     def get_all_subpages(self):
-        return self.get_children().live().specific()
+        return (
+            self.get_children()
+            .live()
+            .specific()
+            .annotate(
+                custom_order=Case(
+                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
+        )
 
     def get_page_tags(self):
         return PageTag.objects.all()
@@ -110,6 +175,7 @@ class OffersEntryPage(NumeriqueBasePage):
         verbose_name=_("Card image"),
     )
     card_alt_image = models.CharField(max_length=255, blank=True, verbose_name=_("Image alt"))
+    position = models.IntegerField(default=0)
 
     # organization
     organization_title = models.TextField(blank=True, verbose_name=_("Organization title"))
@@ -137,6 +203,7 @@ class OffersEntryPage(NumeriqueBasePage):
         ),
         MultiFieldPanel(
             [
+                FieldPanel("position"),
                 FieldPanel("page_tags"),
                 FieldPanel("target_audiences"),
                 FieldPanel("major_areas"),
