@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-26 10:56+0200\n"
-"PO-Revision-Date: 2024-10-26 11:03+0200\n"
+"PO-Revision-Date: 2024-10-26 15:35+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -779,7 +779,7 @@ msgstr "Le numérique au service de l’efficacité des agents publics"
 
 #: numerique_gouv/templates/numerique_gouv/products_index_page.html:67
 msgid "Discover others services"
-msgstr "Autres services en accélération et Startups d’’État"
+msgstr "Autres services en accélération et Startups d’État"
 
 #: numerique_gouv/templates/numerique_gouv/products_index_page.html:70
 msgid "Discover"
