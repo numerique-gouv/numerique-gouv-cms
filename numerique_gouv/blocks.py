@@ -64,12 +64,23 @@ class ThreeCardsBlock(blocks.StructBlock):
 class HighlightCards(blocks.StructBlock):
     main_card = HorizontalCardBlock(lrequired=True, abel=_("Main card"), group=_("DSFR components"))
     secondary_card = VerticalCardBlock(lrequired=True, abel=_("Secondary card"), group=_("DSFR components"))
-    tertiary_card = VerticalCardBlock(required=True, label=_("Secondary card"), group=_("DSFR components"))
+    tertiary_card = VerticalCardBlock(required=True, label=_("Tertiary card"), group=_("DSFR components"))
 
     class Meta:
         template = "numerique_gouv/blocks/highlight_cards.html"
         icon = "image"
-        label = "highlight  cards"
+        label = "highlight cards"
+
+
+class VerticalHighlightCards(blocks.StructBlock):
+    main_card = VerticalCardBlock(lrequired=True, abel=_("Main card"), group=_("DSFR components"))
+    secondary_card = VerticalCardBlock(lrequired=True, abel=_("Secondary card"), group=_("DSFR components"))
+    tertiary_card = VerticalCardBlock(required=True, label=_("Secondary card"), group=_("DSFR components"))
+
+    class Meta:
+        template = "numerique_gouv/blocks/vertical_highlight_cards.html"
+        icon = "image"
+        label = "highlight cards"
 
 
 class NumericDirectionCardBlock(blocks.StructBlock):
@@ -281,5 +292,9 @@ STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("spacer", SpacerBlock(label=_("Spacer"), group=_("Page structure"))),
     ("stylized_column", StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))),
     ("highlight_cards", HighlightCards(label=_("Highlight cards"), group=_("Numerique components"))),
+    (
+        "vertical_highlight_cards",
+        VerticalHighlightCards(label=_("Vertical Highlight cards"), group=_("Numerique components")),
+    ),
     ("item_grid", CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))),
 ]

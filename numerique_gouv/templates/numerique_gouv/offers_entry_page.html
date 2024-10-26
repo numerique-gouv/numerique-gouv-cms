@@ -15,7 +15,9 @@
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="{% if page.organization_title %}fr-col-md-8{% endif %}">
           <h1 class="fr-text-title--blue-france">{{ page.title }}</h1>
-          <p class="fr-badge fr-badge--{{ page.type.color }} fr-my-5v">{{ page.type }}</p>
+          {% if page.type %}
+            <p class="fr-badge fr-badge--{{ page.type.color }} fr-my-5v">{{ page.type }}</p>
+          {% endif %}
           {% if page.target_audiences.count > 0 or page.themes.count > 0 or page.categories.count > 0  %}
             <ul style="list-style: none">
               {% if page.target_audiences.count > 0 %}

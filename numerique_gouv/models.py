@@ -194,7 +194,7 @@ class OffersEntryPage(NumeriqueBasePage):
     block_three_column_three = models.TextField(blank=True, verbose_name=_("Block three column three"))
 
     parent_page_types = ["numerique_gouv.OffersIndexPage"]
-    subpage_types = []
+    subpage_types = ["numerique_gouv.NumeriquePage"]
 
     header_panels = [
         FieldPanel(
