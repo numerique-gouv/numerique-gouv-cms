@@ -16,44 +16,59 @@
   {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}
 
   {% if citizens_subpages %}
-    <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
+    <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume);" aria-labelledby="citizens-section">
       <div class="fr-container">
         <h2 class="fr-h2">{{ _('Digital technology to simplify citizen procedures') }}</h2>
-        <div class="fr-grid-row fr-grid-row--gutters">
+        <div id="citizens-section" class="fr-grid-row fr-grid-row--gutters">
           {% for subpage in citizens_subpages %}
-            <div class="fr-col-12 fr-col-md-4">
+            <div class="fr-col-12 fr-col-md-4 citizen-subpage {% if forloop.counter > 6 %}hidden{% endif %}">
               {% include "numerique_gouv/blocks/product_card.html" with page=subpage %}
             </div>
           {% endfor %}
         </div>
+        {% if citizens_subpages|length > 6 %}
+          <div class="fr-grid-row fr-grid-row--center fr-mt-3w">
+            <button id="voir-plus-citizens" class="fr-btn" aria-controls="citizens-section" aria-expanded="false">{{ _('Voir plus') }}</button>
+          </div>
+        {% endif %}
       </div>
     </div>
   {% endif %}
 
   {% if companies_subpages %}
-    <div class="fr-container">
+    <div class="fr-container" aria-labelledby="companies-section">
       <h2 class="fr-h2">{{ _('Le numérique au service des entreprises') }}</h2>
-      <div class="fr-grid-row fr-grid-row--gutters">
+      <div id="companies-section" class="fr-grid-row fr-grid-row--gutters">
         {% for subpage in companies_subpages %}
-          <div class="fr-col-12 fr-col-md-4">
+          <div class="fr-col-12 fr-col-md-4 company-subpage {% if forloop.counter > 6 %}hidden{% endif %}">
             {% include "numerique_gouv/blocks/product_card.html" with page=subpage %}
           </div>
         {% endfor %}
       </div>
+      {% if companies_subpages|length > 6 %}
+        <div class="fr-grid-row fr-grid-row--center fr-mt-3w">
+          <button id="voir-plus-companies" class="fr-btn" aria-controls="companies-section" aria-expanded="false">{{ _('Voir plus') }}</button>
+        </div>
+      {% endif %}
     </div>
   {% endif %}
 
   {% if agents_publics_subpages %}
-    <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
+    <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume);" aria-labelledby="agents-section">
       <div class="fr-container">
         <h2 class="fr-h2">{{ _('Digital technology to improve the efficiency of public officials') }}</h2>
-        <div class="fr-grid-row fr-grid-row--gutters">
+        <div id="agents-section" class="fr-grid-row fr-grid-row--gutters">
           {% for subpage in agents_publics_subpages %}
-            <div class="fr-col-12 fr-col-md-4">
+            <div class="fr-col-12 fr-col-md-4 agent-subpage {% if forloop.counter > 6 %}hidden{% endif %}">
               {% include "numerique_gouv/blocks/product_card.html" with page=subpage %}
             </div>
           {% endfor %}
         </div>
+        {% if agents_publics_subpages|length > 6 %}
+          <div class="fr-grid-row fr-grid-row--center fr-mt-3w">
+            <button id="voir-plus-agents" class="fr-btn" aria-controls="agents-section" aria-expanded="false">{{ _('Voir plus') }}</button>
+          </div>
+        {% endif %}
       </div>
     </div>
   {% endif %}
@@ -63,12 +78,16 @@
       <div class="fr-col-12 fr-col-md-2 ng-text-center">
         <img class="fr-responsive-img fr-ratio-16x9" src="{% static 'images/logo-beta.webp' %}" alt="Logo de Beta.gouv.fr" style="max-width: 12rem"/>
       </div>
-       <div class="fr-col-12 fr-col-md-6 ng-text-right">
-          <p class="fr-h4 fr-text--bold fr-m-0">{{ _('Discover others services') }}</p>
-       </div>
-       <div class="fr-col-12 fr-col-md-2">
-          <a href="https://beta.gouv.fr/startups" class="fr-btn fr-btn--lg" target="_blank">{{ _('Discover') }}</a>
-       </div>
+      <div class="fr-col-12 fr-col-md-6 ng-text-right">
+        <p class="fr-h4 fr-text--bold fr-m-0">{{ _('Discover others services') }}</p>
+      </div>
+      <div class="fr-col-12 fr-col-md-2">
+        <a href="https://beta.gouv.fr/startups" class="fr-btn fr-btn--lg" target="_blank">{{ _('Discover') }}</a>
+      </div>
     </div>
   </div>
 {% endblock content %}
+
+{% block extra_js %}
+  <script src="{% static 'js/voir_plus.js' %}"></script>
+{% endblock extra_js %}
