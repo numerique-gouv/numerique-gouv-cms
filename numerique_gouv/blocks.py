@@ -8,6 +8,7 @@ from content_manager.blocks import (
     BackgroundColorChoiceBlock,
     BlogRecentEntriesBlock,
     ColumnBlock,
+    EventsRecentEntriesBlock,
     FullWidthBackgroundBlock,
     FullWidthBlock,
     HorizontalCardBlock,
@@ -230,9 +231,6 @@ class CustomRecentEntriesStructValue(RecentEntriesStructValue):
 
         return filters
 
-    class Meta:
-        template = "numerique_gouv/blocks/custom_blog_recent_entries.html"
-
 
 class CustomBlogRecentEntriesBlock(BlogRecentEntriesBlock):
     blog = blocks.PageChooserBlock(label=_("Blog"), page_type="numerique_gouv.NumeriqueBlogIndexPage")
@@ -274,6 +272,18 @@ class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
     content = CustomFullWidthBlock(label=_("Content"))
 
 
+class CustomEventsRecentEntriesBlocks(EventsRecentEntriesBlock):
+    index_page = blocks.PageChooserBlock(
+        label=_("Event calendar"), page_type="numerique_gouv.NumeriqueEventsIndexPage"
+    )
+
+    class Meta:
+        template = "numerique_gouv/blocks/events_recent_entries.html"
+        icon = "date"
+        label = "Events recent entries"
+        value_class = CustomRecentEntriesStructValue
+
+
 STREAMFIELD_NUMERIQUE_BLOCKS = [
     ("three_cards", ThreeCardsBlock(label=_("Headline cards"), group=_("Numerique components"))),
     ("multicolumns", CustomMultiColumnsWithTitleBlock(label=_("Multi columns"), group=_("Page structure"))),
@@ -295,6 +305,10 @@ STREAMFIELD_NUMERIQUE_BLOCKS = [
     (
         "vertical_highlight_cards",
         VerticalHighlightCards(label=_("Vertical Highlight cards"), group=_("Numerique components")),
+    ),
+    (
+        "events_recent_entries",
+        CustomEventsRecentEntriesBlocks(label=_("custom Events recent entries"), group=_("Website structure")),
     ),
     ("item_grid", CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))),
 ]
