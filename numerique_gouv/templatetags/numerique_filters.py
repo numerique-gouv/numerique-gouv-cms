@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django import template
 
-from numerique_gouv.models import NumeriqueBlogEntryPage, NumeriqueEventPage
+from numerique_gouv.models import NumeriqueBlogEntryPage
 
 register = template.Library()
 
@@ -19,8 +19,3 @@ def replace(value, args=",|."):
 @register.filter
 def is_numerique_blog_entry_page(value):
     return isinstance(value, NumeriqueBlogEntryPage)
-
-
-@register.filter
-def is_numerique_event_page(value):
-    return isinstance(value, NumeriqueEventPage)
