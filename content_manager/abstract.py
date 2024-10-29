@@ -57,7 +57,11 @@ class SitesFacilesBasePage(Page):
             (
                 "buttons",
                 ButtonsHorizontalListBlock(
-                    help_text=_("Please use only one primary button. If you use icons, align them on the same side.")
+                    help_text=_(
+                        """Please use only one primary button.
+                        If you use icons, use them on all buttons and align them on the same side."""
+                    ),
+                    label=_("Buttons"),
                 ),
             ),
         ],
@@ -79,6 +83,13 @@ class SitesFacilesBasePage(Page):
         help_text=_(
             "This field is obsolete and will be removed in the near future. Please replace with the CTA buttons above."
         ),
+        null=True,
+        blank=True,
+    )
+
+    source_url = models.URLField(
+        _("Source URL"),
+        help_text=_("For imported pages, to allow updates."),
         null=True,
         blank=True,
     )
@@ -126,7 +137,20 @@ class SitesFacilesBasePage(Page):
         APIField("header_cta_buttons"),
         APIField("header_cta_label"),
         APIField("header_cta_link"),
+        APIField("public_child_pages"),
     ]
+
+    @property
+    def public_child_pages(self):
+        return [
+            {
+                "id": child.id,
+                "slug": child.slug,
+                "title": child.title,
+                "type": f"{child.content_type.app_label}.{child.content_type.model}",
+            }
+            for child in self.get_children().live().public()
+        ]
 
     def get_absolute_url(self):
         return self.url
