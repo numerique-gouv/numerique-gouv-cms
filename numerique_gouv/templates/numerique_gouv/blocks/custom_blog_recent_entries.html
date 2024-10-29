@@ -57,7 +57,7 @@
 
   <div class="fr-grid-row fr-grid-row--gutters fr-mb-3w">
     {% for post in value.posts %}
-      <div class="fr-col-12 fr-col-md-4">
+      <div class="fr-col {% if value.posts|length == 2 %}fr-col-md-6{% elif value.posts|length == 3 %}fr-col-md-4{% else %}fr-col-md-3{% endif %}">
         {% include "numerique_gouv/blocks/card_vertical.html" with page=post %}
       </div>
     {% empty %}
