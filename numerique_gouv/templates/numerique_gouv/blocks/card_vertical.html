@@ -29,18 +29,17 @@
 
           {% if page|is_numerique_blog_entry_page %}
             <p class="fr-card__detail">Publié le {{ page.date |date:'l j F Y' }}</p>
-          {% endif %}
-          {% if page|is_numerique_event_page %}
+          {% elif page.event_date_start.date %}
             <p class="fr-card__detail">
-            {% if page.event_date_start.date == page.event_date_end.date %}
-              {{ page.event_date_start.date }}
-            {% elif page.event_date_start.year == page.event_date_end.year and page.event_date_start.month == page.event_date_end.month %}
-              {{ page.event_date_start.day }} – {{ page.event_date_end.date }}
-            {% elif page.event_date_start.year == page.event_date_end.year %}
-              {{ page.event_date_start|date:"j F" }} – {{ page.event_date_end|date:"j F Y" }}
-            {% else %}
-              {{ page.event_date_start.date }} – {{ page.event_date_end.date }}
-            {% endif %}
+              {% if page.event_date_start.date == page.event_date_end.date %}
+                {{ page.event_date_start.date }}
+              {% elif page.event_date_start.year == page.event_date_end.year and page.event_date_start.month == page.event_date_end.month %}
+                {{ page.event_date_start.day }} – {{ page.event_date_end.date }}
+              {% elif page.event_date_start.year == page.event_date_end.year %}
+                {{ page.event_date_start|date:"j F" }} – {{ page.event_date_end|date:"j F Y" }}
+              {% else %}
+                {{ page.event_date_start.date }} – {{ page.event_date_end.date }}
+              {% endif %}
             </p>
           {% endif %}
         </div>
