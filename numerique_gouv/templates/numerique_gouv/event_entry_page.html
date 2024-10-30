@@ -20,7 +20,7 @@
           <div>
             {% if page.header_image %}
               {% image page.header_image width-450 as header_image %}
-              <img class="fr-responsive-img" src="{{ header_image.full_url }}" alt="" />
+              <img class="ng-image-max-100" src="{{ header_image.full_url }}" alt="" />
             {% endif %}
           </div>
           <h1 class="fr-my-2w">{{ page.title }}</h1>
@@ -121,10 +121,10 @@
           <div class="fr-card__img">
             {% if page.header_image %}
               {% image page.header_image width-450 as header_image %}
-              <img class="fr-responsive-img" src="{{ header_image.full_url }}" alt="" />
+              <img class="ng-image-max-100" src="{{ header_image.full_url }}" alt="" />
 
             {% else %}
-              <img class="fr-responsive-img"
+              <img class="ng-image-max-100"
                    src="{% static 'dsfr/dist/artwork/pictograms/digital/calendar.svg' %}"
                    alt="" />
             {% endif %}
