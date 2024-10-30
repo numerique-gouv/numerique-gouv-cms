@@ -76,7 +76,7 @@ class HighlightCards(blocks.StructBlock):
 class VerticalHighlightCards(blocks.StructBlock):
     main_card = VerticalCardBlock(lrequired=True, abel=_("Main card"), group=_("DSFR components"))
     secondary_card = VerticalCardBlock(lrequired=True, abel=_("Secondary card"), group=_("DSFR components"))
-    tertiary_card = VerticalCardBlock(required=True, label=_("Secondary card"), group=_("DSFR components"))
+    tertiary_card = VerticalCardBlock(required=True, label=_("Tertiary card"), group=_("DSFR components"))
 
     class Meta:
         template = "numerique_gouv/blocks/vertical_highlight_cards.html"
