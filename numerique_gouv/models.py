@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 from dsfr.constants import COLOR_CHOICES_ILLUSTRATION
 from modelcluster.fields import ParentalManyToManyField
+from wagtail.admin import blocks
 from wagtail.admin.panels import FieldPanel, FieldRowPanel, HelpPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.images import get_image_model_string
@@ -142,7 +143,7 @@ class OffersIndexPage(NumeriqueBasePage):
 
 class TextAndCTAStreamField(StreamField):
     def __init__(self, *args, **kwargs):
-        block_types = [("text_and_cta", TextAndCTA())]
+        block_types = [("text_and_cta", TextAndCTA()), ("html", blocks.RawHTMLBlock())]
         super().__init__(block_types, *args)
 
 
