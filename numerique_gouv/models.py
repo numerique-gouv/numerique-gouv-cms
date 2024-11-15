@@ -10,7 +10,7 @@ from wagtail.fields import StreamField
 from wagtail.images import get_image_model_string
 from wagtail.snippets.models import register_snippet
 
-from blog.models import BlogEntryPage, BlogIndexPage
+from blog.models import BlogEntryPage, BlogIndexPage, Organization
 from content_manager.blocks import ButtonsHorizontalListBlock, TextAndCTA
 from events.models import EventEntryPage, EventsIndexPage
 from numerique_gouv.abstract import NumeriqueBasePage
@@ -140,6 +140,9 @@ class OffersIndexPage(NumeriqueBasePage):
     def get_target_audiences(self):
         return TargetAudience.objects.all()
 
+    def get_organizations(self):
+        return Organization.objects.all()
+
 
 class TextAndCTAStreamField(StreamField):
     def __init__(self, *args, **kwargs):
@@ -151,17 +154,12 @@ class OffersEntryPage(NumeriqueBasePage):
     type = models.ForeignKey(
         "numerique_gouv.Offertype", blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("Type")
     )
-
     page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
-    # a supprimer
-    target_audiences_old = ParentalManyToManyField(
-        "numerique_gouv.OfferTargetAudience", blank=True, verbose_name=_("Target Audience")
-    )
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audience")
     )
+    organizations = ParentalManyToManyField("blog.Organization", blank=True, verbose_name=_("Organizations"))
     major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Dinum Tags"))
-    themes = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Theme"))
     buttons = ButtonsHorizontalListBlock(label=_("Buttons"))
     text_and_cta = TextAndCTAStreamField(blank=True, verbose_name=_("Text and cta"))
 
@@ -205,10 +203,10 @@ class OffersEntryPage(NumeriqueBasePage):
         MultiFieldPanel(
             [
                 FieldPanel("position"),
+                FieldPanel("organizations"),
                 FieldPanel("page_tags"),
                 FieldPanel("target_audiences"),
                 FieldPanel("major_areas"),
-                FieldPanel("themes"),
                 FieldPanel("text_and_cta"),
             ],
             heading=_("Header"),
