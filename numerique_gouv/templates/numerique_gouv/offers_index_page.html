@@ -187,7 +187,7 @@
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col">
         <ul class="fr-tags-group">
-          {% for page_tag in page.get_page_tags %}
+          {% for page_tag in page_tags %}
             <li>
               <a class="fr-tag"
                  href="{% pageurl page %}{% toggle_url_filter page_tag=page_tag %}"
@@ -205,7 +205,7 @@
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col">
         <ul class="fr-tags-group">
-          {% for target_audience in page.get_target_audiences %}
+          {% for target_audience in target_audiences %}
             <li>
               <a class="fr-tag"
                  href="{% pageurl page %}{% toggle_url_filter target_audience=target_audience %}"
@@ -223,7 +223,7 @@
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col">
         <ul class="fr-tags-group">
-          {% for organization in page.get_organizations %}
+          {% for organization in organizations %}
             <li>
               <a class="fr-tag"
                  href="{% pageurl page %}{% toggle_url_filter organization=organization %}"
@@ -242,7 +242,7 @@
     <div class="fr-container" id="expertise">
       <h2>{{ _('Request DINUM’s expertise') }}</h2>
       <div class="fr-grid-row fr-grid-row--gutters">
-        {% for offer in page.get_expertise_subpages %}
+        {% for offer in expertise_subpages %}
           {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
         {% endfor %}
       </div>
@@ -252,7 +252,7 @@
   <div class="fr-container" id="document">
     <h2>{{ _('Consult a reference document') }}</h2>
     <div class="fr-grid-row fr-grid-row--gutters">
-      {% for offer in page.get_document_subpages %}
+      {% for offer in document_subpages %}
         {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
       {% endfor %}
     </div>
@@ -262,7 +262,7 @@
     <div class="fr-container" id="fincancing">
       <h2>{{ _('Financing a digital project') }}</h2>
       <div class="fr-grid-row fr-grid-row--gutters">
-        {% for offer in page.get_financement_subpages %}
+        {% for offer in financement_subpages %}
           {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
         {% endfor %}
       </div>
@@ -272,7 +272,7 @@
   <div class="fr-container" id="tools">
     <h2>{{ _('Equipping public officials') }}</h2>
     <div class="fr-grid-row fr-grid-row--gutters">
-      {% for offer in page.get_tool_subpages %}
+      {% for offer in tools_subpages %}
         {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
       {% endfor %}
     </div>
@@ -282,7 +282,7 @@
     <div class="fr-container" id="manage">
       <h2>{{ _('Access the management tools') }}</h2>
       <div class="fr-grid-row fr-grid-row--gutters">
-        {% for offer in page.get_pilotage_subpages %}
+        {% for offer in pilotage_subpages %}
           {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
         {% endfor %}
       </div>

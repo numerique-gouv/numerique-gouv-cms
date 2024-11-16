@@ -72,6 +72,8 @@ def toggle_url_filter(context, *_, **kwargs):
         ("year", ""),
         ("page_tag", "slug"),
         ("major_area", "slug"),
+        ("organization", "slug"),
+        ("target_audience", "slug"),
     ]
 
     for f in filters:
