@@ -7,7 +7,7 @@
 {% block content %}
   {% include "content_manager/blocks/messages.html" %}
 
-  {% with categories=page.blog_categories.all %}
+  {% with organizations=page.organizations.all %}
     <div class="fr-container fr-mt-6w">
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12">
@@ -25,10 +25,10 @@
           <h1 class="fr-my-2w">{{ page.title }}</h1>
           <p>
             Publié le <a href="{% pageurl page.get_parent %}{% toggle_url_filter year=page.date.year %}">{{ page.date |date:'l j F Y' }}</a>
-            {% if categories %}
+            {% if organizations %}
               |
-              {% for category in categories %}
-                <a href="{% pageurl page.get_parent %}{% toggle_url_filter category=category %}">{{ category.name }}</a>
+              {% for organization in organizations %}
+                <a href="{% pageurl page.get_parent %}{% toggle_url_filter organization=organization %}">{{ organization.name }}</a>
                 {% if not forloop.last %},{% endif %}
               {% endfor %}
             {% endif %}
