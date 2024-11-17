@@ -10,7 +10,7 @@ from wagtail.fields import StreamField
 from wagtail.images import get_image_model_string
 from wagtail.snippets.models import register_snippet
 
-from blog.models import BlogEntryPage, BlogIndexPage
+from blog.models import BlogEntryPage, BlogIndexPage, Organization
 from content_manager.blocks import ButtonsHorizontalListBlock, TextAndCTA
 from events.models import EventEntryPage, EventsIndexPage
 from numerique_gouv.abstract import NumeriqueBasePage
@@ -36,109 +36,139 @@ class OffersIndexPage(NumeriqueBasePage):
     class Meta:
         verbose_name = _("Offers index")
 
-    def get_tool_subpages(self):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(numeriquebasepage__offersentrypage__type__slug="outil")
-            .annotate(
-                custom_order=Case(
-                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
-        )
+    @property
+    def offers(self):
+        offers = OffersEntryPage.objects.live().specific()
+        offers = offers.select_related("owner").prefetch_related("page_tags", "target_audiences", "organizations")
+        return offers
 
-    def get_financement_subpages(self):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(numeriquebasepage__offersentrypage__type__slug="financement")
-            .annotate(
-                custom_order=Case(
-                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
-        )
+    def get_context(self, request, page_tag=None, target_audience=None, organization=None, *args, **kwargs):
+        context = super(NumeriqueBasePage, self).get_context(request, *args, **kwargs)
+        offers = self.offers
 
-    def get_expertise_subpages(self):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(models.Q(numeriquebasepage__offersentrypage__type__slug="expertise"))
-            .annotate(
-                custom_order=Case(
-                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
-        )
+        if page_tag is None:
+            page_tag = request.GET.get("page_tag")
+        if page_tag:
+            page_tag = get_object_or_404(PageTag, slug=page_tag)
+            offers = offers.filter(page_tags=page_tag)
 
-    def get_pilotage_subpages(self):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(
-                models.Q(numeriquebasepage__offersentrypage__type__slug="pilotage")
-                | models.Q(numeriquebasepage__offersentrypage__type__slug="observatoire")
-            )
-            .annotate(
-                custom_order=Case(
-                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
-        )
+        if target_audience is None:
+            target_audience = request.GET.get("target_audience")
+        if target_audience:
+            target_audience = get_object_or_404(TargetAudience, slug=target_audience)
+            offers = offers.filter(target_audiences=target_audience)
 
-    def get_document_subpages(self):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .filter(numeriquebasepage__offersentrypage__type__slug="document")
-            .annotate(
-                custom_order=Case(
-                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
-        )
+        if organization is None:
+            organization = request.GET.get("organization")
+        if organization:
+            organization = get_object_or_404(Organization, slug=organization)
+            offers = offers.filter(organizations=organization)
 
-    def get_all_subpages(self):
-        return (
-            self.get_children()
-            .live()
-            .specific()
-            .annotate(
-                custom_order=Case(
-                    When(numeriquebasepage__offersentrypage__position=0, then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField(),
-                )
-            )
-            .order_by("custom_order", "numeriquebasepage__offersentrypage__position")
-        )
+        context["current_page_tag"] = page_tag
+        context["current_target_audience"] = target_audience
+        context["current_organization"] = organization
 
-    def get_page_tags(self):
-        return PageTag.objects.all()
+        context["tools_subpages"] = self.get_tool_subpages(offers)
+        context["financement_subpages"] = self.get_financement_subpages(offers)
+        context["expertise_subpages"] = self.get_expertise_subpages(offers)
+        context["pilotage_subpages"] = self.get_pilotage_subpages(offers)
+        context["document_subpages"] = self.get_document_subpages(offers)
+        context["all_subpages"] = self.get_all_subpages(offers)
+
+        # Filters
+        context["page_tags"] = self.get_page_tags()
+        context["target_audiences"] = self.get_target_audiences()
+        context["organizations"] = self.get_organizations()
+
+        context["offers"] = offers
+
+        return context
 
     def get_target_audiences(self):
-        return TargetAudience.objects.all()
+        ids = self.offers.specific().values_list("target_audiences", flat=True)
+        return TargetAudience.objects.filter(id__in=ids).order_by("name")
+
+    def get_organizations(self):
+        ids = self.offers.specific().values_list("organizations", flat=True)
+        return Organization.objects.filter(id__in=ids).order_by("name")
+
+    def get_page_tags(self) -> QuerySet:
+        ids = self.offers.specific().values_list("page_tags", flat=True)
+        return PageTag.objects.filter(id__in=ids).order_by("name")
+
+    def get_tool_subpages(self, offers):
+        return (
+            offers.filter(type__slug="outil")
+            .annotate(
+                custom_order=Case(
+                    When(position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "position")
+        )
+
+    def get_financement_subpages(self, offers):
+        return (
+            offers.filter(type__slug="financement")
+            .annotate(
+                custom_order=Case(
+                    When(position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "position")
+        )
+
+    def get_expertise_subpages(self, offers):
+        return (
+            offers.filter(models.Q(type__slug="expertise"))
+            .annotate(
+                custom_order=Case(
+                    When(position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "position")
+        )
+
+    def get_pilotage_subpages(self, offers):
+        return (
+            offers.filter(models.Q(type__slug="pilotage") | models.Q(type__slug="observatoire"))
+            .annotate(
+                custom_order=Case(
+                    When(position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "position")
+        )
+
+    def get_document_subpages(self, offers):
+        return (
+            offers.filter(type__slug="document")
+            .annotate(
+                custom_order=Case(
+                    When(position=0, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by("custom_order", "position")
+        )
+
+    def get_all_subpages(self, offers):
+        return offers.annotate(
+            custom_order=Case(
+                When(position=0, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            )
+        ).order_by("custom_order", "position")
 
 
 class TextAndCTAStreamField(StreamField):
@@ -151,17 +181,12 @@ class OffersEntryPage(NumeriqueBasePage):
     type = models.ForeignKey(
         "numerique_gouv.Offertype", blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("Type")
     )
-
     page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
-    # a supprimer
-    target_audiences_old = ParentalManyToManyField(
-        "numerique_gouv.OfferTargetAudience", blank=True, verbose_name=_("Target Audience")
-    )
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audience")
     )
-    major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Dinum Tags"))
-    themes = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Theme"))
+    organizations = ParentalManyToManyField("blog.Organization", blank=True, verbose_name=_("Organizations"))
+    major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Major areas"))
     buttons = ButtonsHorizontalListBlock(label=_("Buttons"))
     text_and_cta = TextAndCTAStreamField(blank=True, verbose_name=_("Text and cta"))
 
@@ -205,10 +230,10 @@ class OffersEntryPage(NumeriqueBasePage):
         MultiFieldPanel(
             [
                 FieldPanel("position"),
+                FieldPanel("organizations"),
                 FieldPanel("page_tags"),
                 FieldPanel("target_audiences"),
                 FieldPanel("major_areas"),
-                FieldPanel("themes"),
                 FieldPanel("text_and_cta"),
             ],
             heading=_("Header"),
@@ -278,9 +303,9 @@ class ProductsEntryPage(NumeriqueBasePage):
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, null=True, verbose_name=_("Target Audiences")
     )
-    page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Categories"))
-    major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Dinum Tags"))
-
+    page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
+    major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Major areas"))
+    organizations = ParentalManyToManyField("blog.Organization", blank=True, verbose_name=_("Organizations"))
     product_url = models.URLField(blank=True, verbose_name=_("Product URL"))
     the_service = models.TextField(blank=True, verbose_name=_("The service"))
     the_problem = models.TextField(blank=True, verbose_name=_("The problem"))
@@ -304,6 +329,7 @@ class ProductsEntryPage(NumeriqueBasePage):
         FieldPanel("product_url"),
         FieldPanel("the_service"),
         FieldPanel("the_problem"),
+        FieldPanel("organizations"),
         FieldPanel("major_areas"),
         FieldPanel("page_tags"),
         FieldPanel("image"),
@@ -386,7 +412,7 @@ class NumeriqueBlogEntryPage(BlogEntryPage):
     major_areas = ParentalManyToManyField(
         "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
     )
-    dinum_tags = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Dinum Tags"))
+    organizations = ParentalManyToManyField("blog.Organization", blank=True, verbose_name=_("Organizations"))
     page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
@@ -413,10 +439,9 @@ class NumeriqueBlogEntryPage(BlogEntryPage):
         ),
         MultiFieldPanel(
             [
-                FieldPanel("blog_categories"),
+                FieldPanel("organizations"),
                 FieldPanel("page_tags"),
                 FieldPanel("major_areas"),
-                FieldPanel("dinum_tags"),
                 FieldPanel("target_audiences"),
             ],
             heading=_("Tags and Categories"),
@@ -442,7 +467,7 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
         posts = posts.select_related("owner").prefetch_related("major_areas", "page_tags", "date__year")
         return posts
 
-    def get_context(self, request, page_tag=None, major_area=None, year=None, *args, **kwargs):
+    def get_context(self, request, page_tag=None, major_area=None, organization=None, year=None, *args, **kwargs):
         context = super(BlogIndexPage, self).get_context(request, *args, **kwargs)
         posts = self.posts
 
@@ -458,17 +483,25 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
             major_area = get_object_or_404(MajorArea, slug=major_area)
             posts = posts.filter(major_areas=major_area)
 
+        if organization is None:
+            organization = request.GET.get("organization")
+        if organization:
+            organization = get_object_or_404(Organization, slug=organization)
+            posts = posts.filter(organizations=organization)
+
         if year:
             posts = posts.filter(date__year=year)
 
         context["posts"] = posts.order_by("-date")
         context["current_page_tag"] = page_tag
         context["current_major_area"] = major_area
+        context["current_organization"] = organization
         context["year"] = year
 
         # Filters
         context["page_tags"] = self.get_page_tags()
         context["major_areas"] = self.get_major_areas()
+        context["organizations"] = self.get_organizations()
 
         return context
 
@@ -479,6 +512,10 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
     def get_major_areas(self) -> QuerySet:
         ids = self.posts.specific().values_list("major_areas", flat=True)
         return MajorArea.objects.filter(id__in=ids).order_by("name")
+
+    def get_organizations(self) -> QuerySet:
+        ids = self.posts.specific().values_list("organizations", flat=True)
+        return Organization.objects.filter(id__in=ids).order_by("name")
 
 
 class HubPages(NumeriqueBasePage):
@@ -499,12 +536,12 @@ class HubPages(NumeriqueBasePage):
         on_delete=models.SET_NULL,
         verbose_name=_("Major Area of Actions"),
     )
-    dinum_tag = models.ForeignKey(
-        "numerique_gouv.DinumTag",
+    organization = models.ForeignKey(
+        "blog.Organization",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        verbose_name=_("Dinum Tags"),
+        verbose_name=_("Organization"),
     )
     page_tag = models.ForeignKey(
         "numerique_gouv.PageTag",
@@ -523,7 +560,7 @@ class HubPages(NumeriqueBasePage):
 
     CHOICES = [
         ("major_area", _("Major Areas of Actions")),
-        ("dinum_tag", _("Dinum Tags")),
+        ("organization", _("Organizations")),
         ("page_tag", _("Page tags")),
         ("target_audience", _("Target Audiences")),
     ]
@@ -551,7 +588,7 @@ class HubPages(NumeriqueBasePage):
                 FieldPanel("display_offers"),
                 FieldPanel("content_source"),
                 FieldPanel("major_area"),
-                FieldPanel("dinum_tag"),
+                FieldPanel("organization"),
                 FieldPanel("page_tag"),
                 FieldPanel("target_audience"),
             ],
@@ -579,8 +616,8 @@ class HubPages(NumeriqueBasePage):
 
         if self.content_source == "major_area":
             return entries.filter(major_areas=self.major_area).order_by("-id")[:3]
-        elif self.content_source == "dinum_tag":
-            return entries.filter(dinum_tags=self.dinum_tag).order_by("-id")[:3]
+        elif self.content_source == "organization":
+            return entries.filter(organizations=self.organization).order_by("-id")[:3]
         elif self.content_source == "page_tag":
             return entries.filter(page_tags=self.page_tag).order_by("-id")[:3]
         elif self.content_source == "target_audience":
@@ -589,8 +626,8 @@ class HubPages(NumeriqueBasePage):
     def get_content_source_name(self):
         if self.content_source == "major_area":
             return self.major_area.name.lower()
-        elif self.content_source == "dinum_tag":
-            return self.dinum_tag.name.lower()
+        elif self.content_source == "organization":
+            return self.organization.name.lower()
         elif self.content_source == "page_tag":
             return self.page_tag.name.lower()
         elif self.content_source == "target_audience":
@@ -609,7 +646,7 @@ class NumeriqueEventPage(EventEntryPage):
     major_areas = ParentalManyToManyField(
         "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
     )
-    dinum_tags = ParentalManyToManyField("numerique_gouv.DinumTag", blank=True, verbose_name=_("Dinum Tags"))
+    organizations = ParentalManyToManyField("blog.Organization", blank=True, verbose_name=_("Organizations"))
     page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
@@ -654,7 +691,7 @@ class NumeriqueEventPage(EventEntryPage):
                 FieldPanel("event_categories"),
                 FieldPanel("page_tags"),
                 FieldPanel("major_areas"),
-                FieldPanel("dinum_tags"),
+                FieldPanel("organizations"),
                 FieldPanel("target_audiences"),
             ],
             heading=_("Tags and Categories"),
@@ -717,4 +754,4 @@ class TargetAudience(BaseCategory):
 @register_snippet
 class DinumTag(BaseCategory):
     class Meta:
-        verbose_name = _("Dinum Tag")
+        verbose_name = _("Dinum Tag ( a supprimer )")
