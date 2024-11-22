@@ -3,8 +3,21 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, TemplateView
 from unidecode import unidecode
+from wagtail.models import Page
+from wagtail.search.backends import get_search_backend
 
 from content_manager.models import ContentPage, Tag
+from numerique_gouv.models import (
+    HubPages,
+    NumeriqueBlogEntryPage,
+    NumeriqueBlogIndexPage,
+    NumeriqueEventPage,
+    NumeriqueEventsIndexPage,
+    NumeriquePage,
+    OffersEntryPage,
+    OffersIndexPage,
+    ProductsIndexPage,
+)
 
 
 class SearchResultsView(ListView):
@@ -14,10 +27,28 @@ class SearchResultsView(ListView):
     def get_queryset(self):
         query = self.request.GET.get("q", None)
         if query:
-            object_list = ContentPage.objects.live().search(query)
+            s = get_search_backend()
+            id_list = []
+            models = [
+                NumeriquePage,
+                NumeriqueBlogIndexPage,
+                NumeriqueBlogEntryPage,
+                HubPages,
+                OffersIndexPage,
+                OffersEntryPage,
+                ProductsIndexPage,
+                NumeriqueEventsIndexPage,
+                NumeriqueEventPage,
+            ]
 
+            for model in models:
+                results = s.search(query, model.objects.live())
+                id_list.extend([r.id for r in results])
+
+            object_list = Page.objects.filter(id__in=id_list)
         else:
-            object_list = ContentPage.objects.none()
+            object_list = Page.objects.none()
+
         return object_list
 
     def get_context_data(self, **kwargs):
