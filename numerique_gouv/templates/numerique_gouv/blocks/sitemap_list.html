@@ -1,0 +1,10 @@
+<li>
+  <a href="{{ structure.url }}" class="fr-link">{{ structure.page.title }}</a>
+  {% if structure.children %}
+    <ul class="fr-list">
+      {% for child in structure.children %}
+        {% include "numerique_gouv/blocks/sitemap_list.html" with structure=child %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</li>
