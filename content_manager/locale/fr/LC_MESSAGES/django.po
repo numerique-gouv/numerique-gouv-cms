@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-24 15:55+0200\n"
+"POT-Creation-Date: 2024-11-23 21:13+0100\n"
 "PO-Revision-Date: 2024-10-24 15:55+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1321,7 +1321,7 @@ msgid "Continue"
 msgstr "Continuer"
 
 #: content_manager/templates/content_manager/tags_list_page.html:31
-#: content_manager/views.py:46 content_manager/views.py:77
+#: content_manager/views.py:77 content_manager/views.py:108
 msgid "Tags"
 msgstr "Étiquettes"
 
@@ -1333,16 +1333,16 @@ msgstr "Sélectionner une icône"
 msgid "search/"
 msgstr "recherche/"
 
-#: content_manager/views.py:52
+#: content_manager/views.py:83
 msgid "List of all the tags."
 msgstr "Liste de toutes les étiquettes."
 
-#: content_manager/views.py:73
+#: content_manager/views.py:104
 #, python-brace-format
 msgid "Pages tagged with {tag}"
 msgstr "Pages avec l’étiquette {tag}"
 
-#: content_manager/views.py:82
+#: content_manager/views.py:113
 #, python-brace-format
 msgid "List of pages tagged with {tag}"
 msgstr "Liste de pages avec l’étiquette {tag}"
