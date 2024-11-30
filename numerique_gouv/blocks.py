@@ -246,44 +246,6 @@ class CustomBlogRecentEntriesBlock(BlogRecentEntriesBlock):
         value_class = CustomRecentEntriesStructValue
 
 
-class CustomFullWidthBlock(FullWidthBlock):
-    html = blocks.RawHTMLBlock(
-        required=False,
-        help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
-        group=_("Expert syntax"),
-    )
-    numeric_direction_card = NumericDirectionCardBlock(
-        required=False, label=_("Numeric direction card"), group=_("Numerique components")
-    )
-    custom_ajustable_column = CustomAdjustableColumnBlock(
-        required=False, label=_("Custom adjustable column"), group=_("Page structure")
-    )
-    horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
-    multicolumns = CustomMultiColumnsWithTitleBlock(
-        required=False, label=_("Multi columns"), group=_("Page structure")
-    )
-    stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
-    spacer = SpacerBlock(label=_("Spacer"), group=_("Page structure"))
-    custom_item_grid = CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))
-    blog_recent_entries = CustomBlogRecentEntriesBlock(label=_("Blog recent entries"), group=_("Website structure"))
-
-
-class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
-    content = CustomFullWidthBlock(label=_("Content"))
-
-
-class CustomEventsRecentEntriesBlocks(EventsRecentEntriesBlock):
-    index_page = blocks.PageChooserBlock(
-        label=_("Event calendar"), page_type="numerique_gouv.NumeriqueEventsIndexPage"
-    )
-
-    class Meta:
-        template = "numerique_gouv/blocks/events_recent_entries.html"
-        icon = "date"
-        label = "Events recent entries"
-        value_class = CustomRecentEntriesStructValue
-
-
 class Slider(blocks.StructBlock):
     title = blocks.CharBlock(required=False, label=_("Title"))
     title_heading_tag = blocks.ChoiceBlock(
@@ -306,6 +268,45 @@ class Slider(blocks.StructBlock):
         template = "numerique_gouv/blocks/slider.html"
         icon = "image"
         label = "Slider"
+
+
+class CustomFullWidthBlock(FullWidthBlock):
+    html = blocks.RawHTMLBlock(
+        required=False,
+        help_text=_("Warning: Use HTML block with caution. Malicious code can compromise the security of the site."),
+        group=_("Expert syntax"),
+    )
+    numeric_direction_card = NumericDirectionCardBlock(
+        required=False, label=_("Numeric direction card"), group=_("Numerique components")
+    )
+    custom_ajustable_column = CustomAdjustableColumnBlock(
+        required=False, label=_("Custom adjustable column"), group=_("Page structure")
+    )
+    horizontal_card = HorizontalCardBlock(label=_("Horizontal card"), group=_("DSFR components"))
+    multicolumns = CustomMultiColumnsWithTitleBlock(
+        required=False, label=_("Multi columns"), group=_("Page structure")
+    )
+    stylized_column = StylizedColumn(label=_("Stylized column"), group=_("Numerique components"))
+    spacer = SpacerBlock(label=_("Spacer"), group=_("Page structure"))
+    custom_item_grid = CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))
+    blog_recent_entries = CustomBlogRecentEntriesBlock(label=_("Blog recent entries"), group=_("Website structure"))
+    slider = Slider(label=_("Slider"), group=_("Numerique components"))
+
+
+class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
+    content = CustomFullWidthBlock(label=_("Content"))
+
+
+class CustomEventsRecentEntriesBlocks(EventsRecentEntriesBlock):
+    index_page = blocks.PageChooserBlock(
+        label=_("Event calendar"), page_type="numerique_gouv.NumeriqueEventsIndexPage"
+    )
+
+    class Meta:
+        template = "numerique_gouv/blocks/events_recent_entries.html"
+        icon = "date"
+        label = "Events recent entries"
+        value_class = CustomRecentEntriesStructValue
 
 
 STREAMFIELD_NUMERIQUE_BLOCKS = [
