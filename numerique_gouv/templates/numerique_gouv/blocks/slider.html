@@ -1,0 +1,41 @@
+{% load i18n wagtailcore_tags %}
+
+<div class="fr-container">
+  {% if value.title %}
+    <div class="fr-grid-row">
+      <div class="fr-col-12 fr-mt-3w">
+        <{{ value.heading_tag|default:"h2" }} class="fr-{{ value.title_heading_size|default:"h2" }}">{{ value.title }}</{{ value.heading_tag|default:"h2" }}>
+      </div>
+    </div>
+  {% endif %}
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      {% for block in value.blocks %}
+        <div class="swiper-slide">
+          {% include_block block %}
+        </div>
+      {% endfor %}
+    </div>
+    <div class="fr-container fr-my-2w">
+      <div class="fr-slider-footer">
+        <nav role="navigation" class="fr-pagination" aria-label="Pagination">
+          <ul class="fr-pagination__list">
+            <li>
+              <button class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label fr-text--sm fr-mb-0"
+                      id="fr-slideshow-prev" title="{% translate "View previous slide" %}" aria-label="{% translate "Previous slide" %}">
+                {% translate "Previous" %}
+              </button>
+            </li>
+            <li class="fr-slide-stepper swiper-pagination-bullets swiper-pagination-horizontal"></li>
+            <li>
+              <button class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label fr-text--sm fr-mb-0"
+                      id="fr-slideshow-next" title="{% translate "View next slide" %}" aria-label="{% translate "Next slide" %}">
+                {% translate "next" %}
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

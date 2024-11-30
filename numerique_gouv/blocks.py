@@ -246,6 +246,30 @@ class CustomBlogRecentEntriesBlock(BlogRecentEntriesBlock):
         value_class = CustomRecentEntriesStructValue
 
 
+class Slider(blocks.StructBlock):
+    title = blocks.CharBlock(required=False, label=_("Title"))
+    title_heading_tag = blocks.ChoiceBlock(
+        required=False,
+        label=_("Title heading level"),
+        choices=HEADING_CHOICES,
+        default="h2",
+        help_text=_("Adapt to the page layout. Defaults to heading 2."),
+    )
+    title_heading_size = blocks.ChoiceBlock(
+        required=False,
+        label=_("Title heading size level"),
+        choices=HEADING_SIZE_CHOICES,
+        default="h2",
+        help_text=_("Defaults to heading 2."),
+    )
+    blocks = CustomColumnBlock(label=_("Slider blocks"))
+
+    class Meta:
+        template = "numerique_gouv/blocks/slider.html"
+        icon = "image"
+        label = "Slider"
+
+
 class CustomFullWidthBlock(FullWidthBlock):
     html = blocks.RawHTMLBlock(
         required=False,
@@ -266,6 +290,7 @@ class CustomFullWidthBlock(FullWidthBlock):
     spacer = SpacerBlock(label=_("Spacer"), group=_("Page structure"))
     custom_item_grid = CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))
     blog_recent_entries = CustomBlogRecentEntriesBlock(label=_("Blog recent entries"), group=_("Website structure"))
+    slider = Slider(label=_("Slider"), group=_("Numerique components"))
 
 
 class CustomFullWidthBackgroundBlock(FullWidthBackgroundBlock):
@@ -311,4 +336,5 @@ STREAMFIELD_NUMERIQUE_BLOCKS = [
         CustomEventsRecentEntriesBlocks(label=_("custom Events recent entries"), group=_("Website structure")),
     ),
     ("item_grid", CustomItemGridBlock(label=_("Item grid"), group=_("Page structure"))),
+    ("slider", Slider(label=_("Slider"), group=_("Numerique components"))),
 ]

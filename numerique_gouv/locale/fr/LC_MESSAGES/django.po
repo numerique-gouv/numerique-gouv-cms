@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-23 21:13+0100\n"
-"PO-Revision-Date: 2024-11-23 21:13+0100\n"
+"POT-Creation-Date: 2024-11-30 20:13+0100\n"
+"PO-Revision-Date: 2024-11-30 20:14+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -138,6 +138,7 @@ msgid "Secondary link"
 msgstr "Lien secondaire"
 
 #: numerique_gouv/blocks.py:101 numerique_gouv/blocks.py:129
+#: numerique_gouv/blocks.py:287
 msgid "Title"
 msgstr "Titre"
 
@@ -168,9 +169,9 @@ msgstr "Utilise les couleurs du système de design de l’État"
 #: numerique_gouv/blocks.py:129 numerique_gouv/blocks.py:136
 #: numerique_gouv/blocks.py:172 numerique_gouv/blocks.py:178
 #: numerique_gouv/blocks.py:256 numerique_gouv/blocks.py:265
-#: numerique_gouv/blocks.py:288 numerique_gouv/blocks.py:292
-#: numerique_gouv/blocks.py:303 numerique_gouv/blocks.py:304
-#: numerique_gouv/blocks.py:307
+#: numerique_gouv/blocks.py:311 numerique_gouv/blocks.py:315
+#: numerique_gouv/blocks.py:326 numerique_gouv/blocks.py:327
+#: numerique_gouv/blocks.py:330 numerique_gouv/blocks.py:337
 msgid "Numerique components"
 msgstr "Composants Numerique.gouv.fr"
 
@@ -189,7 +190,7 @@ msgid "Expert syntax"
 msgstr "Syntaxe experte"
 
 #: numerique_gouv/blocks.py:136 numerique_gouv/blocks.py:172
-#: numerique_gouv/blocks.py:256 numerique_gouv/blocks.py:292
+#: numerique_gouv/blocks.py:256 numerique_gouv/blocks.py:315
 msgid "Numeric direction card"
 msgstr "Carte direction numérique"
 
@@ -199,16 +200,16 @@ msgid "Horizontal card"
 msgstr "Carte horizontale"
 
 #: numerique_gouv/blocks.py:139 numerique_gouv/blocks.py:267
-#: numerique_gouv/blocks.py:313
+#: numerique_gouv/blocks.py:336
 msgid "Item grid"
 msgstr "Grille de composants"
 
 #: numerique_gouv/blocks.py:139 numerique_gouv/blocks.py:175
 #: numerique_gouv/blocks.py:182 numerique_gouv/blocks.py:259
 #: numerique_gouv/blocks.py:263 numerique_gouv/blocks.py:266
-#: numerique_gouv/blocks.py:267 numerique_gouv/blocks.py:289
-#: numerique_gouv/blocks.py:296 numerique_gouv/blocks.py:302
-#: numerique_gouv/blocks.py:313
+#: numerique_gouv/blocks.py:267 numerique_gouv/blocks.py:312
+#: numerique_gouv/blocks.py:319 numerique_gouv/blocks.py:325
+#: numerique_gouv/blocks.py:336
 msgid "Page structure"
 msgstr "Structure de la page"
 
@@ -238,7 +239,7 @@ msgid "Custom adjustable column"
 msgstr "Colonne ajustable"
 
 #: numerique_gouv/blocks.py:178 numerique_gouv/blocks.py:265
-#: numerique_gouv/blocks.py:303
+#: numerique_gouv/blocks.py:326
 msgid "Stylized column"
 msgstr "Colonne stylisée"
 
@@ -277,20 +278,20 @@ msgstr "Filtrer par catégorie"
 msgid "Filter by tag"
 msgstr "Filtrer par tag"
 
-#: numerique_gouv/blocks.py:263 numerique_gouv/blocks.py:289
+#: numerique_gouv/blocks.py:263 numerique_gouv/blocks.py:312
 msgid "Multi columns"
 msgstr "Multi-colonnes"
 
-#: numerique_gouv/blocks.py:266 numerique_gouv/blocks.py:302
+#: numerique_gouv/blocks.py:266 numerique_gouv/blocks.py:325
 msgid "Spacer"
 msgstr "Espacement"
 
-#: numerique_gouv/blocks.py:268 numerique_gouv/blocks.py:300
+#: numerique_gouv/blocks.py:268 numerique_gouv/blocks.py:323
 msgid "Blog recent entries"
 msgstr "Actualités récentes"
 
-#: numerique_gouv/blocks.py:268 numerique_gouv/blocks.py:300
-#: numerique_gouv/blocks.py:311
+#: numerique_gouv/blocks.py:268 numerique_gouv/blocks.py:323
+#: numerique_gouv/blocks.py:334
 msgid "Website structure"
 msgstr "Structure de la page"
 
@@ -298,25 +299,49 @@ msgstr "Structure de la page"
 msgid "Event calendar"
 msgstr "Date et lieu de l’événement"
 
-#: numerique_gouv/blocks.py:288
+#: numerique_gouv/blocks.py:290
+msgid "Title heading level"
+msgstr "Niveau de titre"
+
+#: numerique_gouv/blocks.py:293
+msgid "Adapt to the page layout. Defaults to heading 2."
+msgstr "À adapter à la structure de la page. Par défaut en-tête 2."
+
+#: numerique_gouv/blocks.py:297
+msgid "Title heading size level"
+msgstr "Taille du titre"
+
+#: numerique_gouv/blocks.py:300
+msgid "Defaults to heading 2."
+msgstr "Par défaut taille d’en-tête 2."
+
+#: numerique_gouv/blocks.py:302
+msgid "Slider blocks"
+msgstr "Bloc carrousel"
+
+#: numerique_gouv/blocks.py:311
 msgid "Headline cards"
 msgstr "Unes"
 
-#: numerique_gouv/blocks.py:296
+#: numerique_gouv/blocks.py:319
 msgid "Full width background"
 msgstr "Fond pleine largeur"
 
-#: numerique_gouv/blocks.py:304
+#: numerique_gouv/blocks.py:327
 msgid "Highlight cards"
 msgstr "Cartes mises en avant"
 
-#: numerique_gouv/blocks.py:307
+#: numerique_gouv/blocks.py:330
 msgid "Vertical Highlight cards"
 msgstr "Cartes mises en avant vertical"
 
-#: numerique_gouv/blocks.py:311
+#: numerique_gouv/blocks.py:334
 msgid "custom Events recent entries"
 msgstr "événements récents"
+
+#: numerique_gouv/blocks.py:337
+msgid "Slider"
+msgstr "Carrousel"
 
 #: numerique_gouv/constants.py:4
 msgid "Heading 1"
@@ -657,6 +682,34 @@ msgstr "La feuille de route"
 #: numerique_gouv/templates/numerique_gouv/blocks/product_card.html:29
 msgid "Discover service"
 msgstr "Découvrir le service"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:24
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:35
+msgid "Previous"
+msgstr "Précédent"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:30
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:34
+msgid "View previous slide"
+msgstr "Voir la diapositive précédente"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:30
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:34
+msgid "Previous slide"
+msgstr "Diapositive précédente"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:31
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:42
+msgid "next"
+msgstr "Suivant"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:41
+msgid "View next slide"
+msgstr "Voir la diapositive suivante"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/slider.html:41
+msgid "Next slide"
+msgstr "Diapositive suivante"
 
 #: numerique_gouv/templates/numerique_gouv/blog_entry_page.html:40
 msgid "Themes :"
