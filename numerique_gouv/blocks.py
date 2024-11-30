@@ -285,7 +285,7 @@ class CustomEventsRecentEntriesBlocks(EventsRecentEntriesBlock):
 
 
 class Slider(blocks.StructBlock):
-    title = blocks.CharBlock(required=True, label=_("Title"))
+    title = blocks.CharBlock(required=False, label=_("Title"))
     title_heading_tag = blocks.ChoiceBlock(
         required=False,
         label=_("Title heading level"),

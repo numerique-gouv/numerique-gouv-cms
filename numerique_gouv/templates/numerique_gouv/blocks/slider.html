@@ -1,10 +1,13 @@
 {% load i18n wagtailcore_tags %}
 
 <div class="fr-container">
-  <div class="fr-grid-row">
-    <div class="fr-col-12 fr-mt-3w">
-      <{{ value.heading_tag|default:"h2" }} class="fr-{{ value.title_heading_size|default:"h2" }}">{{ value.title }}</{{ value.heading_tag|default:"h2" }}>
-  </div>
+  {% if value.title %}
+    <div class="fr-grid-row">
+      <div class="fr-col-12 fr-mt-3w">
+        <{{ value.heading_tag|default:"h2" }} class="fr-{{ value.title_heading_size|default:"h2" }}">{{ value.title }}</{{ value.heading_tag|default:"h2" }}>
+      </div>
+    </div>
+  {% endif %}
   <div class="swiper">
     <div class="swiper-wrapper">
       {% for block in value.blocks %}
