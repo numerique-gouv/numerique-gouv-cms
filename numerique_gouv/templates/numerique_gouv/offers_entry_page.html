@@ -16,6 +16,11 @@
         <div class="{% if page.organization_title %}fr-col-md-8{% endif %}">
           <h1 class="fr-text-title--blue-france">{{ page.title }}</h1>
           <ul style="list-style: none; display: flex; flex-wrap: wrap;">
+            {% for organization in page.organizations.all %}
+              <li class="fr-mr-1w">
+                <span class="fr-badge fr-badge--{{ organization.color }}">{{ organization }}</span>
+              </li>
+            {% endfor %}
             {% if page.type %}
               <li class="fr-mr-1w">
                 <span class="fr-badge fr-badge--{{ page.type.color }}">{{ page.type }}</span>
