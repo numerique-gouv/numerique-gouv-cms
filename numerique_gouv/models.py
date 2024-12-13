@@ -175,8 +175,9 @@ class OffersIndexPage(NumeriqueBasePage):
 
 class TextAndCTAStreamField(StreamField):
     def __init__(self, *args, **kwargs):
+        # Définir le minimum_number_of_blocks à 0 pour rendre le champ optionnel
         block_types = [("text_and_cta", TextAndCTA()), ("html", blocks.RawHTMLBlock())]
-        super().__init__(block_types, *args)
+        super().__init__(block_types, min_num=0, max_num=None, *args, **kwargs)
 
 
 class OffersEntryPage(NumeriqueBasePage):
@@ -204,6 +205,7 @@ class OffersEntryPage(NumeriqueBasePage):
     )
     card_alt_image = models.CharField(max_length=255, blank=True, verbose_name=_("Image alt"))
     position = models.IntegerField(default=0)
+    external_link = models.URLField(blank=True, verbose_name=_("External link"))
 
     # organization
     organization_title = models.TextField(blank=True, verbose_name=_("Organization title"))
@@ -282,6 +284,7 @@ class OffersEntryPage(NumeriqueBasePage):
         FieldPanel("card_image"),
         FieldPanel("card_alt_image"),
         FieldPanel("card_text"),
+        FieldPanel("external_link"),
     ]
 
     edit_handler = TabbedInterface(
