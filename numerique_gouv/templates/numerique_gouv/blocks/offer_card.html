@@ -5,7 +5,11 @@
     <div class="fr-card__body">
       <div class="fr-card__content">
         <h3 class="fr-card__title">
-          <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+          {% if page.external_link %}
+            <a href="{{ page.external_link }}" target="_blank" title="{{ page.title }} - Ouvre une nouvelle fenêtre">{{ page.title }}</a>
+          {% else %}
+            <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+          {% endif %}
         </h3>
         <p class="fr-card__desc">{{ page.card_text }}</p>
       </div>
@@ -15,9 +19,11 @@
         {% image page.card_image original class="fr-responsive-img" alt=page.card_alt_image %}
       </div>
       <ul class="fr-badges-group">
+        {% for organization in page.organizations.all %}
         <li>
-          <p class="fr-badge fr-badge--{{ page.type.color }} fr-my-5v">{{ page.type.name }}</p>
+          <p class="fr-badge fr-badge--{{ organization.color }} fr-my-5v">{{ organization.name }}</p>
         </li>
+        {% endfor %}
       </ul>
     </div>
   </div>
