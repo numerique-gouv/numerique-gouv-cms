@@ -15,9 +15,11 @@
         {% image page.card_image original class="fr-responsive-img" alt=page.card_alt_image %}
       </div>
       <ul class="fr-badges-group">
+        {% for organization in page.organizations.all %}
         <li>
-          <p class="fr-badge fr-badge--{{ page.type.color }} fr-my-5v">{{ page.type.name }}</p>
+          <p class="fr-badge fr-badge--{{ organization.color }} fr-my-5v">{{ organization.name }}</p>
         </li>
+        {% endfor %}
       </ul>
     </div>
   </div>
