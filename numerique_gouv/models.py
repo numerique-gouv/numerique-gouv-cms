@@ -1,3 +1,4 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from django.db.models import Case, IntegerField, QuerySet, Value, When
 from django.shortcuts import get_object_or_404, redirect
@@ -497,7 +498,21 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
         if year:
             posts = posts.filter(date__year=year)
 
-        context["posts"] = posts.order_by("-date")
+        posts = posts.order_by("-date")
+
+        # Pagination
+        page = request.GET.get("page")
+        page_size = self.posts_per_page
+
+        paginator = Paginator(posts, page_size)  # Show <page_size> posts per page
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+
+        context["posts"] = posts
         context["current_page_tag"] = page_tag
         context["current_major_area"] = major_area
         context["current_organization"] = organization
