@@ -27,6 +27,7 @@ class NumeriquePage(NumeriqueBasePage):
         "numerique_gouv.ProductsIndexPage",
         "numerique_gouv.NumeriqueEventsIndexPage",
         "numerique_gouv.SitemapPage",
+        "content_manager.CatalogIndexPage",
     ]
 
     class Meta:
