@@ -18,9 +18,8 @@
 
     {% if current_category.description %}
       {{ current_category.description|richtext }}
-    {% else %}
-      {{ page.body }}
     {% endif %}
+
 
     {% if page.show_filters %}
       <div class="fr-grid-row fr-grid-row--gutters fr-mb-3w">
@@ -112,5 +111,7 @@
       {% endif %}
     {% endif %}
   </div>
+
+  {{ page.body }}
 {% endblock content %}
 

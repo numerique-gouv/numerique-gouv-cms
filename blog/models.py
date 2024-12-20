@@ -224,6 +224,12 @@ class BlogIndexPage(SitesFacilesBasePage):
 
     subpage_types = ["blog.BlogEntryPage"]
 
+    body = StreamField(
+        STREAMFIELD_COMMON_BLOCKS + STREAMFIELD_NUMERIQUE_BLOCKS,
+        blank=True,
+        use_json_field=True,
+    )
+
     class Meta:
         verbose_name = _("Blog index")
 
