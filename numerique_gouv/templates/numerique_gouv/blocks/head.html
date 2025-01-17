@@ -14,6 +14,14 @@
   <meta property="og:url" content="{{ page.full_url }}" />
   <meta property="og:description" content="{{ page.search_description }}" />
   <meta property="og:locale" content="{{ LANGUAGE_CODE }}" />
+  <link rel="alternate"
+        type="application/atom+xml"
+        title="Atom"
+        href="{% routablepageurl page 'atom_feed' %}">
+  <link rel="alternate"
+        type="application/rss+xml"
+        title="RSS"
+        href="{% routablepageurl page 'rss_feed' %}">
 
   {% if page.get_translations.live %}
     {% for translation in page.get_translations.live %}
