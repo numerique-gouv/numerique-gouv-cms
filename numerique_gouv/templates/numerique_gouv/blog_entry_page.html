@@ -28,7 +28,12 @@
               <img class="ng-image-max-100" src="{{ header_image.full_url }}" alt=""/>
             {% endif %}
           </div>
-          <h1 class="fr-my-2w">{{ page.title }}</h1>
+          {% if not page.header_with_title %}
+            <h1>
+              {{ page.title }}
+              {% include "content_manager/blocks/page_visibility.html" %}
+            </h1>
+          {% endif %}
           <p>
             Publié le <a href="{% pageurl page.get_parent %}{% toggle_url_filter year=page.date.year %}">{{ page.date |date:'l j F Y' }}</a>
             {% if organizations %}

@@ -99,22 +99,17 @@ msgstr "Filtrer par catégorie"
 msgid "Filter by tag"
 msgstr "Filtrer par étiquette"
 
-#: blog/models.py:207 blog/templates/blog/blog_index_page.html:111
-#: blog/models.py:205 blog/templates/blog/blog_index_page.html:111
 #: blog/models.py:213 blog/templates/blog/blog_index_page.html:119
 msgid "Filter by author"
 msgstr "Filtrer par auteur"
 
-#: blog/models.py:209 blog/templates/blog/blog_index_page.html:126
-#: blog/models.py:207 blog/templates/blog/blog_index_page.html:126
 #: blog/models.py:215 blog/templates/blog/blog_index_page.html:134
 msgid "Filter by source"
 msgstr "Filtrer par source"
 
 #: blog/models.py:215
 msgid "The source is the organization of the post author"
-msgstr ""
-"La source est l’organisation à laquelle appartient l’auteur de l’article"
+msgstr "La source est l’organisation à laquelle appartient l’auteur de l’article"
 
 #: blog/models.py:228
 msgid "Show filters"
