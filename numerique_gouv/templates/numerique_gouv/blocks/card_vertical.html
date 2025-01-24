@@ -9,9 +9,9 @@
       <div class="fr-card__desc">
         {% with page.body|first as first_block %}
           {% if first_block.block_type == 'highlight' or first_block.block_type == 'callout' %}
-            {{ first_block.value.text|truncatechars:200 }}
+            {{ first_block.value.text|striptags|safe|truncatechars:200 }}
           {% else %}
-            {{ first_block.value|truncatechars:200 }}
+            {{ first_block.value|striptags|safe|truncatechars:200 }}
           {% endif %}
         {% endwith %}
       </div>

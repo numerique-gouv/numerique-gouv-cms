@@ -7,12 +7,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("numerique_gouv", "0087_alter_offersentrypage_text_and_cta"),
+        ("blog", "0055_merge_20250117_1145"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="numeriquebasepage",
+            model_name="blogentrypage",
             name="body",
             field=wagtail.fields.StreamField(
                 [
