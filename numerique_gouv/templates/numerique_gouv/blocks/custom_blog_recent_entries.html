@@ -66,7 +66,15 @@
   </div>
   <ul class="fr-btns-group fr-btns-group--inline-sm fr-btns-group--center">
     <li>
-      <a class="fr-btn" href="{% pageurl value.blog %}">{% translate "See all posts" %}</a>
+      <a class="fr-btn" href="{% pageurl value.blog %}">
+        {% if value.blog.title == "Actualités" %}
+          {% translate "See all news" %}
+        {% elif value.blog.title == "Communiqués"  %}
+          {% translate "See all communiques" %}
+        {% else %}
+          {% translate "See all posts" %}
+        {% endif %}
+      </a>
     </li>
   </ul>
 </div>

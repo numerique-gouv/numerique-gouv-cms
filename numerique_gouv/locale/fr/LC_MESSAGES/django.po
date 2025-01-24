@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-17 18:35+0100\n"
-"PO-Revision-Date: 2025-01-17 18:43+0100\n"
+"POT-Creation-Date: 2025-01-24 14:13+0100\n"
+"PO-Revision-Date: 2025-01-24 14:16+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -668,7 +668,16 @@ msgstr "Filtrer par source"
 msgid "No article found."
 msgstr "Pas d’actualité trouvée."
 
-#: numerique_gouv/templates/numerique_gouv/blocks/custom_blog_recent_entries.html:69
+#: numerique_gouv/templates/numerique_gouv/blocks/custom_blog_recent_entries.html:71
+#: numerique_gouv/templates/numerique_gouv/hub_pages.html:31
+msgid "See all news"
+msgstr "Voir toutes les actualités"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/custom_blog_recent_entries.html:73
+msgid "See all communiques"
+msgstr "Voir tous les communiqués"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/custom_blog_recent_entries.html:75
 msgid "See all posts"
 msgstr "Voir toutes les actualités"
 
@@ -773,10 +782,6 @@ msgstr "Actualités"
 msgid "See more news"
 msgstr "Voir plus d’actualités"
 
-#: numerique_gouv/templates/numerique_gouv/hub_pages.html:31
-msgid "See all news"
-msgstr "Voir toutes les actualités"
-
 #: numerique_gouv/templates/numerique_gouv/hub_pages.html:40
 msgid "Offers"
 msgstr "Offres"
@@ -855,6 +860,11 @@ msgstr "Autres services en accélération et Startups d’État"
 #: numerique_gouv/templates/numerique_gouv/products_index_page.html:85
 msgid "Discover"
 msgstr "Découvrir"
+
+#, fuzzy
+#~| msgid "See all posts"
+#~ msgid "See all actus"
+#~ msgstr "Voir toutes les actualités"
 
 #~ msgid "Categories"
 #~ msgstr "Catégories"
