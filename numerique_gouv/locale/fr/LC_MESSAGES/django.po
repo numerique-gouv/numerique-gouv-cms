@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-24 14:13+0100\n"
-"PO-Revision-Date: 2025-01-24 14:16+0100\n"
+"POT-Creation-Date: 2025-01-31 11:28+0100\n"
+"PO-Revision-Date: 2025-01-31 11:30+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -725,11 +725,11 @@ msgstr "Diapositive suivante"
 msgid "next"
 msgstr "Suivant"
 
-#: numerique_gouv/templates/numerique_gouv/blog_entry_page.html:51
+#: numerique_gouv/templates/numerique_gouv/blog_entry_page.html:45
 msgid "Themes :"
 msgstr "Thématiques :"
 
-#: numerique_gouv/templates/numerique_gouv/blog_entry_page.html:63
+#: numerique_gouv/templates/numerique_gouv/blog_entry_page.html:57
 msgid "Categories :"
 msgstr "Catégories :"
 
@@ -799,27 +799,27 @@ msgid "See all services"
 msgstr "Voir tous les services"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:28
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:243
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:242
 msgid "Request DINUM’s expertise"
 msgstr "Solliciter l’expertise de la DINUM"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:72
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:253
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:260
 msgid "Consult a reference document"
 msgstr "Consulter un document de référence"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:102
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:263
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:278
 msgid "Financing a digital project"
 msgstr "Financer un projet numérique"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:130
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:273
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:296
 msgid "Equipping public officials"
 msgstr "Outiller les agents publics"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:159
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:283
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:314
 msgid "Access the management tools"
 msgstr "Accéder aux outils de pilotage"
 
@@ -834,6 +834,23 @@ msgstr "Filtrer par public cible"
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:222
 msgid "Offers by Organization"
 msgstr "Filtrer par émetteur"
+
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:252
+msgid "See more expertises"
+msgstr "Voir plus d’expertises"
+
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:270
+msgid "See more document"
+msgstr "Voir plus de documents"
+
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:288
+msgid "See more offers"
+msgstr "Voir plus d’offres"
+
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:306
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:324
+msgid "See more tools"
+msgstr "Voir plus d’outils"
 
 #: numerique_gouv/templates/numerique_gouv/products_index_page.html:21
 msgid "Digital technology to simplify citizen procedures"
