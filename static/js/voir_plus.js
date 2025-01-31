@@ -20,4 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupVoirPlusButton('voir-plus-citizens', 'citizen-subpage');
   setupVoirPlusButton('voir-plus-companies', 'company-subpage');
   setupVoirPlusButton('voir-plus-agents', 'agent-subpage');
+  setupVoirPlusButton('voir-plus-expertises', 'expertise-subpage');
+  setupVoirPlusButton('voir-plus-documents', 'document-subpage');
+  setupVoirPlusButton('voir-plus-financements', 'financement-subpage');
+  setupVoirPlusButton('voir-plus-outils', 'outil-subpage');
+  setupVoirPlusButton('voir-plus-pilotages', 'pilotage-subpage');
 });

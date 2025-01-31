@@ -237,55 +237,97 @@
     </div>
   </div>
 
-  
-  <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
-    <div class="fr-container" id="expertise">
+  <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume);" aria-labelledby="expertises-section">
+    <div class="fr-container">
       <h2>{{ _('Request DINUM’s expertise') }}</h2>
-      <div class="fr-grid-row fr-grid-row--gutters">
+      <div id="expertises-section" class="fr-grid-row fr-grid-row--gutters">
         {% for offer in expertise_subpages %}
+        <div class="fr-col-12 fr-col-md-4 expertise-subpage {% if forloop.counter > 6 %}hidden{% endif %}">
           {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
+        </div>
         {% endfor %}
       </div>
+      {% if expertise_subpages|length > 6 %}
+      <div class="fr-grid-row fr-grid-row--center fr-mt-3w">
+        <button id="voir-plus-expertises" class="fr-btn" aria-controls="expertises-section" aria-expanded="false">{{ _('See more expertises') }}</button>
+      </div>
+      {% endif %}
     </div>
   </div>
 
-  <div class="fr-container" id="document">
-    <h2>{{ _('Consult a reference document') }}</h2>
-    <div class="fr-grid-row fr-grid-row--gutters">
-      {% for offer in document_subpages %}
-        {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
-      {% endfor %}
+  <div class="fr-py-5w fr-my-5w" aria-labelledby="documents-section">
+    <div class="fr-container">
+      <h2>{{ _('Consult a reference document') }}</h2>
+      <div id="documents-section" class="fr-grid-row fr-grid-row--gutters">
+        {% for offer in document_subpages %}
+        <div class="fr-col-12 fr-col-md-4 document-subpage {% if forloop.counter > 6 %}hidden{% endif %}">
+          {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
+        </div>
+        {% endfor %}
+      </div>
+      {% if document_subpages|length > 6 %}
+      <div class="fr-grid-row fr-grid-row--center fr-mt-3w">
+        <button id="voir-plus-documents" class="fr-btn" aria-controls="documents-section" aria-expanded="false">{{ _('See more document') }}</button>
+      </div>
+      {% endif %}
     </div>
   </div>
-  
-  <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
-    <div class="fr-container" id="fincancing">
+
+  <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume);" aria-labelledby="financements-section">
+    <div class="fr-container">
       <h2>{{ _('Financing a digital project') }}</h2>
-      <div class="fr-grid-row fr-grid-row--gutters">
+      <div id="financements-section" class="fr-grid-row fr-grid-row--gutters">
         {% for offer in financement_subpages %}
+        <div class="fr-col-12 fr-col-md-4 financement-subpage {% if forloop.counter > 6 %}hidden{% endif %}">
           {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
+        </div>
         {% endfor %}
       </div>
+      {% if financement_subpages|length > 6 %}
+      <div class="fr-grid-row fr-grid-row--center fr-mt-3w">
+        <button id="voir-plus-financements" class="fr-btn" aria-controls="financements-section" aria-expanded="false">{{ _('See more offers') }}</button>
+      </div>
+      {% endif %}
     </div>
   </div>
 
-  <div class="fr-container" id="tools">
-    <h2>{{ _('Equipping public officials') }}</h2>
-    <div class="fr-grid-row fr-grid-row--gutters">
-      {% for offer in tools_subpages %}
-        {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
-      {% endfor %}
+  <div class="fr-py-5w fr-my-5w" aria-labelledby="outils-section">
+    <div class="fr-container">
+      <h2>{{ _('Equipping public officials') }}</h2>
+      <div id="outils-section" class="fr-grid-row fr-grid-row--gutters">
+        {% for offer in tools_subpages %}
+        <div class="fr-col-12 fr-col-md-4 outil-subpage {% if forloop.counter > 6 %}hidden{% endif %}">
+          {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
+        </div>
+        {% endfor %}
+      </div>
+      {% if tools_subpages|length > 6 %}
+      <div class="fr-grid-row fr-grid-row--center fr-mt-3w">
+        <button id="voir-plus-outils" class="fr-btn" aria-controls="tools-section" aria-expanded="false">{{ _('See more tools') }}</button>
+      </div>
+      {% endif %}
     </div>
   </div>
 
-  <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
-    <div class="fr-container" id="manage">
+  <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;" aria-labelledby="pilotages-section">
+    <div class="fr-container">
       <h2>{{ _('Access the management tools') }}</h2>
-      <div class="fr-grid-row fr-grid-row--gutters">
+      <div id="-pilotages-section" class="fr-grid-row fr-grid-row--gutters">
         {% for offer in pilotage_subpages %}
+        <div class="fr-col-12 fr-col-md-4 pilotage-subpage {% if forloop.counter > 6 %}hidden{% endif %}">
           {% include "numerique_gouv/blocks/offer_card.html" with page=offer %}
+        </div>
         {% endfor %}
       </div>
+      {% if pilotage_subpages|length > 6 %}
+      <div class="fr-grid-row fr-grid-row--center fr-mt-3w">
+        <button id="voir-plus-pilotages" class="fr-btn" aria-controls="pilotages-section" aria-expanded="false">{{ _('See more tools') }}</button>
+      </div>
+      {% endif %}
     </div>
   </div>
 {% endblock content %}
+
+{% block extra_js %}
+  <script src="{% static 'js/voir_plus.js' %}"></script>
+{% endblock extra_js %}
