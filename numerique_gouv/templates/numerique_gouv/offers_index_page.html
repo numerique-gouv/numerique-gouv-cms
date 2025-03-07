@@ -183,25 +183,7 @@
     </div>
   </div>
   <div class="fr-container">
-    <h2 class="fr-h6">{{ _('Offers by PageTag') }}</h2>
-    <div class="fr-grid-row fr-grid-row--gutters">
-      <div class="fr-col">
-        <ul class="fr-tags-group">
-          {% for page_tag in page_tags %}
-            <li>
-              <a class="fr-tag"
-                 href="{% pageurl page %}{% toggle_url_filter page_tag=page_tag %}"
-                 {% if page_tag.slug == current_page_tag.slug %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
-                {{ page_tag.name }}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="fr-container">
-    <h2 class="fr-h6">{{ _('Offers by Target Audience') }}</h2>
+    <h2 class="fr-h6">{{ _('You are ?') }}</h2>
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col">
         <ul class="fr-tags-group">
@@ -218,17 +200,17 @@
       </div>
     </div>
   </div>
-  <div class="fr-container">
-    <h2 class="fr-h6">{{ _('Offers by Organization') }}</h2>
+  <div class="fr-container fr-mt-2v">
+    <h2 class="fr-h6">{{ _('Are you looking for?') }}</h2>
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col">
         <ul class="fr-tags-group">
-          {% for organization in organizations %}
+          {% for page_tag in page_tags %}
             <li>
               <a class="fr-tag"
-                 href="{% pageurl page %}{% toggle_url_filter organization=organization %}"
-                 {% if organization.slug == current_organization.slug %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
-                {{ organization.name }}
+                 href="{% pageurl page %}{% toggle_url_filter page_tag=page_tag %}"
+                 {% if page_tag.slug == current_page_tag.slug %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
+                {{ page_tag.name }}
               </a>
             </li>
           {% endfor %}

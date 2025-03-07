@@ -45,51 +45,38 @@
   {% endif %}
 {% endblock operator_logo %}
 
-{% block header_tools %}
-  {% flat_menu handle="header_tools" template="menus/custom_flat_menu.html" %}
-  {% if user.is_authenticated %}
-    <li>
-      {# The logout operation has to be performed via a POST with a csrf token for security reasons, so using a form. #}
-      {# Cf. https://docs.djangoproject.com/en/5.1/releases/4.1/#log-out-via-get #}
-      <form action="{% settings_value 'LOGOUT_URL' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="fr-btn fr-icon-logout-box-r-line">
-          {% translate "Hello" %}, {{ user.get_full_name }} ({% translate "Log out" %})
-        </button>
-      </form>
-    </li>
-  {% elif settings.content_manager.CmsDsfrConfig.header_login_button %}
-    <li>
-      <a class="fr-btn fr-icon-lock-line"
-         href="{% settings_value 'LOGIN_URL' %}">{% translate "Log in" %}</a>
-    </li>
-  {% endif %}
-{% endblock header_tools %}
-
-{% block header_search %}
-  {% translate "Search" as search_label %}
-  {% if settings.content_manager.CmsDsfrConfig.search_bar %}
-    <div class="fr-header__search fr-modal" id="modal-search">
-      <div class="fr-container fr-container-lg--fluid">
-        {% translate "Close" as close_label %}
-        <button class="fr-btn--close fr-btn"
-                aria-controls="modal-search"
-                title="{{ close_label }}">{{ close_label }}</button>
-        <form action="{% url 'cms_search' %}" method="get">
-          <div class="fr-search-bar" id="search-bar" role="search">
-            <label class="fr-label" for="search-bar-input">{{ search_label }}</label>
-            <input class="fr-input"
-                   placeholder="{{ search_label }}"
-                   type="search"
-                   id="search-bar-input"
-                   name="q">
-            <button class="fr-btn" title="{{ search_label }}">{{ search_label }}</button>
+{% block header_tools_wrapper %}
+  <div class="fr-header__tools">
+    {% block header_tools_links %}
+      {% block header_tools %}
+      {% endblock header_tools %}
+    {% endblock header_tools_links %}
+    {% block header_search %}
+      {% translate "Search" as search_label %}
+      {% if settings.content_manager.CmsDsfrConfig.search_bar %}
+        <div class="fr-header__search fr-modal" id="modal-search">
+          <div class="fr-container fr-container-lg--fluid">
+            {% translate "Close" as close_label %}
+            <button class="fr-btn--close fr-btn"
+                    aria-controls="modal-search"
+                    title="{{ close_label }}">{{ close_label }}</button>
+            <form action="{% url 'cms_search' %}" method="get">
+              <div class="fr-search-bar" id="search-bar" role="search">
+                <label class="fr-label" for="search-bar-input">{{ search_label }}</label>
+                <input class="fr-input"
+                       placeholder="{{ search_label }}"
+                       type="search"
+                       id="search-bar-input"
+                       name="q">
+                <button class="fr-btn" title="{{ search_label }}">{{ search_label }}</button>
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
-    </div>
-  {% endif %}
-{% endblock header_search %}
+        </div>
+      {% endif %}
+    {% endblock header_search %}
+  </div>
+{% endblock header_tools_wrapper %}
 
 {% block burger_menu %}
   {% translate "Search" as search_label %}
