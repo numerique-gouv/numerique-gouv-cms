@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-31 11:28+0100\n"
-"PO-Revision-Date: 2025-01-31 11:30+0100\n"
+"POT-Creation-Date: 2025-03-07 10:32+0100\n"
+"PO-Revision-Date: 2025-03-07 10:41+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -723,7 +723,7 @@ msgstr "Diapositive suivante"
 
 #: numerique_gouv/templates/numerique_gouv/blocks/slider.html:33
 msgid "next"
-msgstr "Suivant"
+msgstr "suivant"
 
 #: numerique_gouv/templates/numerique_gouv/blog_entry_page.html:45
 msgid "Themes :"
@@ -786,69 +786,65 @@ msgstr "Voir plus d’actualités"
 msgid "Offers"
 msgstr "Offres"
 
-#: numerique_gouv/templates/numerique_gouv/hub_pages.html:48
+#: numerique_gouv/templates/numerique_gouv/hub_pages.html:50
 msgid "See all offers"
 msgstr "Voir toutes les offres"
 
-#: numerique_gouv/templates/numerique_gouv/hub_pages.html:56
+#: numerique_gouv/templates/numerique_gouv/hub_pages.html:58
 msgid "Products"
 msgstr "Services"
 
-#: numerique_gouv/templates/numerique_gouv/hub_pages.html:66
+#: numerique_gouv/templates/numerique_gouv/hub_pages.html:68
 msgid "See all services"
 msgstr "Voir tous les services"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:28
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:242
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:224
 msgid "Request DINUM’s expertise"
-msgstr "Solliciter l’expertise de la DINUM"
+msgstr "Solliciter les expertises de l’État"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:72
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:260
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:242
 msgid "Consult a reference document"
 msgstr "Consulter un document de référence"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:102
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:278
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:260
 msgid "Financing a digital project"
 msgstr "Financer un projet numérique"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:130
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:296
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:278
 msgid "Equipping public officials"
 msgstr "Outiller les agents publics"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:159
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:314
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:296
 msgid "Access the management tools"
 msgstr "Accéder aux outils de pilotage"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:186
-msgid "Offers by PageTag"
-msgstr "Filtrer par thématique numérique"
+msgid "You are ?"
+msgstr "Vous êtes ?"
 
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:204
-msgid "Offers by Target Audience"
-msgstr "Filtrer par public cible"
+msgid "Are you looking for?"
+msgstr "Vous recherchez ?"
 
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:222
-msgid "Offers by Organization"
-msgstr "Filtrer par émetteur"
-
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:252
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:234
 msgid "See more expertises"
 msgstr "Voir plus d’expertises"
 
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:270
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:252
 msgid "See more document"
 msgstr "Voir plus de documents"
 
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:288
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:270
 msgid "See more offers"
 msgstr "Voir plus d’offres"
 
+#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:288
 #: numerique_gouv/templates/numerique_gouv/offers_index_page.html:306
-#: numerique_gouv/templates/numerique_gouv/offers_index_page.html:324
 msgid "See more tools"
 msgstr "Voir plus d’outils"
 
@@ -877,6 +873,15 @@ msgstr "Autres services en accélération et Startups d’État"
 #: numerique_gouv/templates/numerique_gouv/products_index_page.html:85
 msgid "Discover"
 msgstr "Découvrir"
+
+#~ msgid "Offers by PageTag"
+#~ msgstr "Filtrer par thématique numérique"
+
+#~ msgid "Offers by Target Audience"
+#~ msgstr "Vous êtes ?"
+
+#~ msgid "Offers by Organization"
+#~ msgstr "Filtrer par émetteur"
 
 #, fuzzy
 #~| msgid "See all posts"
