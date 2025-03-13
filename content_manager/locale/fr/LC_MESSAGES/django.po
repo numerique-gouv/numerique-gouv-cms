@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-13 15:52+0100\n"
+"POT-Creation-Date: 2025-03-13 16:24+0100\n"
 "PO-Revision-Date: 2025-03-05 10:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1344,12 +1344,6 @@ msgstr "Dans cette rubrique"
 msgid "Go to page"
 msgstr "Aller à la page"
 
-#: content_manager/templates/content_manager/blocks/item_grid.html:14
-#, fuzzy
-#| msgid "Social media items"
-msgid "See more items"
-msgstr "Liens de réseaux sociaux"
-
 #: content_manager/templates/content_manager/blocks/page_visibility.html:4
 msgid "Page visibility restricted to logged in users only"
 msgstr "Visibilité de la page restreinte aux utilisateurs connectés"
@@ -1443,6 +1437,11 @@ msgstr "Pages avec l’étiquette {tag}"
 #, python-brace-format
 msgid "List of pages tagged with {tag}"
 msgstr "Liste de pages avec l’étiquette {tag}"
+
+#, fuzzy
+#~| msgid "Social media items"
+#~ msgid "See more items"
+#~ msgstr "Liens de réseaux sociaux"
 
 #~ msgid ""
 #~ "Please use only one primary button. If you use icons, align them on the "
