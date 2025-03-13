@@ -8,7 +8,7 @@
   {% endfor %}
 </div>
 
-{% if value.items|length > 4 %}
+{% if value.items|length > value.numbers_items_to_display %}
   <div class="fr-grid-row fr-grid-row--center">
     <button class="fr-btn" id="show-more-btn-{{ value.items|first_item_id }}" onclick="showMoreItems{{ value.items|first_item_id }}()">
       Voir plus
