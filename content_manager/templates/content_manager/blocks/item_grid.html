@@ -1,6 +1,34 @@
-{% load wagtailcore_tags %}
-<div class="fr-grid-row fr-grid-row--gutters fr-mb-2w">
+{% load wagtailcore_tags numerique_filters %}
+<div class="fr-grid-row fr-grid-row--gutters fr-mb-2w" id="grid-{{ value.items|first_item_id }}">
   {% for item in value.items %}
-    <div class="fr-col-12 fr-col-md-{{ value.column_width }}">{% include_block item %}</div>
+    <div class="fr-col-12 fr-col-md-{{ value.column_width }} item-grid-element {% if forloop.counter > 4 %}hidden{% endif %}"
+         data-item="{{ forloop.counter }}">
+      {% include_block item %}
+    </div>
   {% endfor %}
 </div>
+
+{% if value.items|length > 4 %}
+  <div class="fr-grid-row fr-grid-row--center">
+    <button class="fr-btn" id="show-more-btn-{{ value.items|first_item_id }}" onclick="showMoreItems{{ value.items|first_item_id }}()">
+      Voir plus
+    </button>
+  </div>
+
+  <script>
+    function showMoreItems{{ value.items|first_item_id }}() {
+      const grid = document.getElementById('grid-{{ value.items|first_item_id }}');
+      const hiddenItems = grid.querySelectorAll('.hidden');
+
+      hiddenItems.forEach(function(item) {
+        item.classList.remove('hidden');
+      });
+
+      if (hiddenItems.length > 0) {
+        hiddenItems[0].focus();
+      }
+
+      document.getElementById('show-more-btn-{{ value.items|first_item_id }}').style.display = 'none';
+    }
+  </script>
+{% endif %}
