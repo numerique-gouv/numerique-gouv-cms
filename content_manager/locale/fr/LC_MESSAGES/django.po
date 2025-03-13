@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-07 09:51+0100\n"
+"POT-Creation-Date: 2025-03-13 16:24+0100\n"
 "PO-Revision-Date: 2025-03-05 10:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1437,6 +1437,11 @@ msgstr "Pages avec l’étiquette {tag}"
 #, python-brace-format
 msgid "List of pages tagged with {tag}"
 msgstr "Liste de pages avec l’étiquette {tag}"
+
+#, fuzzy
+#~| msgid "Social media items"
+#~ msgid "See more items"
+#~ msgstr "Liens de réseaux sociaux"
 
 #~ msgid ""
 #~ "Please use only one primary button. If you use icons, align them on the "

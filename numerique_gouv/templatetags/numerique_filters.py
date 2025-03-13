@@ -19,3 +19,10 @@ def replace(value, args=",|."):
 @register.filter
 def is_numerique_blog_entry_page(value):
     return isinstance(value, NumeriqueBlogEntryPage)
+
+
+@register.filter
+def first_item_id(items):
+    if items and len(items) > 0:
+        return str(items[0].id).replace("-", "")
+    return None
