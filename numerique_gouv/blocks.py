@@ -195,6 +195,7 @@ class SpacerBlock(blocks.StructBlock):
 
 
 class CustomItemGridBlock(ItemGridBlock):
+    numbers_items_to_display = blocks.IntegerBlock(label=_("Numbers items to display"), default=99, min_value=1)
     items = CustomColumnBlock(label=_("Items"))
 
 
