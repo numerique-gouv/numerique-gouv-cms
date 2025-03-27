@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-13 15:52+0100\n"
-"PO-Revision-Date: 2025-03-13 16:25+0100\n"
+"POT-Creation-Date: 2025-03-27 13:28+0100\n"
+"PO-Revision-Date: 2025-03-27 13:33+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -689,11 +689,15 @@ msgstr "Voir toutes les actualités"
 msgid "See all events"
 msgstr "Voir tous les événements"
 
-#: numerique_gouv/templates/numerique_gouv/blocks/numeric_direction_card.html:8
+#: numerique_gouv/templates/numerique_gouv/blocks/numeric_direction_card.html:10
+msgid "The directions"
+msgstr "Les directions"
+
+#: numerique_gouv/templates/numerique_gouv/blocks/numeric_direction_card.html:12
 msgid "The direction"
 msgstr "La direction"
 
-#: numerique_gouv/templates/numerique_gouv/blocks/numeric_direction_card.html:12
+#: numerique_gouv/templates/numerique_gouv/blocks/numeric_direction_card.html:18
 msgid "The road map"
 msgstr "La feuille de route"
 

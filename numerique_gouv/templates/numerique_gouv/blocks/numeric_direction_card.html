@@ -5,7 +5,13 @@
       <p class="fr-card__desc">{{ value.text }}</p>
       <ul class="fr-btns-group fr-btns-group--inline-reverse fr-btns-group--inline-lg">
         <li>
-          <a href="{{ value.main_link.url }}" class="fr-btn">{{ _("The direction") }}</a>
+          <a href="{{ value.main_link.url }}" class="fr-btn">
+            {% if "directions" in value.text|lower %}
+              {{ _("The directions") }}
+            {% else %}
+              {{ _("The direction") }}
+            {% endif %}
+          </a>
         </li>
         {% if value.secondary_link %}
         <li>
