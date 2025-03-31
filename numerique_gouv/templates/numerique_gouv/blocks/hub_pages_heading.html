@@ -18,6 +18,10 @@
               <p>{{ page.introduction_text|richtext }}</p>
             {% endif %}
             {% if page.header_cta_text %}{{ page.header_cta_text|richtext }}{% endif %}
+            {% if page.introduction_text or page.header_cta_text %}
+              <a class="fr-btn {% if page.header_darken %}fr-btn--secondary fr-background-alt--blue-france fr-btn{% else %}fr-btn--primary{% endif %} fr-btn"
+                 href="{{ page.header_cta_url }}">En savoir plus</a>
+            {% endif %}
             {% if page.header_cta_buttons %}
               {% for block in page.header_cta_buttons %}
                 {% include_block block %}
