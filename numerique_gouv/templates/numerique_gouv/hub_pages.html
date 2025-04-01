@@ -71,10 +71,8 @@
   </div>
   {% endif %}
 
-  <div id="blocks">
-    {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}
-  </div>
-  
+  {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}
+
   {% endblock content %}
 
 
