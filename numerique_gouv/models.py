@@ -779,6 +779,50 @@ class SitemapPage(NumeriqueBasePage):
 class NumeriqueCatalogIndexPage(CatalogIndexPage):
     subpage_types = ["numerique_gouv.NumeriquePage"]
 
+    template = "content_manager/catalog_index_page.html"
+
+    subpage_types = ["numerique_gouv.NumeriquePage"]
+
+    @property
+    def entries(self):
+        # Get a list of live content pages that are children of this page
+        return NumeriquePage.objects.child_of(self).live().specific()
+
+    def get_context(self, request, *args, **kwargs):
+        context = super(CatalogIndexPage, self).get_context(request, *args, **kwargs)
+        entries = self.entries
+
+        extra_breadcrumbs = None
+        extra_title = ""
+
+        # Pagination
+        page = request.GET.get("page")
+        page_size = self.entries_per_page
+
+        paginator = Paginator(entries, page_size)  # Show <page_size> entries per page
+        try:
+            entries = paginator.page(page)
+        except PageNotAnInteger:
+            entries = paginator.page(1)
+        except EmptyPage:
+            entries = paginator.page(paginator.num_pages)
+
+        context["entries"] = entries
+        context["paginator"] = paginator
+        context["extra_title"] = extra_title
+        context["current_tag"] = ""
+
+        context["tags"] = []
+        if extra_breadcrumbs:
+            context["extra_breadcrumbs"] = extra_breadcrumbs
+
+        return context
+
+    # N'utilise pas les tags pour la version de numérique
+    @property
+    def show_filters(self) -> bool | models.BooleanField:
+        return self.filter_by_tag and "false"
+
     class Meta:
         verbose_name = _("Numerique catalog index page")
 
