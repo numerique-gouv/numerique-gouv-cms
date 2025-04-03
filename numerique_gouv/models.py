@@ -14,6 +14,7 @@ from wagtail.snippets.models import register_snippet
 
 from blog.models import BlogEntryPage, BlogIndexPage, Organization
 from content_manager.blocks import ButtonsHorizontalListBlock, TextAndCTA
+from content_manager.models import CatalogIndexPage
 from events.models import EventEntryPage, EventsIndexPage
 from numerique_gouv.abstract import NumeriqueBasePage
 
@@ -27,7 +28,7 @@ class NumeriquePage(NumeriqueBasePage):
         "numerique_gouv.ProductsIndexPage",
         "numerique_gouv.NumeriqueEventsIndexPage",
         "numerique_gouv.SitemapPage",
-        "content_manager.CatalogIndexPage",
+        "numerique_gouv.NumeriqueCatalogIndexPage",
     ]
 
     class Meta:
@@ -773,6 +774,13 @@ class SitemapPage(NumeriqueBasePage):
 
     class Meta:
         verbose_name = _("Sitemap")
+
+
+class NumeriqueCatalogIndexPage(CatalogIndexPage):
+    subpage_types = ["numerique_gouv.NumeriquePage"]
+
+    class Meta:
+        verbose_name = _("Numerique catalog index page")
 
 
 @register_snippet
