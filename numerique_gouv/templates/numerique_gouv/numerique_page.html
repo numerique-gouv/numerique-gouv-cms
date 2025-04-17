@@ -6,8 +6,6 @@
   <title>{{ page.seo_title|default:page.title }} — {{ settings.content_manager.CmsDsfrConfig.site_title }}</title>
 {% endblock title %}
 
-{% include "content_manager/blocks/head.html" with stream=page.body %}
-
 {% block content %}
     {% include "content_manager/blocks/heading.html" %}
     <div class="fr-container fr-pt-4w">
