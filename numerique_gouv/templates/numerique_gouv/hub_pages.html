@@ -2,6 +2,8 @@
 
 {% load static dsfr_tags wagtailcore_tags wagtailimages_tags i18n numerique_filters %}
 
+{% include "content_manager/blocks/head.html" with stream=page.body %}
+
 {% block content %}
   {% include "numerique_gouv/blocks/hub_pages_heading.html" %}
   <div class="fr-container fr-pt-4w">
