@@ -2,6 +2,8 @@
 
 {% load static dsfr_tags wagtailcore_tags wagtailimages_tags wagtail_dsfr_tags i18n %}
 
+{% include "content_manager/blocks/head.html" with stream=page.body %}
+
 {% block content %}
 {% include "content_manager/blocks/heading.html" %}
 
