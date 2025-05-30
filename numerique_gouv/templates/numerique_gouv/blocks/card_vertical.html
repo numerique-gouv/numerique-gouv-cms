@@ -16,7 +16,7 @@
         {% endwith %}
       </div>
         <div class="fr-card__start">
-          {% if page.major_areas.all or page.dinum_tags.all or page|is_numerique_blog_entry_page %}
+          {% if page.major_areas.all or page.dinum_tags.all %}
             <ul class="fr-badges-group">
               {% for major_areas in page.major_areas.all %}
                 <li>

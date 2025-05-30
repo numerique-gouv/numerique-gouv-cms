@@ -17,11 +17,13 @@
         <p style="display: contents;">{{ page.the_service }}</p>
       </div>
       <div class="fr-card__start">
-        <ul class="fr-badge-group">
-          {% for tag in page.tags.all %}
-            <li><p class="fr-badge fr-badge--{{ tag.color }} fr-my-5v">{{ tag.name }}</p></li>
-          {% endfor %}
-        </ul>
+        {% if page.tags.all %}
+          <ul class="fr-badge-group">
+            {% for tag in page.tags.all %}
+              <li><p class="fr-badge fr-badge--{{ tag.color }} fr-my-5v">{{ tag.name }}</p></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
       </div>
     </div>
     <div class="fr-card__footer">
