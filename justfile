@@ -23,8 +23,11 @@ mmi:
     just makemigrations
     just migrate
 
+shell:
+    {{poetry_run}} python manage.py shell
+
 test app="":
-    {{poetry_run}} python manage.py test {{app}} --buffer --parallel
+    {{poetry_run}} python manage.py test {{app}} --buffer --parallel --settings config.settings_test
 
 unittest app="":
     {{poetry_run}} python manage.py test {{app}} --settings config.settings_test
