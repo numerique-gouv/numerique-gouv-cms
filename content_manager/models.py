@@ -32,7 +32,7 @@ class ContentPage(SitesFacilesBasePage):
     class Meta:
         verbose_name = _("Content page")
 
-    settings_panels = SitesFacilesBasePage.settings_panels + [
+    content_panels = SitesFacilesBasePage.content_panels + [
         FieldPanel("tags"),
     ]
 
@@ -347,7 +347,15 @@ class CmsDsfrConfig(ClusterableModel, BaseSiteSetting):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        verbose_name=_("Operator logo"),
+        verbose_name=_("Site logo"),
+    )
+
+    operator_logo_display = models.CharField(
+        _("Logo display"),
+        choices=[("header-footer", _("Header and Footer")), ("header-only", _("Header only"))],
+        default="header-footer",
+        blank=True,
+        max_length=20,
     )
 
     operator_logo_alt = models.CharField(
@@ -361,7 +369,7 @@ class CmsDsfrConfig(ClusterableModel, BaseSiteSetting):
         max_digits=3,
         decimal_places=1,
         null=True,
-        default="0.0",
+        default="5.0",
         help_text=_(
             "To be adjusted according to the width of the logo.\
             Example for a vertical logo: 3.5, Example for a horizontal logo: 8."
@@ -422,10 +430,11 @@ class CmsDsfrConfig(ClusterableModel, BaseSiteSetting):
         MultiFieldPanel(
             [
                 FieldPanel("operator_logo_file"),
+                FieldPanel("operator_logo_display"),
                 FieldPanel("operator_logo_alt"),
                 FieldPanel("operator_logo_width"),
             ],
-            heading=_("Operator logo"),
+            heading=_("Site logo"),
         ),
         MultiFieldPanel(
             [
