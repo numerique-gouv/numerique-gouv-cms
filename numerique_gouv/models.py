@@ -30,6 +30,7 @@ class NumeriquePage(NumeriqueBasePage):
         "numerique_gouv.SitemapPage",
         "numerique_gouv.NumeriqueCatalogIndexPage",
         "forms.FormPage",
+        "content_manager.CatalogIndexPage",
     ]
 
     class Meta:
