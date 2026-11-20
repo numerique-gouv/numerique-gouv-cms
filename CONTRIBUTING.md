@@ -236,9 +236,9 @@ Un changement de politique peut mettre quelques minutes à s’appliquer chez OV
 Pour passer un environnement en URLs publiques, dans cet ordre :
 
 1. mettre à jour la politique de l’utilisateur S3 (voir ci-dessus) ;
-2. déployer, avec `S3_CACHE_CONTROL` défini ;
+2. déployer, avec `S3_CACHE_CONTROL` défini  (et `S3_ADDRESSING_STYLE=virtual` chez OVHcloud) ;
 3. lancer `set_s3_cache_control --public-read` (voir ci-dessus) ;
-4. définir `S3_PUBLIC_HOST` (et `S3_ADDRESSING_STYLE=virtual` chez OVHcloud) ;
+4. définir `S3_PUBLIC_HOST` ;
 5. relancer la commande, pour les images envoyées entre les étapes 3 et 4.
 
 #### Stockage local
