@@ -11,9 +11,23 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="numeriqueeventpage",
-            name="numeriquebasepage_ptr",
+        # Django 6 no longer adds CASCADE when dropping a column, but the M2M tables
+        # created in 0065 still reference this column. Reproduce the Django 5 SQL.
+        migrations.SeparateDatabaseAndState(
+            state_operations=[
+                migrations.RemoveField(
+                    model_name="numeriqueeventpage",
+                    name="numeriquebasepage_ptr",
+                ),
+            ],
+            database_operations=[
+                migrations.RunSQL(
+                    sql=(
+                        "ALTER TABLE numerique_gouv_numeriqueeventpage " "DROP COLUMN numeriquebasepage_ptr_id CASCADE"
+                    ),
+                    reverse_sql=migrations.RunSQL.noop,
+                ),
+            ],
         ),
         migrations.AddField(
             model_name="numeriqueeventpage",
