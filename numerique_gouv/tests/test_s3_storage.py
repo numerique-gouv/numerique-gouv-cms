@@ -12,9 +12,9 @@ from wagtail.documents import get_document_model
 from wagtail.images import get_image_model
 from wagtail.models import Collection, CollectionViewRestriction
 
-from content_manager.storages import PublicImagesS3Storage, is_public_key
+from numerique_gouv.storages import PublicImagesS3Storage, is_public_key
 
-COMMAND_MODULE = "content_manager.management.commands.set_s3_cache_control"
+COMMAND_MODULE = "numerique_gouv.management.commands.set_s3_cache_control"
 CACHE_CONTROL = "public, max-age=600"
 
 

@@ -18,6 +18,7 @@ import sys
 from pathlib import Path
 
 import dj_database_url
+import sites_conformes
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -100,14 +101,20 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "widget_tweaks",
     "dsfr",
-    "content_manager",
-    "blog",
+    "sites_conformes",
+    "sites_conformes.customimages",
+    "sites_conformes.core",
+    "sites_conformes.blog",
+    "sites_conformes.events",
+    "sites_conformes.forms",
+    "sites_conformes.menus",
     "numerique_gouv",
-    "events",
-    "forms",
+    "sites_conformes.dashboard",
     "wagtail_honeypot",
-    "dashboard",
     "wagtail.admin",
+    "wagtail_2fa",
+    "django_otp",
+    "django_otp.plugins.otp_totp",
 ]
 
 if SF_USE_WHITENOISE:
@@ -167,12 +174,15 @@ if not TESTING and DEBUG and "localhost" in HOST_URL:
 
 ROOT_URLCONF = "config.urls"
 
+PACKAGE_DIR = Path(sites_conformes.__file__).resolve().parent
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            os.path.join(BASE_DIR, "dsfr/templates"),
-            os.path.join(BASE_DIR, "templates"),
+            BASE_DIR / "dsfr/templates",
+            BASE_DIR / "templates",
+            PACKAGE_DIR / "templates",
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -183,8 +193,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "wagtail.contrib.settings.context_processors.settings",
                 "wagtailmenus.context_processors.wagtailmenus",
-                "content_manager.context_processors.skiplinks",
-                "content_manager.context_processors.mega_menus",
+                "sites_conformes.core.context_processors.skiplinks",
             ],
         },
     },
@@ -311,7 +320,7 @@ if os.getenv("S3_HOST"):
 
     if public_host:
         # Unsigned, stable URLs so that browsers and proxies can cache media.
-        # Images get a public-read ACL on upload (see content_manager/storages.py);
+        # Images get a public-read ACL on upload (see numerique_gouv/storages.py);
         # documents stay private and are served by Wagtail (see below).
         if addressing_style == "virtual":
             # bucket.host/key: required by OVHcloud, which rejects anonymous
@@ -322,7 +331,7 @@ if os.getenv("S3_HOST"):
             options["custom_domain"] = f"{public_host}/{bucket_name}"
         options["url_protocol"] = f"{protocol}:"
         options["querystring_auth"] = False
-        storage_backend = "content_manager.storages.PublicImagesS3Storage"
+        storage_backend = "numerique_gouv.storages.PublicImagesS3Storage"
         public_endpoint = f"{protocol}://{options['custom_domain'].split('/')[0]}"
     else:
         storage_backend = "storages.backends.s3.S3Storage"
@@ -356,7 +365,11 @@ STATIC_URL = os.getenv("STATIC_URL", "static/")
 if FORCE_SCRIPT_NAME and not STATIC_URL.startswith(FORCE_SCRIPT_NAME):
     STATIC_URL = f"{FORCE_SCRIPT_NAME}/{STATIC_URL}"
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = [
+    PACKAGE_DIR / "static",
+    BASE_DIR / "static",
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -452,8 +465,8 @@ if DEFAULT_FROM_EMAIL:
 WAGTAIL_PASSWORD_RESET_ENABLED = os.getenv("WAGTAIL_PASSWORD_RESET_ENABLED", False)
 
 # (Optional) ProConnect settings
-PROCONNECT_ACTIVATED = True if os.getenv("PROCONNECT_ACTIVATED", False) in ["1", "True"] else False
-OIDC_CREATE_USER = True if os.getenv("PROCONNECT_CREATE_USER", "True") in ["1", "True"] else False
+PROCONNECT_ACTIVATED = getenv_bool("PROCONNECT_ACTIVATED", False)
+OIDC_CREATE_USER = getenv_bool("PROCONNECT_CREATE_USER", True)
 OIDC_RP_CLIENT_ID = os.getenv("PROCONNECT_CLIENT_ID", "")
 OIDC_RP_CLIENT_SECRET = os.getenv("PROCONNECT_CLIENT_SECRET", "")
 OIDC_RP_SCOPES = os.getenv("PROCONNECT_SCOPES", "openid given_name usual_name email siret uid")
@@ -471,6 +484,8 @@ OIDC_AUTH_REQUEST_EXTRA_PARAMS = {"acr_values": "eidas1"}
 OIDC_REDIRECT_ALLOWED_HOSTS = ALLOWED_HOSTS
 PROCONNECT_USER_CREATION_FILTER = os.getenv("PROCONNECT_USER_CREATION_FILTER", None)
 LASUITE_DOMAINE_API_KEY = os.getenv("LASUITE_DOMAINE_API_KEY", None)
+SF_DISABLE_LOCAL_LOGIN = getenv_bool("SF_DISABLE_LOCAL_LOGIN", False)
+
 
 LOGIN_REDIRECT_URL = f"{FORCE_SCRIPT_NAME}/"
 LOGOUT_REDIRECT_URL = f"{FORCE_SCRIPT_NAME}/"
@@ -478,13 +493,21 @@ LOGOUT_REDIRECT_URL = f"{FORCE_SCRIPT_NAME}/"
 if PROCONNECT_ACTIVATED:
     INSTALLED_APPS += [
         "mozilla_django_oidc",
-        "proconnect",
+        "sites_conformes.proconnect",
     ]
+    # With SF_DISABLE_LOCAL_LOGIN, removing ModelBackend so that the
+    # connection with password is really made impossible
+    if SF_DISABLE_LOCAL_LOGIN:
+        AUTHENTICATION_BACKENDS = []
+        WAGTAIL_PASSWORD_RESET_ENABLED = False
+        WAGTAIL_PASSWORD_MANAGEMENT_ENABLED = False
+        WAGTAILUSERS_PASSWORD_ENABLED = False
+    else:
+        AUTHENTICATION_BACKENDS = [
+            "django.contrib.auth.backends.ModelBackend",
+        ]
 
-    AUTHENTICATION_BACKENDS = [
-        "django.contrib.auth.backends.ModelBackend",
-        "proconnect.backends.OIDCAuthenticationBackend",
-    ]
+    AUTHENTICATION_BACKENDS.append("sites_conformes.proconnect.backends.OIDCAuthenticationBackend")
 
     LOGOUT_URL = f"{FORCE_SCRIPT_NAME}/oidc/logout/"
 
@@ -508,3 +531,7 @@ if len(trusted_origins):
 DSFR_USE_INTEGRITY_CHECKSUMS = True if os.getenv("DSFR_USE_INTEGRITY_CHECKSUMS") in ["1", "True"] else False
 
 SF_DISABLE_TUTORIALS = True if os.getenv("SF_DISABLE_TUTORIALS") in ["1", "True"] else False
+
+# Site-specific content models
+
+SF_CONTENTPAGE_MODEL = "numerique_gouv.NumeriquePage"

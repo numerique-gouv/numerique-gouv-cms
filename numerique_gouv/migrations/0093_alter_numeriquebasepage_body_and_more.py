@@ -343,7 +343,7 @@ class Migration(migrations.Migration):
                             "required": False,
                         },
                     ),
-                    36: ("content_manager.blocks.IconPickerBlock", (), {"label": "Icon", "required": False}),
+                    36: ("sites_conformes.core.blocks.IconPickerBlock", (), {"label": "Icon", "required": False}),
                     37: (
                         "wagtail.blocks.ChoiceBlock",
                         [],
@@ -766,7 +766,7 @@ class Migration(migrations.Migration):
                     ),
                     93: ("wagtail.blocks.CharBlock", (), {"label": "Top detail: text", "required": False}),
                     94: (
-                        "content_manager.blocks.IconPickerBlock",
+                        "sites_conformes.core.blocks.IconPickerBlock",
                         (),
                         {"label": "Top detail: icon", "required": False},
                     ),
@@ -787,7 +787,7 @@ class Migration(migrations.Migration):
                         },
                     ),
                     99: (
-                        "content_manager.blocks.IconPickerBlock",
+                        "sites_conformes.core.blocks.IconPickerBlock",
                         (),
                         {"label": "Bottom detail: icon", "required": False},
                     ),
@@ -914,7 +914,7 @@ class Migration(migrations.Migration):
                     119: (
                         "wagtail.blocks.PageChooserBlock",
                         (),
-                        {"label": "Blog", "page_type": ["blog.BlogIndexPage"]},
+                        {"label": "Blog", "page_type": ["sites_conformes_blog.BlogIndexPage"]},
                     ),
                     120: (
                         "wagtail.blocks.IntegerBlock",
@@ -929,22 +929,22 @@ class Migration(migrations.Migration):
                     ),
                     121: (
                         "wagtail.snippets.blocks.SnippetChooserBlock",
-                        ("blog.Category",),
+                        ("sites_conformes_blog.Category",),
                         {"label": "Filter by category", "required": False},
                     ),
                     122: (
                         "wagtail.snippets.blocks.SnippetChooserBlock",
-                        ("content_manager.Tag",),
+                        ("sites_conformes_core.Tag",),
                         {"label": "Filter by tag", "required": False},
                     ),
                     123: (
                         "wagtail.snippets.blocks.SnippetChooserBlock",
-                        ("blog.Person",),
+                        ("sites_conformes_blog.Person",),
                         {"label": "Filter by author", "required": False},
                     ),
                     124: (
                         "wagtail.snippets.blocks.SnippetChooserBlock",
-                        ("blog.Organization",),
+                        ("sites_conformes_blog.Organization",),
                         {
                             "help_text": "The source is the organization of the post author",
                             "label": "Filter by source",
@@ -976,7 +976,7 @@ class Migration(migrations.Migration):
                     127: (
                         "wagtail.blocks.PageChooserBlock",
                         (),
-                        {"label": "Event calendar", "page_type": ["events.EventsIndexPage"]},
+                        {"label": "Event calendar", "page_type": ["sites_conformes_events.EventsIndexPage"]},
                     ),
                     128: (
                         "wagtail.blocks.StructBlock",
@@ -1089,7 +1089,7 @@ class Migration(migrations.Migration):
                     ),
                     141: (
                         "wagtail.snippets.blocks.SnippetChooserBlock",
-                        ("blog.Person",),
+                        ("sites_conformes_blog.Person",),
                         {
                             "help_text": "Optional, all values can be manually specified or overriden below",
                             "label": "Person",

@@ -1,7 +1,7 @@
+from sites_conformes.core.abstract import SitesFacilesBasePage
+from sites_conformes.core.blocks import STREAMFIELD_COMMON_BLOCKS
 from wagtail.fields import StreamField
 
-from content_manager.abstract import SitesFacilesBasePage
-from content_manager.blocks import STREAMFIELD_COMMON_BLOCKS
 from numerique_gouv.blocks import STREAMFIELD_NUMERIQUE_BLOCKS
 
 

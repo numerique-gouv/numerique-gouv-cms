@@ -5,12 +5,12 @@ from django.urls import include, path
 from django.views.defaults import page_not_found, server_error
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.i18n import JavaScriptCatalog
+from sites_conformes.proconnect import urls as oidc_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 
 from config.api import api_router
-from proconnect import urls as oidc_urls
 
 urlpatterns = [
     path("sitemap.xml", sitemap, name="xml_sitemap"),
@@ -42,6 +42,6 @@ if settings.DEBUG or settings.TESTING:
 
 urlpatterns += i18n_patterns(
     path("jsi18n/", JavaScriptCatalog.as_view(), name="javascript-catalog"),
-    path("", include("content_manager.urls")),
+    path("", include("sites_conformes.core.urls")),
     prefix_default_language=False,
 )

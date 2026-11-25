@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("events", "0008_alter_evententrypage_body_alter_eventsindexpage_body"),
+        ("sites_conformes_events", "0008_alter_evententrypage_body_alter_eventsindexpage_body"),
         ("numerique_gouv", "0065_remove_numeriqueeventsindexpage_dinum_tags_and_more"),
     ]
 
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                 parent_link=True,
                 primary_key=True,
                 serialize=False,
-                to="events.evententrypage",
+                to="sites_conformes_events.evententrypage",
             ),
             preserve_default=False,
         ),

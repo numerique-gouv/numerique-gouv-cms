@@ -1,9 +1,5 @@
 from django.utils.translation import gettext_lazy as _
-from wagtail import blocks
-from wagtail.images.blocks import ImageChooserBlock
-from wagtail.snippets.blocks import SnippetChooserBlock
-
-from content_manager.blocks import (
+from sites_conformes.core.blocks import (
     AdjustableColumnBlock,
     BackgroundColorChoiceBlock,
     BlogRecentEntriesBlock,
@@ -18,7 +14,11 @@ from content_manager.blocks import (
     RecentEntriesStructValue,
     VerticalCardBlock,
 )
-from content_manager.constants import HEADING_CHOICES
+from sites_conformes.core.constants import HEADING_CHOICES
+from wagtail import blocks
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
+
 from numerique_gouv.constants import HEADING_SIZE_CHOICES
 
 
@@ -238,7 +238,9 @@ class CustomBlogRecentEntriesBlock(BlogRecentEntriesBlock):
     entries_count = blocks.IntegerBlock(
         label=_("Number of entries"), required=False, min_value=1, max_value=12, default=3
     )
-    category_filter = SnippetChooserBlock("blog.Category", label=_("Filter by category"), required=False)
+    category_filter = SnippetChooserBlock(
+        "sites_conformes_blog.Category", label=_("Filter by category"), required=False
+    )
     page_tag_filter = SnippetChooserBlock("numerique_gouv.PageTag", label=_("Filter by tag"), required=False)
 
     class Meta:

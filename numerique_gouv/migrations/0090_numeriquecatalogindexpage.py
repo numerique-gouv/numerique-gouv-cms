@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("content_manager", "0053_cmsdsfrconfig_header_login_button"),
+        ("sites_conformes_core", "0053_cmsdsfrconfig_header_login_button"),
         ("numerique_gouv", "0089_alter_numeriquebasepage_body"),
     ]
 
@@ -23,13 +23,13 @@ class Migration(migrations.Migration):
                         parent_link=True,
                         primary_key=True,
                         serialize=False,
-                        to="content_manager.catalogindexpage",
+                        to="sites_conformes_core.catalogindexpage",
                     ),
                 ),
             ],
             options={
                 "verbose_name": "Numerique catalog index page",
             },
-            bases=("content_manager.catalogindexpage",),
+            bases=("sites_conformes_core.catalogindexpage",),
         ),
     ]

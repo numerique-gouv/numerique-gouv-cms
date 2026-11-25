@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("blog", "0039_alter_blogentrypage_body"),
+        ("sites_conformes_blog", "0039_alter_blogentrypage_body_alter_blogindexpage_body_and_more"),
         ("numerique_gouv", "0052_hubpages"),
     ]
 
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                         parent_link=True,
                         primary_key=True,
                         serialize=False,
-                        to="blog.blogentrypage",
+                        to="sites_conformes_blog.blogentrypage",
                     ),
                 ),
                 (
@@ -54,6 +54,6 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "Numerique blog entry page",
             },
-            bases=("blog.blogentrypage",),
+            bases=("sites_conformes_blog.blogentrypage",),
         ),
     ]
