@@ -228,7 +228,7 @@ class CustomRecentEntriesStructValue(RecentEntriesStructValue):
 
         page_tag_filter = self.get("page_tag_filter")
         if page_tag_filter:
-            filters["tag"] = page_tag_filter.slug
+            filters["page_tag"] = page_tag_filter.slug
 
         return filters
 

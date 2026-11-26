@@ -182,14 +182,17 @@ class NumeriqueBlogTestCase(NumeriqueTestCase):
         now = timezone.now()
         self.oldest = self.add_post("Article ancien", now - timedelta(days=30), tags=[self.tag_ia])
         self.middle = self.add_post("Article moyen", now - timedelta(days=10), areas=[self.area_cloud])
-        self.newest = self.add_post("Article récent", now, organizations=[self.dinum])
+        self.newest = self.add_post(
+            "Article récent", now, organizations=[self.dinum], audiences=[self.audience_agents]
+        )
         self.draft = self.add_post("Article brouillon", now, live=False, tags=[self.tag_unused])
 
-    def add_post(self, title, date, tags=None, areas=None, organizations=None, **kwargs):
+    def add_post(self, title, date, tags=None, areas=None, organizations=None, audiences=None, **kwargs):
         post = self.add_page(self.index, NumeriqueBlogEntryPage, title=title, date=date, **kwargs)
         post.page_tags.add(*(tags or []))
         post.major_areas.add(*(areas or []))
         post.organizations.add(*(organizations or []))
+        post.target_audiences.add(*(audiences or []))
         post.save()
         return post
 
@@ -237,8 +240,13 @@ class NumeriqueBlogTestCase(NumeriqueTestCase):
         self.assertEqual(list(context["posts"]), [self.newest])
         self.assertEqual(context["current_organization"], self.dinum)
 
+    def test_filter_by_target_audience(self):
+        context = self.get_context(target_audience="agents_public")
+        self.assertEqual(list(context["posts"]), [self.newest])
+        self.assertEqual(context["current_target_audience"], self.audience_agents)
+
     def test_unknown_filter_returns_404(self):
-        for param in ["page_tag", "major_area", "organization"]:
+        for param in ["page_tag", "major_area", "organization", "target_audience"]:
             with self.subTest(param=param):
                 response = self.client.get(self.index.url, {param: "inconnu"})
                 self.assertEqual(response.status_code, 404)
@@ -328,6 +336,23 @@ class HubPagesTestCase(NumeriqueTestCase):
     def test_see_more_news_link_when_news_are_full(self):
         response = self.client.get(self.hub.url)
         self.assertContains(response, 'href="/actualites/?page_tag=ia"')
+
+    def test_see_more_news_link_filters_by_target_audience(self):
+        for post in self.posts[:3]:
+            post.target_audiences.add(self.audience_agents)
+            post.save()
+        self.posts[3].target_audiences.add(self.audience_citizens)
+        self.posts[3].save()
+        self.hub.content_source = "target_audience"
+        self.hub.target_audience = self.audience_agents
+        self.hub.save()
+
+        response = self.client.get(self.hub.url)
+        self.assertContains(response, 'href="/actualites/?target_audience=agents_public"')
+
+        response = self.client.get("/actualites/", {"target_audience": "agents_public"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(set(response.context["posts"]), set(self.posts[:3]))
 
     def test_see_all_news_link_when_few_news(self):
         self.hub.content_source = "major_area"
@@ -479,9 +504,12 @@ class NumeriqueBlogYearAndRoutesTestCase(NumeriqueTestCase):
         self.assertEqual(response.context["year"], 2024)
 
     def test_malformed_year_is_ignored(self):
-        response = self.client.get(self.index.url, {"year": "abc"})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context["posts"]), 2)
+        for year in ["abc", "²"]:
+            with self.subTest(year=year):
+                response = self.client.get(self.index.url, {"year": year})
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(len(response.context["posts"]), 2)
+                self.assertIsNone(response.context["year"])
 
     def test_feeds_list_numerique_posts(self):
         for route in ["rss/", "atom/"]:

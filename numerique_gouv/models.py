@@ -477,7 +477,17 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
         posts = posts.select_related("owner").prefetch_related("major_areas", "page_tags", "date__year")
         return posts
 
-    def get_context(self, request, page_tag=None, major_area=None, organization=None, year=None, *args, **kwargs):
+    def get_context(
+        self,
+        request,
+        page_tag=None,
+        major_area=None,
+        organization=None,
+        year=None,
+        target_audience=None,
+        *args,
+        **kwargs,
+    ):
         context = super(BlogIndexPage, self).get_context(request, *args, **kwargs)
         posts = self.posts
 
@@ -499,10 +509,19 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
             organization = get_object_or_404(Organization, slug=organization)
             posts = posts.filter(organizations=organization)
 
+        if target_audience is None:
+            target_audience = request.GET.get("target_audience")
+        if target_audience:
+            target_audience = get_object_or_404(TargetAudience, slug=target_audience)
+            posts = posts.filter(target_audiences=target_audience)
+
         if year is None:
             year = request.GET.get("year")
-        # Ignore malformed values instead of raising an error
-        year = int(year) if str(year or "").isdigit() else None
+        # Ignore malformed values (e.g. "abc", "²") instead of raising an error
+        try:
+            year = int(year) if year else None
+        except (TypeError, ValueError):
+            year = None
         if year:
             posts = posts.filter(date__year=year)
 
@@ -524,6 +543,7 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
         context["current_page_tag"] = page_tag
         context["current_major_area"] = major_area
         context["current_organization"] = organization
+        context["current_target_audience"] = target_audience
         context["year"] = year
 
         # Filters

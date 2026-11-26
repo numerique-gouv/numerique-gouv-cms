@@ -45,27 +45,41 @@ jobs:
           ref: ${{ inputs.ref }}
 
       # When running against main, overlay current-branch test files so both
-      # baseline and comparison jobs use the same test definitions.
+      # baseline and comparison jobs use the same test definitions. Non-cone
+      # mode so that only the listed paths are checked out (cone mode would
+      # also pull root files and the parent modules, e.g. numerique_gouv/*.py).
       - name: Checkout E2E files from PR branch
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ github.sha }}
+          sparse-checkout-cone-mode: false
           sparse-checkout: |
-            playwright.config.ts
-            pyproject.toml
-            e2e/
-            .github/
-            .env.test
-            justfile
-            scripts/
-            numerique_gouv/management/commands/
+            /playwright.config.ts
+            /package.json
+            /package-lock.json
+            /pyproject.toml
+            /uv.lock
+            /.env.test
+            /justfile
+            /e2e/
+            /.github/
+            /scripts/
+            /numerique_gouv/management/commands/
           path: __e2e_overlay__
 
+      # Copy only the selected paths: application modules and .git are kept
+      # from the checked-out ref.
       - name: Overlay E2E files onto working tree
         shell: bash
         run: |
-          shopt -s dotglob
-          cp -r __e2e_overlay__/* .
+          cd __e2e_overlay__
+          for p in playwright.config.ts package.json package-lock.json pyproject.toml uv.lock \
+                   .env.test justfile e2e .github scripts numerique_gouv/management/commands; do
+            if [ -e "$p" ]; then
+              cp -r --parents "$p" ..
+            fi
+          done
+          cd ..
           rm -rf __e2e_overlay__
 
       - name: Install just

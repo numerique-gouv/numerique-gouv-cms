@@ -34,7 +34,7 @@ jobs:
     needs: baseline
     uses: ./.github/workflows/_e2e.yml
     with:
-      ref: ${{ github.ref }}
+      ref: ${{ github.sha }}
       compare: true
       allow_visual_diff: ${{ contains(github.event.pull_request.labels.*.name, 'visual-change') }}
     permissions:

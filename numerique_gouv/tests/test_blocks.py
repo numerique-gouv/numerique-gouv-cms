@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from django.utils import timezone
 
+from blog.models import Person
 from numerique_gouv.blocks import CustomBlogRecentEntriesBlock
 from numerique_gouv.models import NumeriqueBlogEntryPage, NumeriqueBlogIndexPage, NumeriquePage
 from numerique_gouv.tests.base import NumeriqueTestCase
@@ -43,10 +44,35 @@ class CustomBlogRecentEntriesBlockTestCase(NumeriqueTestCase):
 
     def test_current_filters_include_page_tag(self):
         value = self.get_value(page_tag_filter=self.tag_ia.id)
-        self.assertEqual(value.current_filters(), {"tag": "ia"})
+        self.assertEqual(value.current_filters(), {"page_tag": "ia"})
 
     def test_current_filters_empty_without_filters(self):
         self.assertEqual(self.get_value().current_filters(), {})
+
+    def test_rendered_filter_link_keeps_page_tag(self):
+        alice = Person.objects.create(name="Alice", role="Rédactrice", organization=self.dinum)
+        bob = Person.objects.create(name="Bob", role="Rédacteur", organization=self.dinum)
+        self.posts[0].authors.add(alice)
+        self.posts[0].save()
+        self.posts[1].authors.add(bob)
+        self.posts[1].save()
+
+        body = [
+            {
+                "type": "blog_recent_entries",
+                "value": {
+                    "blog": self.blog.id,
+                    "page_tag_filter": self.tag_ia.id,
+                    "author_filter": alice.id,
+                    "show_filters": True,
+                },
+            }
+        ]
+        page = self.add_page(self.home, NumeriquePage, title="Filtres", slug="filtres", body=json.dumps(body))
+        response = self.client.get(page.url)
+
+        # Selecting another author keeps the page tag restriction
+        self.assertContains(response, f'href="{self.blog.url}?author={bob.id}&amp;page_tag=ia"')
 
 
 class NumeriqueBlocksRenderingTestCase(NumeriqueTestCase):

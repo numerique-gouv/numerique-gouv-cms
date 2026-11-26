@@ -1,5 +1,6 @@
 import json
 
+from bs4 import BeautifulSoup
 from django.contrib.auth import get_user_model
 from wagtail.models import Page
 from wagtail.test.utils import WagtailPageTestCase
@@ -51,10 +52,11 @@ class ItemGridTestCase(WagtailPageTestCase):
 
     def test_items_beyond_limit_are_hidden_behind_show_more_button(self):
         response = self.get_response(item_grid(5, numbers_items_to_display=2))
-        content = response.content.decode()
+        soup = BeautifulSoup(response.content, "html.parser")
 
-        # Items 3 to 5 are rendered but hidden
-        self.assertEqual(content.count('item-grid-element hidden"'), 3)
+        # Items 1 and 2 are visible, items 3 to 5 are rendered but hidden
+        hidden_by_item = {int(el["data-item"]): "hidden" in el["class"] for el in soup.select(".item-grid-element")}
+        self.assertEqual(hidden_by_item, {1: False, 2: False, 3: True, 4: True, 5: True})
         self.assertContains(response, "Élément 5")
         self.assertContains(response, "show-more-btn-", count=2)  # button id + script
 

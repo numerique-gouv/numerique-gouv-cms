@@ -4,6 +4,20 @@ import { test as base, expect } from "@playwright/test"
 // visual diff is reported but does not fail the test.
 const allowVisualDiff = process.env.ALLOW_VISUAL_DIFF === "true"
 
+// True only when toHaveScreenshot completed a comparison against an existing
+// baseline and found differences (expected + diff images were attached).
+// Capture errors, missing baselines or a closed page don't produce a diff.
+function isVisualMismatch(error: unknown): boolean {
+  const result = (
+    error as {
+      matcherResult?: { name?: string; attachments?: { name: string }[] }
+    }
+  )?.matcherResult
+  if (result?.name !== "toHaveScreenshot") return false
+  const names = (result.attachments ?? []).map((a) => a.name)
+  return names.some((n) => n.includes("-expected")) && names.some((n) => n.includes("-diff"))
+}
+
 // After every test tagged @regression, capture a full-page screenshot and
 // assert it against the baseline. The assertion is intentionally hard (not
 // `expect.soft`): in comparison mode a visual diff must fail the run, unless
@@ -17,7 +31,7 @@ export const test = base.extend<{ forEachTest: void }>({
         try {
           await expect(page).toHaveScreenshot({ fullPage: true })
         } catch (error) {
-          if (!allowVisualDiff) throw error
+          if (!allowVisualDiff || !isVisualMismatch(error)) throw error
           // The expected/actual/diff images are still written to test-results/.
           testInfo.annotations.push({
             type: "visual-diff",
