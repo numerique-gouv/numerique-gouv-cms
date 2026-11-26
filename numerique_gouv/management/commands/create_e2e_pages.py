@@ -1,10 +1,15 @@
 import zoneinfo
 from datetime import datetime
+from io import BytesIO
 
+from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
+from PIL import Image as PILImage
+from wagtail.images.models import Image
 from wagtail.models import Page
 
 from blog.models import Organization
+from content_manager.models import CmsDsfrConfig
 from content_manager.utils import get_default_site
 from numerique_gouv.models import (
     HubPages,
@@ -27,20 +32,32 @@ PARIS_TZ = zoneinfo.ZoneInfo("Europe/Paris")
 
 class Command(BaseCommand):
     help = """
-    Creates the numerique_gouv pages used by the end-to-end tests (offers, products, news, hub, sitemap).
+    Creates the numerique_gouv pages used by the end-to-end tests (offers, products, news, hub, sitemap,
+    pages with a slider and an item grid), mirroring the content used on numerique.gouv.fr.
+    The contact form comes from `create_starter_pages`.
     The content is fixed (no random data, fixed dates) so that visual regression screenshots stay stable.
     The command is idempotent: existing pages and snippets are reused.
     """
 
     def handle(self, *args, **kwargs):
-        self.home = get_default_site().root_page
+        self.site = get_default_site()
+        self.home = self.site.root_page
 
+        self.enable_search_bar()
         self.create_taxonomy()
         self.create_blog()
         self.create_offers()
         self.create_products()
         self.create_hub()
         self.create_sitemap()
+        self.create_slider_page()
+        self.create_item_grid_page()
+
+    def enable_search_bar(self):
+        # The search bar is enabled on numerique.gouv.fr
+        config = CmsDsfrConfig.for_site(self.site)
+        config.search_bar = True
+        config.save()
 
     def create_taxonomy(self):
         def get_or_create(model, slug, name):
@@ -112,6 +129,20 @@ class Command(BaseCommand):
             ("fonds-transformation", "Fonds pour la transformation de l’action publique", "financement", 1, []),
             ("conseil-ia", "Conseil en intelligence artificielle", "expertise", 1, [self.tag_ia]),
         ]
+        # More than 6 offers of the same type: the extra ones are behind a "See more" button
+        extra_expertises = [
+            ("conseil-cloud", "Conseil en hébergement cloud"),
+            ("conseil-design", "Conseil en design de services"),
+            ("conseil-accessibilite", "Conseil en accessibilité numérique"),
+            ("conseil-donnees", "Conseil en valorisation des données"),
+            ("conseil-securite", "Conseil en sécurité des systèmes d’information"),
+            ("conseil-achats", "Conseil en achats numériques"),
+            ("conseil-ecoconception", "Conseil en écoconception"),
+        ]
+        offers += [
+            (slug, title, "expertise", position, [])
+            for position, (slug, title) in enumerate(extra_expertises, start=2)
+        ]
         for slug, title, type_slug, position, tags in offers:
             offer = self.get_or_create_page(
                 self.offers_index,
@@ -163,3 +194,69 @@ class Command(BaseCommand):
         # SitemapPage can only be created under a NumeriquePage
         about = self.get_or_create_page(self.home, NumeriquePage, "a-propos-numerique", title="À propos")
         self.get_or_create_page(about, SitemapPage, "carte-du-site", title="Carte du site")
+
+    def get_or_create_image(self) -> Image:
+        title = "Image des tests de bout en bout"
+        image = Image.objects.filter(title=title).first()
+        if image:
+            return image
+
+        # Plain image generated on the fly, so that the repository holds no binary fixture
+        buffer = BytesIO()
+        PILImage.new("RGB", (400, 200), (0, 0, 145)).save(buffer, format="PNG")
+        return Image.objects.create(title=title, file=ImageFile(buffer, name="e2e.png"))
+
+    def create_slider_page(self):
+        # Same structure as the testimonials of the "Rejoignez-nous" page
+        quotes = [
+            ("Un service numérique réussi doit être utile et accessible à tous.", "Camille", "Designer"),
+            ("Notre travail a un impact concret sur les services numériques de l’État.", "Dominique", "Développeur"),
+            ("Trouver des solutions est un défi passionnant que je relève chaque jour.", "Alex", "Support"),
+        ]
+        slider = {
+            "title": "Ils et elles témoignent",
+            "title_heading_tag": "h2",
+            "title_heading_size": "h2",
+            "blocks": [
+                {"type": "quote", "value": {"quote": quote, "author_name": name, "author_title": job}}
+                for quote, name, job in quotes
+            ],
+        }
+        body = [
+            {
+                "type": "fullwidthbackground",
+                "value": {"bg_color_class": "", "content": [{"type": "slider", "value": slider}]},
+            }
+        ]
+        self.get_or_create_page(self.home, NumeriquePage, "rejoignez-nous", title="Rejoignez-nous", body=body)
+
+    def create_item_grid_page(self):
+        # Same structure as the grid of the ministerial digital directions on the "Le numérique de l’État" page
+        image = self.get_or_create_image()
+        items = [
+            {
+                "type": "numeric_direction_card",
+                "value": {
+                    "image": image.id,
+                    "alt": "",
+                    "text": f"<p>Direction du numérique n° {number}</p>",
+                    "main_link": self.offers_index.id,
+                    "secondary_link": "",
+                },
+            }
+            for number in range(1, 11)
+        ]
+        grid = {
+            "column_width": "6",
+            "horizontal_align": "left",
+            "vertical_align": "middle",
+            "numbers_items_to_display": 4,
+            "items": items,
+        }
+        self.get_or_create_page(
+            self.home,
+            NumeriquePage,
+            "numerique-etat",
+            title="Le numérique de l’État",
+            body=[{"type": "item_grid", "value": grid}],
+        )
