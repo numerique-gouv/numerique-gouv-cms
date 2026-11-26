@@ -477,7 +477,17 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
         posts = posts.select_related("owner").prefetch_related("major_areas", "page_tags", "date__year")
         return posts
 
-    def get_context(self, request, page_tag=None, major_area=None, organization=None, year=None, *args, **kwargs):
+    def get_context(
+        self,
+        request,
+        page_tag=None,
+        major_area=None,
+        organization=None,
+        year=None,
+        target_audience=None,
+        *args,
+        **kwargs,
+    ):
         context = super(BlogIndexPage, self).get_context(request, *args, **kwargs)
         posts = self.posts
 
@@ -499,6 +509,22 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
             organization = get_object_or_404(Organization, slug=organization)
             posts = posts.filter(organizations=organization)
 
+        if target_audience is None:
+            target_audience = request.GET.get("target_audience")
+        if target_audience:
+            target_audience = get_object_or_404(TargetAudience, slug=target_audience)
+            posts = posts.filter(target_audiences=target_audience)
+
+        if year is None:
+            year = request.GET.get("year")
+        # Ignore malformed values (e.g. "abc", "²") instead of raising an error
+        try:
+            year = int(year) if year else None
+        except (TypeError, ValueError):
+            year = None
+        # Out-of-range years would make the date__year lookup crash
+        if year is not None and not 1 <= year <= 9999:
+            year = None
         if year:
             posts = posts.filter(date__year=year)
 
@@ -520,6 +546,7 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
         context["current_page_tag"] = page_tag
         context["current_major_area"] = major_area
         context["current_organization"] = organization
+        context["current_target_audience"] = target_audience
         context["year"] = year
 
         # Filters
@@ -656,6 +683,11 @@ class HubPages(NumeriqueBasePage):
             return self.page_tag.name.lower()
         elif self.content_source == "target_audience":
             return self.target_audience.name.lower()
+
+    def get_content_source_slug(self) -> str:
+        # Slug of the selected source, used as a filter value on the index pages
+        source = getattr(self, self.content_source, None) if self.content_source else None
+        return source.slug if source else ""
 
 
 class NumeriqueEventsIndexPage(EventsIndexPage):
@@ -823,7 +855,7 @@ class NumeriqueCatalogIndexPage(CatalogIndexPage):
     # N'utilise pas les tags pour la version de numérique
     @property
     def show_filters(self) -> bool | models.BooleanField:
-        return self.filter_by_tag and "false"
+        return False
 
     class Meta:
         verbose_name = _("Numerique catalog index page")
