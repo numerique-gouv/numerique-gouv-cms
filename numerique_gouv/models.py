@@ -522,6 +522,9 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
             year = int(year) if year else None
         except (TypeError, ValueError):
             year = None
+        # Out-of-range years would make the date__year lookup crash
+        if year is not None and not 1 <= year <= 9999:
+            year = None
         if year:
             posts = posts.filter(date__year=year)
 

@@ -504,7 +504,7 @@ class NumeriqueBlogYearAndRoutesTestCase(NumeriqueTestCase):
         self.assertEqual(response.context["year"], 2024)
 
     def test_malformed_year_is_ignored(self):
-        for year in ["abc", "²"]:
+        for year in ["abc", "²", "0", "-5", "10000"]:
             with self.subTest(year=year):
                 response = self.client.get(self.index.url, {"year": year})
                 self.assertEqual(response.status_code, 200)
