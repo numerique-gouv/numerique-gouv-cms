@@ -499,6 +499,10 @@ class NumeriqueBlogIndexPage(BlogIndexPage):
             organization = get_object_or_404(Organization, slug=organization)
             posts = posts.filter(organizations=organization)
 
+        if year is None:
+            year = request.GET.get("year")
+        # Ignore malformed values instead of raising an error
+        year = int(year) if str(year or "").isdigit() else None
         if year:
             posts = posts.filter(date__year=year)
 

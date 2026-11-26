@@ -441,3 +441,97 @@ class CategorySnippetsTestCase(NumeriqueTestCase):
         for model in [PageTag, MajorArea]:
             with self.subTest(model=model.__name__), self.assertRaises(IntegrityError), transaction.atomic():
                 model.objects.create(name="Doublon", slug="cloud" if model is MajorArea else "ia")
+
+
+class NumeriqueBlogYearAndRoutesTestCase(NumeriqueTestCase):
+    """
+    The "Publié le …" link of every post points to the index with ?year=, and the index
+    inherits the RSS/Atom/categories/tags routes of BlogIndexPage.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.index = self.add_page(self.home, NumeriqueBlogIndexPage, title="Actualités", slug="actualites")
+        paris = timezone.get_default_timezone()
+        self.post_2024 = self.add_page(
+            self.index,
+            NumeriqueBlogEntryPage,
+            title="Article de 2024",
+            slug="article-2024",
+            date=timezone.datetime(2024, 5, 2, 10, 0, tzinfo=paris),
+        )
+        self.post_2025 = self.add_page(
+            self.index,
+            NumeriqueBlogEntryPage,
+            title="Article de 2025",
+            slug="article-2025",
+            date=timezone.datetime(2025, 3, 12, 10, 0, tzinfo=paris),
+        )
+
+    def test_post_date_links_to_year_filter(self):
+        response = self.client.get(self.post_2024.url)
+        self.assertContains(response, f'href="{self.index.url}?year=2024"')
+
+    def test_year_filter(self):
+        response = self.client.get(self.index.url, {"year": 2024})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["posts"]), [self.post_2024])
+        self.assertEqual(response.context["year"], 2024)
+
+    def test_malformed_year_is_ignored(self):
+        response = self.client.get(self.index.url, {"year": "abc"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["posts"]), 2)
+
+    def test_feeds_list_numerique_posts(self):
+        for route in ["rss/", "atom/"]:
+            with self.subTest(route=route):
+                response = self.client.get(self.index.url + route)
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, "Article de 2024")
+                self.assertContains(response, "Article de 2025")
+
+    def test_categories_and_tags_lists(self):
+        for route in ["categories/", "tags/"]:
+            with self.subTest(route=route):
+                response = self.client.get(self.index.url + route)
+                self.assertEqual(response.status_code, 200)
+
+
+class NumeriqueEventsRoutesTestCase(NumeriqueTestCase):
+    def setUp(self):
+        super().setUp()
+        self.index = self.add_page(self.home, NumeriqueEventsIndexPage, title="Agenda", slug="agenda")
+        now = timezone.now()
+        self.past_event = self.add_page(
+            self.index,
+            NumeriqueEventPage,
+            title="Événement passé",
+            date=now - timedelta(days=400),
+            event_date_start=now - timedelta(days=400),
+            event_date_end=now - timedelta(days=399),
+        )
+        self.future_event = self.add_page(
+            self.index,
+            NumeriqueEventPage,
+            title="Événement futur",
+            date=now,
+            event_date_start=now + timedelta(days=10),
+            event_date_end=now + timedelta(days=11),
+        )
+
+    def test_index_ical(self):
+        response = self.client.get(self.index.url + "ical/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "BEGIN:VCALENDAR")
+        self.assertContains(response, "Événement futur")
+
+    def test_event_ical(self):
+        response = self.client.get(self.future_event.url + "ical/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Événement futur")
+
+    def test_archives(self):
+        response = self.client.get(self.index.url + "archives/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Événement passé")

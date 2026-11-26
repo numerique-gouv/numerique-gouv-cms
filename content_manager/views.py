@@ -43,7 +43,7 @@ class SearchResultsView(ListView):
             ]
 
             for model in models:
-                results = s.search(query, model.objects.live())
+                results = s.search(query, model.objects.live().public())
                 id_list.extend([r.id for r in results])
 
             object_list = Page.objects.filter(id__in=id_list)
