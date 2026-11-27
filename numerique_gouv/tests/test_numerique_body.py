@@ -1,11 +1,11 @@
 import json
 
 from django.contrib.auth import get_user_model
+from sites_conformes.blog.models import BlogEntryPage, BlogIndexPage
+from sites_conformes.core.blocks import STREAMFIELD_COMMON_BLOCKS
 from wagtail.models import Page
 from wagtail.test.utils import WagtailPageTestCase
 
-from blog.models import BlogEntryPage, BlogIndexPage
-from content_manager.blocks import STREAMFIELD_COMMON_BLOCKS
 from numerique_gouv.blocks import (
     STREAMFIELD_NUMERIQUE_BLOCKS,
     CustomBlogRecentEntriesBlock,

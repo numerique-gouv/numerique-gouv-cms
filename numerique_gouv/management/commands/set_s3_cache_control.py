@@ -68,8 +68,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--public-read",
             action="store_true",
-            help="Also set a public-read ACL on images (documents stay private). "
-            "Implied when S3_PUBLIC_HOST is set.",
+            help="Also set a public-read ACL on images (documents stay private). Implied when S3_PUBLIC_HOST is set.",
         )
 
     def handle(self, *args, **options):

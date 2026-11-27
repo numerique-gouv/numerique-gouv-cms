@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
+from sites_conformes.core.models import CmsDsfrConfig
+from sites_conformes.forms.models import FormField, FormPage
 from wagtail.models import Page
 from wagtail.test.utils import WagtailPageTestCase
 
-from content_manager.models import CmsDsfrConfig, ContentPage
-from forms.models import FormField, FormPage
 from numerique_gouv.models import NumeriquePage
 
 User = get_user_model()
@@ -21,9 +21,6 @@ class LayoutTestCase(WagtailPageTestCase):
         self.numerique_page = home.add_child(
             instance=NumeriquePage(title="Page numérique", slug="page-numerique", owner=admin)
         )
-        self.content_page = home.add_child(
-            instance=ContentPage(title="Mentions légales", slug="mentions-legales", owner=admin)
-        )
         self.form_page = home.add_child(
             instance=FormPage(title="Contact", slug="contact", owner=admin, thank_you_text="Merci")
         )
@@ -32,7 +29,8 @@ class LayoutTestCase(WagtailPageTestCase):
         CmsDsfrConfig.objects.update_or_create(site_id=1, defaults={"search_bar": True})
 
     def test_site_stylesheet_is_loaded_on_every_page_type(self):
-        for page in [self.numerique_page, self.content_page, self.form_page]:
+        # ContentPage is swapped for NumeriquePage (SF_CONTENTPAGE_MODEL)
+        for page in [self.numerique_page, self.form_page]:
             with self.subTest(page=page.title):
                 response = self.client.get(page.url)
                 self.assertEqual(response.status_code, 200)

@@ -6,15 +6,15 @@ import frontmatter
 import pytz
 from django.core.management.base import BaseCommand
 from git import Repo
+from sites_conformes.blog.models import Category
+from sites_conformes.core.models import ContentPage
+from sites_conformes.core.utils import import_image
 from slugify import slugify
 from wagtail.documents.models import Document
 from wagtail.images.models import Image
 from wagtail.models import Site
 from wagtail.rich_text import RichText
 
-from blog.models import Category
-from content_manager.models import ContentPage
-from content_manager.utils import import_image
 from numerique_gouv.models import NumeriqueBlogEntryPage, NumeriqueBlogIndexPage, NumeriquePage
 
 
@@ -161,7 +161,7 @@ class Command(BaseCommand):
                                 )
                         if created_at.tzinfo is None:
                             created_at = tz.localize(created_at)
-                        if created_at < reference_date:
+                        if created_at < reference_date:  # type: ignore
                             continue
                     except Exception as e:
                         self.stdout.write(self.style.ERROR(f"Error while parsing date of {file_name}: {e}"))

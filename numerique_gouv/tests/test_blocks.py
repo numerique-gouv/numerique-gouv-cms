@@ -2,8 +2,8 @@ import json
 from datetime import timedelta
 
 from django.utils import timezone
+from sites_conformes.blog.models import Person
 
-from blog.models import Person
 from numerique_gouv.blocks import CustomBlogRecentEntriesBlock
 from numerique_gouv.models import NumeriqueBlogEntryPage, NumeriqueBlogIndexPage, NumeriquePage
 from numerique_gouv.tests.base import NumeriqueTestCase

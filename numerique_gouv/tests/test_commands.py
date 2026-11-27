@@ -1,10 +1,10 @@
 from io import StringIO
 
 from django.core.management import call_command
+from sites_conformes.core.models import CmsDsfrConfig
 from wagtail.models import Page
 from wagtail.test.utils import WagtailPageTestCase
 
-from content_manager.models import CmsDsfrConfig
 from numerique_gouv.models import (
     HubPages,
     NumeriqueBlogEntryPage,

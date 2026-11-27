@@ -3,6 +3,8 @@
 import django.db.models.deletion
 from django.db import migrations, models
 
+from numerique_gouv.migration_operations import AlterModelBases
+
 
 class Migration(migrations.Migration):
     dependencies = [
@@ -43,4 +45,7 @@ class Migration(migrations.Migration):
             ),
             preserve_default=False,
         ),
+        # The model now inherits from EventEntryPage: without this, the historical model still
+        # joins NumeriqueBasePage on the dropped numeriquebasepage_ptr column.
+        AlterModelBases(name="numeriqueeventpage", bases=("sites_conformes_events.evententrypage",)),
     ]

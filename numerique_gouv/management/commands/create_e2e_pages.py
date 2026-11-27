@@ -5,12 +5,12 @@ from io import BytesIO
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
 from PIL import Image as PILImage
+from sites_conformes.blog.models import Organization
+from sites_conformes.core.models import CmsDsfrConfig
+from sites_conformes.core.utils import get_default_site
 from wagtail.images.models import Image
 from wagtail.models import Page
 
-from blog.models import Organization
-from content_manager.models import CmsDsfrConfig
-from content_manager.utils import get_default_site
 from numerique_gouv.models import (
     HubPages,
     MajorArea,

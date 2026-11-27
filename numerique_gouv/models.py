@@ -698,7 +698,7 @@ class HubPages(NumeriqueBasePage):
 
 class NumeriqueEventsIndexPage(EventsIndexPage):
     subpage_types = ["numerique_gouv.NumeriqueEventPage"]
-    template = "events/events_index_page.html"
+    template = "sites_conformes_events/events_index_page.html"
 
     class Meta:
         verbose_name = _("Numerique events index page")
@@ -821,7 +821,7 @@ class SitemapPage(NumeriqueBasePage):
 class NumeriqueCatalogIndexPage(CatalogIndexPage):
     subpage_types = ["numerique_gouv.NumeriquePage"]
 
-    template = "content_manager/catalog_index_page.html"
+    template = "sites_conformes_core/catalog_index_page.html"
 
     subpage_types = ["numerique_gouv.NumeriquePage"]
 

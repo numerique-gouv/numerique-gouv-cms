@@ -441,6 +441,7 @@ WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
     ("mega_menu_section_16", "Catégorie de méga-menu 16"),
 )
 
+WAGTAILIMAGES_IMAGE_MODEL = "sites_conformes_customimages.CustomImage"
 WAGTAILIMAGES_EXTENSIONS = ["gif", "jpg", "jpeg", "png", "webp", "svg"]
 SF_SCHEME_DEPENDENT_SVGS = True if os.getenv("SF_SCHEME_DEPENDENT_SVGS", False) in ["1", "True"] else False
 

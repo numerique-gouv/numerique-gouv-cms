@@ -2,16 +2,16 @@
 
 {% load i18n static dsfr_tags wagtailcore_tags wagtailimages_tags wagtail_dsfr_tags %}
 
-{% include "content_manager/blocks/head.html" with stream=page.body %}
+{% include "numerique_gouv/blocks/head.html" with stream=page.body %}
 
 {% block content %}
-  {% include "content_manager/blocks/messages.html" %}
+  {% include "sites_conformes_core/blocks/messages.html" %}
 
   {% with organizations=page.organizations.all %}
     <div class="fr-container fr-mt-6w">
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12">
-          {% include "content_manager/blocks/breadcrumbs.html" %}
+          {% include "sites_conformes_core/blocks/breadcrumbs.html" %}
         </div>
       </div>
       <div class="fr-grid-row fr-grid-row--center fr-mb-3w">
@@ -25,7 +25,7 @@
           {% if not page.header_with_title %}
             <h1>
               {{ page.title }}
-              {% include "content_manager/blocks/page_visibility.html" %}
+              {% include "sites_conformes_core/blocks/page_visibility.html" %}
             </h1>
           {% endif %}
           <p>
@@ -43,7 +43,7 @@
               {% if page.page_tags.all %}
                 <li>
                   <strong>{% translate "Themes :" %}</strong>
-                  <ul class="fr-tags-group" style="display: ruby;}">
+                  <ul class="fr-tags-group">
                     {% for page_tag in page.page_tags.all %}
                       <li>
                         <p class="fr-badge fr-badge--{{ page_tag.color }} fr-mx-1w">{{ page_tag.name }}</p>
@@ -55,7 +55,7 @@
               {% if page.dinum_tags.all %}
                 <li>
                   <strong>{% translate "Categories :" %}</strong>
-                  <ul class="fr-tags-group" style="display: ruby;}">
+                  <ul class="fr-tags-group">
 
                     {% for dinum_tag in page.dinum_tags.all %}
                       <li>
@@ -68,14 +68,12 @@
             </ul>
          {% endif %}
         </div>
-        {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}
+        {% include "sites_conformes_core/blocks/blocks_stream.html" with stream=page.body %}
         </div>
       {% endwith %}
 
-      {% if settings.content_manager.CmsDsfrConfig.show_share_links and settings.content_manager.CmsDsfrConfig.share_links_blog_posts %}
+      {% if settings.sites_conformes_core.CmsDsfrConfig.show_share_links and settings.sites_conformes_core.CmsDsfrConfig.share_links_blog_posts %}
         {% include "blocks/share.html" %}
       {% endif %}
     </div>
-  </div>
-
 {% endblock content %}
