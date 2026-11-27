@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "widget_tweaks",
     "dsfr",
+    "numerique_gouv.overrides",
     "sites_conformes",
     "sites_conformes.customimages",
     "sites_conformes.core",
