@@ -20,7 +20,7 @@ urlpatterns = [
     path("favicon.ico", RedirectView.as_view(url="/static/dsfr/dist/favicon/favicon.ico", permanent=True)),
     path(
         "robots.txt",
-        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+        TemplateView.as_view(template_name="sites_conformes_core/robots.txt", content_type="text/plain"),
     ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

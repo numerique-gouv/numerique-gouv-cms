@@ -1,8 +1,6 @@
-{% extends "base.html" %}
+{% extends "sites_conformes_blog/blog_entry_page.html" %}
 
 {% load i18n static dsfr_tags wagtailcore_tags wagtailimages_tags wagtail_dsfr_tags %}
-
-{% include "numerique_gouv/blocks/head.html" with stream=page.body %}
 
 {% block content %}
   {% include "sites_conformes_core/blocks/messages.html" %}
@@ -73,7 +71,7 @@
       {% endwith %}
 
       {% if settings.sites_conformes_core.CmsDsfrConfig.show_share_links and settings.sites_conformes_core.CmsDsfrConfig.share_links_blog_posts %}
-        {% include "blocks/share.html" %}
+        {% include "sites_conformes_core/blocks/share.html" %}
       {% endif %}
     </div>
 {% endblock content %}

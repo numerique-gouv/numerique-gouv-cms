@@ -1,8 +1,6 @@
-{% extends "base.html" %}
+{% extends "sites_conformes_core/content_page.html" %}
 
 {% load static dsfr_tags wagtailcore_tags wagtailimages_tags i18n %}
-
-{% include "numerique_gouv/blocks/head.html" with stream=page.body %}
 
 {% block content %}
   <div class="fr-container fr-pt-4w">
@@ -69,5 +67,4 @@
     {% endfor %}
   </div>
 {% endblock content %}
-
 

@@ -1,8 +1,6 @@
-{% extends "base.html" %}
+{% extends "sites_conformes_core/content_page.html" %}
 
 {% load static dsfr_tags wagtailcore_tags wagtailimages_tags i18n numerique_filters %}
-
-{% include "numerique_gouv/blocks/head.html" with stream=page.body %}
 
 {% block content %}
   {% include "numerique_gouv/blocks/hub_pages_heading.html" %}
@@ -74,5 +72,4 @@
   {% include "sites_conformes_core/blocks/blocks_stream.html" with stream=page.body %}
 
   {% endblock content %}
-
 

@@ -1,8 +1,6 @@
-{% extends "base.html" %}
+{% extends "sites_conformes_blog/blog_index_page.html" %}
 
 {% load static dsfr_tags wagtailcore_tags wagtailimages_tags wagtail_dsfr_tags i18n %}
-
-{% include "numerique_gouv/blocks/head.html" with stream=page.body %}
 
 {% block content %}
 {% include "sites_conformes_core/blocks/heading.html" %}
@@ -21,13 +19,13 @@
     <div class="fr-mb-4w">{{ current_category.description|richtext }}</div>
   {% endif %}
 
-
   {% if page.show_filters %}
   <div class="fr-grid-row fr-grid-row--gutters fr-mb-3w">
     <div class="fr-col fr-col-md-4 fr-col-12">
       <nav class="fr-sidemenu fr-sidemenu--sticky-full-height fr-mb-0-5v">
         <div class="fr-sidemenu__inner">
-          <button class="fr-sidemenu__btn"
+          <button type="button"
+                  class="fr-sidemenu__btn"
                   hidden
                   aria-controls="fr-sidemenu-wrapper-{{ page.slug }}"
                   aria-expanded="false">{% translate "Filters" %}</button>
@@ -89,7 +87,7 @@
     <div class="fr-col fr-col-md-8 fr-col-12">
       <h2>{% translate "Posts" %}</h2>
       <div class="fr-grid-row fr-grid-row--gutters">
-        {%  for subpage in posts %}
+        {% for subpage in posts %}
         <div class="fr-col-12 fr-col-md-6">
           {% include "numerique_gouv/blocks/card_vertical.html" with page=subpage %}
         </div>
@@ -103,7 +101,7 @@
   </div>
   {% else %}
   <div class="fr-grid-row fr-grid-row--gutters">
-    {%  for subpage in posts %}
+    {% for subpage in posts %}
     <div class="fr-col-12 fr-col-md-6">
       {% include "numerique_gouv/blocks/card_vertical.html" with page=subpage %}
     </div>

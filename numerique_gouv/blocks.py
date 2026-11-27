@@ -198,6 +198,10 @@ class CustomItemGridBlock(ItemGridBlock):
     numbers_items_to_display = blocks.IntegerBlock(label=_("Numbers items to display"), default=99, min_value=1)
     items = CustomColumnBlock(label=_("Items"))
 
+    class Meta:
+        # Adds a "Voir plus" button when there are more items than numbers_items_to_display
+        template = "numerique_gouv/blocks/item_grid.html"
+
 
 class CustomRecentEntriesStructValue(RecentEntriesStructValue):
     def posts(self):
@@ -245,7 +249,7 @@ class CustomBlogRecentEntriesBlock(BlogRecentEntriesBlock):
 
     class Meta:
         icon = "placeholder"
-        template = ("numerique_gouv/blocks/custom_blog_recent_entries.html",)
+        template = "numerique_gouv/blocks/custom_blog_recent_entries.html"
         value_class = CustomRecentEntriesStructValue
 
 

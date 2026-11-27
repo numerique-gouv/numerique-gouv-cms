@@ -1,10 +1,8 @@
-{% extends "base.html" %}
+{% extends "sites_conformes_core/content_page.html" %}
 {% load wagtail_dsfr_tags %}
 {% load wagtailcore_tags %}
 
 {% load static dsfr_tags wagtailcore_tags wagtailimages_tags i18n %}
-
-{% include "numerique_gouv/blocks/head.html" with stream=page.body %}
 
 {% block content %}
   {% include "sites_conformes_core/blocks/heading.html" %}

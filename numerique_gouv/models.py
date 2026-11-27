@@ -31,6 +31,8 @@ class NumeriquePage(NumeriqueBasePage):
         "sites_conformes_core.CatalogIndexPage",
     ]
 
+    template = "sites_conformes_core/content_page.html"
+
     class Meta:
         verbose_name = _("Numerique page")
 

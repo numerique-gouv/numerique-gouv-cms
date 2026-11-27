@@ -9,7 +9,7 @@ from numerique_gouv.models import NumeriquePage
 
 User = get_user_model()
 
-# content_manager/blocks/item_grid.html is customized for numerique.gouv.fr ("Voir plus" button)
+# CustomItemGridBlock uses numerique_gouv/blocks/item_grid.html ("Voir plus" button)
 
 
 def item_grid(items_count, numbers_items_to_display=99, horizontal_align="left", vertical_align="middle"):

@@ -343,7 +343,7 @@ class Migration(migrations.Migration):
                             "required": False,
                         },
                     ),
-                    36: ("content_manager.blocks.IconPickerBlock", (), {"label": "Icon", "required": False}),
+                    36: ("sites_conformes.core.blocks.IconPickerBlock", (), {"label": "Icon", "required": False}),
                     37: (
                         "wagtail.blocks.ChoiceBlock",
                         [],
@@ -766,7 +766,7 @@ class Migration(migrations.Migration):
                     ),
                     93: ("wagtail.blocks.CharBlock", (), {"label": "Top detail: text", "required": False}),
                     94: (
-                        "content_manager.blocks.IconPickerBlock",
+                        "sites_conformes.core.blocks.IconPickerBlock",
                         (),
                         {"label": "Top detail: icon", "required": False},
                     ),
@@ -787,7 +787,7 @@ class Migration(migrations.Migration):
                         },
                     ),
                     99: (
-                        "content_manager.blocks.IconPickerBlock",
+                        "sites_conformes.core.blocks.IconPickerBlock",
                         (),
                         {"label": "Bottom detail: icon", "required": False},
                     ),
