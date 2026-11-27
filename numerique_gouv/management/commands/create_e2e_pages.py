@@ -48,7 +48,6 @@ class Command(BaseCommand):
         self.create_offers()
         self.create_products()
         self.create_hub()
-        self.create_sitemap()
         self.create_slider_page()
         self.create_item_grid_page()
 
