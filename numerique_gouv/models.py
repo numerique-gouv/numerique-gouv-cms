@@ -13,7 +13,6 @@ from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, FieldRowPanel, HelpPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.images import get_image_model_string
-from wagtail.models import Site
 from wagtail.snippets.models import register_snippet
 
 from numerique_gouv.abstract import NumeriqueBasePage
@@ -27,7 +26,6 @@ class NumeriquePage(NumeriqueBasePage):
         "numerique_gouv.OffersIndexPage",
         "numerique_gouv.ProductsIndexPage",
         "numerique_gouv.NumeriqueEventsIndexPage",
-        "numerique_gouv.SitemapPage",
         "numerique_gouv.NumeriqueCatalogIndexPage",
         "sites_conformes_forms.FormPage",
         "sites_conformes_core.CatalogIndexPage",
@@ -782,40 +780,6 @@ class BaseCategory(models.Model):
 
     class Meta:
         abstract = True
-
-
-class SitemapPage(NumeriqueBasePage):
-    template = "numerique_gouv/sitemap.html"
-    parent_page_types = ["numerique_gouv.NumeriquePage"]
-    subpage_types = []
-    max_count = 1
-
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
-        site = Site.objects.get(is_default_site=True)
-        root_page = site.root_page
-
-        def get_page_structure(page):
-            children = page.get_children().live().specific().order_by("-first_published_at")
-            result = {
-                "page": page.specific,
-                "level": page.depth,
-                "url": page.url,
-                "children": [get_page_structure(child) for child in children] if children else [],
-            }
-            return result
-
-        site_structure = get_page_structure(root_page)
-
-        context.update(
-            {
-                "site_structure": site_structure,
-            }
-        )
-        return context
-
-    class Meta:
-        verbose_name = _("Sitemap")
 
 
 class NumeriqueCatalogIndexPage(CatalogIndexPage):

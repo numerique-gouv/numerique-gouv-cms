@@ -12,7 +12,6 @@ from numerique_gouv.models import (
     OffersEntryPage,
     PageTag,
     ProductsEntryPage,
-    SitemapPage,
 )
 
 
@@ -38,8 +37,6 @@ class CreateE2EPagesTestCase(WagtailPageTestCase):
             with self.subTest(slug=slug):
                 page = Page.objects.get(slug=slug).specific
                 self.assertPageIsRenderable(page)
-
-        self.assertPageIsRenderable(SitemapPage.objects.get())
 
     def test_creates_the_content_used_on_numerique_gouv(self):
         self.call_command()

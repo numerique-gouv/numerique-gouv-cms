@@ -23,7 +23,6 @@ from numerique_gouv.models import (
     PageTag,
     ProductsEntryPage,
     ProductsIndexPage,
-    SitemapPage,
     TargetAudience,
 )
 
@@ -189,11 +188,6 @@ class Command(BaseCommand):
             page_tag=self.tag_ia,
             introduction_text="Toutes les ressources sur l’intelligence artificielle.",
         )
-
-    def create_sitemap(self):
-        # SitemapPage can only be created under a NumeriquePage
-        about = self.get_or_create_page(self.home, NumeriquePage, "a-propos-numerique", title="À propos")
-        self.get_or_create_page(about, SitemapPage, "carte-du-site", title="Carte du site")
 
     def get_or_create_image(self) -> Image:
         title = "Image des tests de bout en bout"
