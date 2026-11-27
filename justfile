@@ -60,7 +60,6 @@ deploy:
     just collectstatic
     just migrate
     {{docker_cmd}} {{uv_run}} python manage.py create_starter_pages
-    {{docker_cmd}} {{uv_run}} python manage.py import_page_templates
     just index
 
 # Sync the dependencies (without the dev ones) and deploy
@@ -210,7 +209,6 @@ scalingo-postdeploy:
     python manage.py migrate_from_sites_faciles --no-input
     python manage.py migrate
     python manage.py create_starter_pages
-    python manage.py import_page_templates
     python manage.py update_index
 
 # Roll a Scalingo app back to a DB backup and to the code of a given git ref
