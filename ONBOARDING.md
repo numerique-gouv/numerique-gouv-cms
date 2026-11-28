@@ -127,7 +127,7 @@ Les fichiers statiques sont servis par [WhiteNoise](https://whitenoise.readthedo
 - Avec `DEBUG=False`, les fichiers sont collectés par `collectstatic` (lancé par `just deploy`), puis servis avec un nom hashé, compressés en gzip et en brotli, et mis en cache pour une durée illimitée.
 - Avec `DEBUG=True`, WhiteNoise sert directement les fichiers des apps et les recharge à chaque modification : pas besoin de relancer `collectstatic`.
 
-Si WhiteNoise est désactivé et `DEBUG=False`, c’est `dj-static` (cf. `config/wsgi.py`) qui sert les statiques, sans brotli ni cache long. La variable `SF_PROD_SERVE_STATIC`, héritée de sites-faciles, n’est plus utilisée.
+Si WhiteNoise est désactivé et `DEBUG=False`, c’est `dj-static` (cf. `config/wsgi.py`) qui sert les statiques, sans brotli ni cache long.
 
 ## Fonctionnement depuis un sous-répertoire
 

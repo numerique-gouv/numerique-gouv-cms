@@ -60,7 +60,6 @@ deploy:
     just collectstatic
     just migrate
     {{docker_cmd}} {{uv_run}} python manage.py create_starter_pages
-    {{docker_cmd}} {{uv_run}} python manage.py import_page_templates
     just index
 
 # Sync the dependencies (without the dev ones) and deploy
@@ -207,9 +206,9 @@ makemessages:
 # Commands run by the Scalingo Procfile
 [group('Production')]
 scalingo-postdeploy:
+    python manage.py migrate_from_sites_faciles --no-input
     python manage.py migrate
     python manage.py create_starter_pages
-    python manage.py import_page_templates
     python manage.py update_index
 
 # Roll a Scalingo app back to a DB backup and to the code of a given git ref
@@ -237,7 +236,7 @@ quality:
 # Count lines of code per app. Requires cloc (see CONTRIBUTING.md).
 [group('Code audit')]
 cloc:
-    @for d in "config" "blog" "content_manager" "dashboard" "events" "forms" "numerique_gouv" "proconnect" "templates" ; do \
+    @for d in "config" "numerique_gouv" "templates" ; do \
     (cd "$d" && echo "$d" && cloc --vcs git); \
     done
 

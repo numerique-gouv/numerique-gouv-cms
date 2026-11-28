@@ -17,7 +17,6 @@ from numerique_gouv.models import (
     PageTag,
     ProductsEntryPage,
     ProductsIndexPage,
-    SitemapPage,
 )
 from numerique_gouv.tests.base import NumeriqueTestCase
 
@@ -400,33 +399,6 @@ class NumeriqueEventsTestCase(NumeriqueTestCase):
     def test_index_lists_event(self):
         response = self.client.get(self.index.url)
         self.assertContains(response, "Événement numérique")
-
-
-class SitemapPageTestCase(NumeriqueTestCase):
-    def setUp(self):
-        super().setUp()
-        self.section = self.add_page(self.home, NumeriquePage, title="Rubrique", slug="rubrique")
-        self.subpage = self.add_page(self.section, NumeriquePage, title="Sous-page", slug="sous-page")
-        self.draft = self.add_page(self.section, NumeriquePage, title="Page brouillon", slug="brouillon", live=False)
-        self.sitemap = self.add_page(self.section, SitemapPage, title="Plan du site", slug="plan-du-site")
-
-    def test_sitemap_is_renderable(self):
-        self.assertPageIsRenderable(self.sitemap)
-
-    def test_sitemap_lists_live_pages_only(self):
-        response = self.client.get(self.sitemap.url)
-        self.assertContains(response, "Rubrique")
-        self.assertContains(response, "Sous-page")
-        self.assertNotContains(response, "Page brouillon")
-
-    def test_sitemap_structure(self):
-        response = self.client.get(self.sitemap.url)
-        structure = response.context["site_structure"]
-        self.assertEqual(structure["page"], self.home.specific)
-        section = next(child for child in structure["children"] if child["page"] == self.section)
-        child_titles = [child["page"].title for child in section["children"]]
-        self.assertIn("Sous-page", child_titles)
-        self.assertNotIn("Page brouillon", child_titles)
 
 
 class NumeriqueCatalogIndexPageTestCase(NumeriqueTestCase):

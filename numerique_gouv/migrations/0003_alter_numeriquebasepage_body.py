@@ -7,7 +7,7 @@ import wagtail.images.blocks
 import wagtailmarkdown.blocks
 from django.db import migrations
 
-import content_manager.blocks
+import sites_conformes.core.blocks
 
 
 class Migration(migrations.Migration):
@@ -394,7 +394,9 @@ class Migration(migrations.Migration):
                                             ),
                                             (
                                                 "icon_class",
-                                                content_manager.blocks.IconPickerBlock(label="Icon", required=False),
+                                                sites_conformes.core.blocks.IconPickerBlock(
+                                                    label="Icon", required=False
+                                                ),
                                             ),
                                             (
                                                 "link",

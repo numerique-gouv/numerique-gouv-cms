@@ -5,12 +5,12 @@ from io import BytesIO
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
 from PIL import Image as PILImage
+from sites_conformes.blog.models import Organization
+from sites_conformes.core.models import CmsDsfrConfig
+from sites_conformes.core.utils import get_default_site
 from wagtail.images.models import Image
 from wagtail.models import Page
 
-from blog.models import Organization
-from content_manager.models import CmsDsfrConfig
-from content_manager.utils import get_default_site
 from numerique_gouv.models import (
     HubPages,
     MajorArea,
@@ -23,7 +23,6 @@ from numerique_gouv.models import (
     PageTag,
     ProductsEntryPage,
     ProductsIndexPage,
-    SitemapPage,
     TargetAudience,
 )
 
@@ -49,7 +48,6 @@ class Command(BaseCommand):
         self.create_offers()
         self.create_products()
         self.create_hub()
-        self.create_sitemap()
         self.create_slider_page()
         self.create_item_grid_page()
 
@@ -189,11 +187,6 @@ class Command(BaseCommand):
             page_tag=self.tag_ia,
             introduction_text="Toutes les ressources sur l’intelligence artificielle.",
         )
-
-    def create_sitemap(self):
-        # SitemapPage can only be created under a NumeriquePage
-        about = self.get_or_create_page(self.home, NumeriquePage, "a-propos-numerique", title="À propos")
-        self.get_or_create_page(about, SitemapPage, "carte-du-site", title="Carte du site")
 
     def get_or_create_image(self) -> Image:
         title = "Image des tests de bout en bout"

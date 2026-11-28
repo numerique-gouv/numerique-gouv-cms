@@ -6,7 +6,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("blog", "0051_alter_blogentrypage_body"),
+        ("sites_conformes_blog", "0048_blogentrypage_preview_image_and_more"),
         ("numerique_gouv", "0078_remove_hubpages_dinum_tag_and_more"),
     ]
 
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             model_name="productsentrypage",
             name="organizations",
             field=modelcluster.fields.ParentalManyToManyField(
-                blank=True, to="blog.organization", verbose_name="Organizations"
+                blank=True, to="sites_conformes_blog.organization", verbose_name="Organizations"
             ),
         ),
         migrations.AlterField(

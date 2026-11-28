@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("events", "0008_alter_evententrypage_body_alter_eventsindexpage_body"),
+        ("sites_conformes_events", "0008_alter_evententrypage_body_alter_eventsindexpage_body"),
         ("numerique_gouv", "0063_alter_numeriquebasepage_body"),
     ]
 
@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                         parent_link=True,
                         primary_key=True,
                         serialize=False,
-                        to="events.eventsindexpage",
+                        to="sites_conformes_events.eventsindexpage",
                     ),
                 ),
                 (
@@ -74,6 +74,6 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "Numerique events index page",
             },
-            bases=("events.eventsindexpage",),
+            bases=("sites_conformes_events.eventsindexpage",),
         ),
     ]

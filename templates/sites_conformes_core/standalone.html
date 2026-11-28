@@ -1,0 +1,8 @@
+{% extends "sites_conformes_core/standalone.html" %}
+{% load static %}
+
+{# Adds the numerique.gouv.fr stylesheet on every page #}
+{% block extra_css %}
+  {{ block.super }}
+  <link href="{% static 'css/numerique_gouv.css' %}" rel="stylesheet" />
+{% endblock extra_css %}

@@ -1,21 +1,19 @@
-{% extends "base.html" %}
+{% extends "sites_conformes_core/content_page.html" %}
 {% load wagtail_dsfr_tags %}
 {% load wagtailcore_tags %}
 
 {% load static dsfr_tags wagtailcore_tags wagtailimages_tags i18n %}
 
-{% include "content_manager/blocks/head.html" with stream=page.body %}
-
 {% block content %}
-  {% include "content_manager/blocks/heading.html" %}
+  {% include "sites_conformes_core/blocks/heading.html" %}
   <div class="fr-container fr-pt-4w">
-    {% include "content_manager/blocks/breadcrumbs.html" %}
+    {% include "sites_conformes_core/blocks/breadcrumbs.html" %}
     {% if not page.header_with_title %}<h1>{{ page.title }}</h1>{% endif %}
   </div>
 
-  {% include "content_manager/blocks/messages.html" %}
+  {% include "sites_conformes_core/blocks/messages.html" %}
 
-  {% include "content_manager/blocks/blocks_stream.html" with stream=page.body %}
+  {% include "sites_conformes_core/blocks/blocks_stream.html" with stream=page.body %}
 
   <div class="fr-py-5w fr-my-5w" style="background: var(--background-alt-blue-ecume) ;">
     <div class="fr-container">

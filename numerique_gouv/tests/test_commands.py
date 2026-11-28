@@ -1,10 +1,11 @@
 from io import StringIO
 
 from django.core.management import call_command
+from sites_conformes.core.models import CmsDsfrConfig
+from wagtail.images import get_image_model
 from wagtail.models import Page
 from wagtail.test.utils import WagtailPageTestCase
 
-from content_manager.models import CmsDsfrConfig
 from numerique_gouv.models import (
     HubPages,
     NumeriqueBlogEntryPage,
@@ -12,8 +13,8 @@ from numerique_gouv.models import (
     OffersEntryPage,
     PageTag,
     ProductsEntryPage,
-    SitemapPage,
 )
+from numerique_gouv.overrides.management.commands.create_demo_pages import Command as CreateDemoPagesCommand
 
 
 class CreateE2EPagesTestCase(WagtailPageTestCase):
@@ -38,8 +39,6 @@ class CreateE2EPagesTestCase(WagtailPageTestCase):
             with self.subTest(slug=slug):
                 page = Page.objects.get(slug=slug).specific
                 self.assertPageIsRenderable(page)
-
-        self.assertPageIsRenderable(SitemapPage.objects.get())
 
     def test_creates_the_content_used_on_numerique_gouv(self):
         self.call_command()
@@ -71,3 +70,13 @@ class CreateE2EPagesTestCase(WagtailPageTestCase):
 
         self.assertEqual(Page.objects.count(), page_count)
         self.assertEqual(PageTag.objects.filter(slug="ia").count(), 1)
+
+
+class CreateDemoPagesTestCase(WagtailPageTestCase):
+    def test_imports_images_from_the_installed_package(self):
+        # Regression: upstream resolved image paths from BASE_DIR, which fails with sites_conformes as a package
+        image = CreateDemoPagesCommand().get_or_import_image(
+            "sites_conformes/static/artwork/technical-error.svg", "Technical Error"
+        )
+
+        self.assertTrue(get_image_model().objects.filter(pk=image.pk, title="Technical Error").exists())

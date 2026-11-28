@@ -321,7 +321,7 @@ class Migration(migrations.Migration):
                         [[("title", 28), ("accordion", 30)]],
                         {"group": "DSFR components", "label": "Accordions"},
                     ),
-                    32: ("content_manager.blocks.IconPickerBlock", (), {"label": "Icon", "required": False}),
+                    32: ("sites_conformes.core.blocks.IconPickerBlock", (), {"label": "Icon", "required": False}),
                     33: (
                         "wagtail.blocks.RichTextBlock",
                         (),
@@ -665,7 +665,7 @@ class Migration(migrations.Migration):
                     ),
                     77: ("wagtail.blocks.CharBlock", (), {"label": "Top detail: text", "required": False}),
                     78: (
-                        "content_manager.blocks.IconPickerBlock",
+                        "sites_conformes.core.blocks.IconPickerBlock",
                         (),
                         {"label": "Top detail: icon", "required": False},
                     ),
@@ -686,7 +686,7 @@ class Migration(migrations.Migration):
                         },
                     ),
                     83: (
-                        "content_manager.blocks.IconPickerBlock",
+                        "sites_conformes.core.blocks.IconPickerBlock",
                         (),
                         {"label": "Bottom detail: icon", "required": False},
                     ),
@@ -903,7 +903,7 @@ class Migration(migrations.Migration):
                     116: (
                         "wagtail.blocks.PageChooserBlock",
                         (),
-                        {"label": "Blog", "page_type": ["blog.BlogIndexPage"]},
+                        {"label": "Blog", "page_type": ["sites_conformes_blog.BlogIndexPage"]},
                     ),
                     117: (
                         "wagtail.blocks.IntegerBlock",
@@ -918,22 +918,22 @@ class Migration(migrations.Migration):
                     ),
                     118: (
                         "wagtail.snippets.blocks.SnippetChooserBlock",
-                        ("blog.Category",),
+                        ("sites_conformes_blog.Category",),
                         {"label": "Filter by category", "required": False},
                     ),
                     119: (
                         "wagtail.snippets.blocks.SnippetChooserBlock",
-                        ("content_manager.Tag",),
+                        ("sites_conformes_core.Tag",),
                         {"label": "Filter by tag", "required": False},
                     ),
                     120: (
                         "wagtail.snippets.blocks.SnippetChooserBlock",
-                        ("blog.Person",),
+                        ("sites_conformes_blog.Person",),
                         {"label": "Filter by author", "required": False},
                     ),
                     121: (
                         "wagtail.snippets.blocks.SnippetChooserBlock",
-                        ("blog.Organization",),
+                        ("sites_conformes_blog.Organization",),
                         {
                             "help_text": "The source is the organization of the post author",
                             "label": "Filter by source",
@@ -965,7 +965,7 @@ class Migration(migrations.Migration):
                     124: (
                         "wagtail.blocks.PageChooserBlock",
                         (),
-                        {"label": "Event calendar", "page_type": ["events.EventsIndexPage"]},
+                        {"label": "Event calendar", "page_type": ["sites_conformes_events.EventsIndexPage"]},
                     ),
                     125: (
                         "wagtail.blocks.StructBlock",

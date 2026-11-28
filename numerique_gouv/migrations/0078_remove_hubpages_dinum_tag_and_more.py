@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("blog", "0051_alter_blogentrypage_body"),
+        ("sites_conformes_blog", "0048_blogentrypage_preview_image_and_more"),
         ("numerique_gouv", "0077_remove_numeriqueblogentrypage_dinum_tags_and_more"),
     ]
 
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
-                to="blog.organization",
+                to="sites_conformes_blog.organization",
                 verbose_name="Organization",
             ),
         ),
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
             model_name="numeriqueeventpage",
             name="organizations",
             field=modelcluster.fields.ParentalManyToManyField(
-                blank=True, to="blog.organization", verbose_name="Organizations"
+                blank=True, to="sites_conformes_blog.organization", verbose_name="Organizations"
             ),
         ),
         migrations.AlterField(

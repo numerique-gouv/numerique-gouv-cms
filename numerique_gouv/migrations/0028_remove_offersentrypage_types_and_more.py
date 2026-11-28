@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
                             "required": False,
                         },
                     ),
-                    6: ("content_manager.blocks.IconPickerBlock", (), {"label": "Icon", "required": False}),
+                    6: ("sites_conformes.core.blocks.IconPickerBlock", (), {"label": "Icon", "required": False}),
                     7: (
                         "wagtail.blocks.ChoiceBlock",
                         [],

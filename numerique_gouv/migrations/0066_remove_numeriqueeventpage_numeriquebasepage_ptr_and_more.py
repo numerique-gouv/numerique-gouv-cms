@@ -3,17 +3,33 @@
 import django.db.models.deletion
 from django.db import migrations, models
 
+from numerique_gouv.services.migration_operations import AlterModelBases
+
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("events", "0008_alter_evententrypage_body_alter_eventsindexpage_body"),
+        ("sites_conformes_events", "0008_alter_evententrypage_body_alter_eventsindexpage_body"),
         ("numerique_gouv", "0065_remove_numeriqueeventsindexpage_dinum_tags_and_more"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="numeriqueeventpage",
-            name="numeriquebasepage_ptr",
+        # Django 6 no longer adds CASCADE when dropping a column, but the M2M tables
+        # created in 0065 still reference this column. Reproduce the Django 5 SQL.
+        migrations.SeparateDatabaseAndState(
+            state_operations=[
+                migrations.RemoveField(
+                    model_name="numeriqueeventpage",
+                    name="numeriquebasepage_ptr",
+                ),
+            ],
+            database_operations=[
+                migrations.RunSQL(
+                    sql=(
+                        "ALTER TABLE numerique_gouv_numeriqueeventpage " "DROP COLUMN numeriquebasepage_ptr_id CASCADE"
+                    ),
+                    reverse_sql=migrations.RunSQL.noop,
+                ),
+            ],
         ),
         migrations.AddField(
             model_name="numeriqueeventpage",
@@ -25,8 +41,11 @@ class Migration(migrations.Migration):
                 parent_link=True,
                 primary_key=True,
                 serialize=False,
-                to="events.evententrypage",
+                to="sites_conformes_events.evententrypage",
             ),
             preserve_default=False,
         ),
+        # The model now inherits from EventEntryPage: without this, the historical model still
+        # joins NumeriqueBasePage on the dropped numeriquebasepage_ptr column.
+        AlterModelBases(name="numeriqueeventpage", bases=("sites_conformes_events.evententrypage",)),
     ]

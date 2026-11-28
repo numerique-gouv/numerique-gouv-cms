@@ -5,17 +5,16 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 from dsfr.constants import COLOR_CHOICES_ILLUSTRATION
 from modelcluster.fields import ParentalManyToManyField
+from sites_conformes.blog.models import BlogEntryPage, BlogIndexPage, Organization
+from sites_conformes.core.blocks import ButtonsHorizontalListBlock, TextAndCTA
+from sites_conformes.core.models import CatalogIndexPage
+from sites_conformes.events.models import EventEntryPage, EventsIndexPage
 from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, FieldRowPanel, HelpPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.images import get_image_model_string
-from wagtail.models import Site
 from wagtail.snippets.models import register_snippet
 
-from blog.models import BlogEntryPage, BlogIndexPage, Organization
-from content_manager.blocks import ButtonsHorizontalListBlock, TextAndCTA
-from content_manager.models import CatalogIndexPage
-from events.models import EventEntryPage, EventsIndexPage
 from numerique_gouv.abstract import NumeriqueBasePage
 
 
@@ -27,11 +26,12 @@ class NumeriquePage(NumeriqueBasePage):
         "numerique_gouv.OffersIndexPage",
         "numerique_gouv.ProductsIndexPage",
         "numerique_gouv.NumeriqueEventsIndexPage",
-        "numerique_gouv.SitemapPage",
         "numerique_gouv.NumeriqueCatalogIndexPage",
-        "forms.FormPage",
-        "content_manager.CatalogIndexPage",
+        "sites_conformes_forms.FormPage",
+        "sites_conformes_core.CatalogIndexPage",
     ]
+
+    template = "sites_conformes_core/content_page.html"
 
     class Meta:
         verbose_name = _("Numerique page")
@@ -193,7 +193,9 @@ class OffersEntryPage(NumeriqueBasePage):
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audience")
     )
-    organizations = ParentalManyToManyField("blog.Organization", blank=True, verbose_name=_("Organizations"))
+    organizations = ParentalManyToManyField(
+        "sites_conformes_blog.Organization", blank=True, verbose_name=_("Organizations")
+    )
     major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Major areas"))
     buttons = ButtonsHorizontalListBlock(label=_("Buttons"))
     text_and_cta = TextAndCTAStreamField(blank=True, verbose_name=_("Text and cta"))
@@ -311,11 +313,13 @@ class OffersEntryPage(NumeriqueBasePage):
 
 class ProductsEntryPage(NumeriqueBasePage):
     target_audiences = ParentalManyToManyField(
-        "numerique_gouv.TargetAudience", blank=True, null=True, verbose_name=_("Target Audiences")
+        "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
     )
     page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
     major_areas = ParentalManyToManyField("numerique_gouv.MajorArea", blank=True, verbose_name=_("Major areas"))
-    organizations = ParentalManyToManyField("blog.Organization", blank=True, verbose_name=_("Organizations"))
+    organizations = ParentalManyToManyField(
+        "sites_conformes_blog.Organization", blank=True, verbose_name=_("Organizations")
+    )
     product_url = models.URLField(blank=True, verbose_name=_("Product URL"))
     the_service = models.TextField(blank=True, verbose_name=_("The service"))
     the_problem = models.TextField(blank=True, verbose_name=_("The problem"))
@@ -422,7 +426,9 @@ class NumeriqueBlogEntryPage(BlogEntryPage):
     major_areas = ParentalManyToManyField(
         "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
     )
-    organizations = ParentalManyToManyField("blog.Organization", blank=True, verbose_name=_("Organizations"))
+    organizations = ParentalManyToManyField(
+        "sites_conformes_blog.Organization", blank=True, verbose_name=_("Organizations")
+    )
     page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
@@ -588,7 +594,7 @@ class HubPages(NumeriqueBasePage):
         verbose_name=_("Major Area of Actions"),
     )
     organization = models.ForeignKey(
-        "blog.Organization",
+        "sites_conformes_blog.Organization",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
@@ -692,7 +698,7 @@ class HubPages(NumeriqueBasePage):
 
 class NumeriqueEventsIndexPage(EventsIndexPage):
     subpage_types = ["numerique_gouv.NumeriqueEventPage"]
-    template = "events/events_index_page.html"
+    template = "sites_conformes_events/events_index_page.html"
 
     class Meta:
         verbose_name = _("Numerique events index page")
@@ -702,7 +708,9 @@ class NumeriqueEventPage(EventEntryPage):
     major_areas = ParentalManyToManyField(
         "numerique_gouv.MajorArea", blank=True, verbose_name=_("Major Areas of Actions")
     )
-    organizations = ParentalManyToManyField("blog.Organization", blank=True, verbose_name=_("Organizations"))
+    organizations = ParentalManyToManyField(
+        "sites_conformes_blog.Organization", blank=True, verbose_name=_("Organizations")
+    )
     page_tags = ParentalManyToManyField("numerique_gouv.PageTag", blank=True, verbose_name=_("Page tags"))
     target_audiences = ParentalManyToManyField(
         "numerique_gouv.TargetAudience", blank=True, verbose_name=_("Target Audiences")
@@ -776,44 +784,10 @@ class BaseCategory(models.Model):
         abstract = True
 
 
-class SitemapPage(NumeriqueBasePage):
-    template = "numerique_gouv/sitemap.html"
-    parent_page_types = ["numerique_gouv.NumeriquePage"]
-    subpage_types = []
-    max_count = 1
-
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
-        site = Site.objects.get(is_default_site=True)
-        root_page = site.root_page
-
-        def get_page_structure(page):
-            children = page.get_children().live().specific().order_by("-first_published_at")
-            result = {
-                "page": page.specific,
-                "level": page.depth,
-                "url": page.url,
-                "children": [get_page_structure(child) for child in children] if children else [],
-            }
-            return result
-
-        site_structure = get_page_structure(root_page)
-
-        context.update(
-            {
-                "site_structure": site_structure,
-            }
-        )
-        return context
-
-    class Meta:
-        verbose_name = _("Sitemap")
-
-
 class NumeriqueCatalogIndexPage(CatalogIndexPage):
     subpage_types = ["numerique_gouv.NumeriquePage"]
 
-    template = "content_manager/catalog_index_page.html"
+    template = "sites_conformes_core/catalog_index_page.html"
 
     subpage_types = ["numerique_gouv.NumeriquePage"]
 

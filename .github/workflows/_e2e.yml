@@ -48,6 +48,10 @@ jobs:
       # baseline and comparison jobs use the same test definitions. Non-cone
       # mode so that only the listed paths are checked out (cone mode would
       # also pull root files and the parent modules, e.g. numerique_gouv/*.py).
+      # Only test definitions are overlaid: Python dependencies (pyproject.toml,
+      # uv.lock), the justfile and the management commands are application
+      # code and must come from the checked-out ref, otherwise the baseline
+      # runs main's code against the PR branch's dependency stack.
       - name: Checkout E2E files from PR branch
         uses: actions/checkout@v7
         with:
@@ -57,14 +61,9 @@ jobs:
             /playwright.config.ts
             /package.json
             /package-lock.json
-            /pyproject.toml
-            /uv.lock
             /.env.test
-            /justfile
             /e2e/
             /.github/
-            /scripts/
-            /numerique_gouv/management/commands/
           path: __e2e_overlay__
 
       # Copy only the selected paths: application modules and .git are kept
@@ -73,8 +72,7 @@ jobs:
         shell: bash
         run: |
           cd __e2e_overlay__
-          for p in playwright.config.ts package.json package-lock.json pyproject.toml uv.lock \
-                   .env.test justfile e2e .github scripts numerique_gouv/management/commands; do
+          for p in playwright.config.ts package.json package-lock.json .env.test e2e .github; do
             if [ -e "$p" ]; then
               cp -r --parents "$p" ..
             fi
@@ -105,9 +103,9 @@ jobs:
       - name: Collect static files
         run: just collectstatic
 
-      # The numerique_gouv management commands (incl. create_e2e_pages) are
-      # overlaid from the PR branch too, so that the baseline and the
-      # comparison render the same content.
+      # Each ref seeds its content with its own management commands (incl.
+      # create_e2e_pages): a PR changing the seeded content shows up as a
+      # visual diff, to be accepted with the `visual-change` label.
       - name: Deploy starter content + demo pages + e2e pages
         run: |
           just init

@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
+from sites_conformes.blog.models import Organization
 from wagtail.models import Page
 from wagtail.test.utils import WagtailPageTestCase
 
-from blog.models import Organization
 from numerique_gouv.models import MajorArea, Offertype, PageTag, TargetAudience
 
 User = get_user_model()

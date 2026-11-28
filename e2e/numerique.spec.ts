@@ -149,7 +149,7 @@ test.describe("Sitemap", () => {
 test.describe("Search", () => {
   test("the header search bar finds a published page", async ({ page }) => {
     await page.goto("/")
-    const input = page.locator("header #search-bar-input")
+    const input = page.locator("header #query")
     await input.fill("France transfert")
     await input.press("Enter")
 
