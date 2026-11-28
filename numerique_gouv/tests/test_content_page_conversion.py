@@ -8,14 +8,14 @@ from django.urls import reverse
 from sites_conformes.core.models import ContentPage
 from wagtail.models import Page, PageLogEntry, get_page_models
 
-from numerique_gouv.content_page_conversion import (
+from numerique_gouv.models import NumeriqueBasePage, NumeriquePage
+from numerique_gouv.services.content_page_conversion import (
     LEGACY_APP_LABEL,
     LEGACY_MODEL,
     LEGACY_TABLE,
     LEGACY_TAG_TABLE,
     convert_content_pages,
 )
-from numerique_gouv.models import NumeriqueBasePage, NumeriquePage
 from numerique_gouv.tests.base import NumeriqueTestCase
 
 
@@ -141,7 +141,7 @@ class ContentPageConversionTestCase(NumeriqueTestCase):
             cursor.execute(
                 f"INSERT INTO {LEGACY_TAG_TABLE} (content_object_id, tag_id) VALUES (%s, 1)", [self.legal.id]
             )
-        with self.assertLogs("numerique_gouv.content_page_conversion", level="WARNING"):
+        with self.assertLogs("numerique_gouv.services.content_page_conversion", level="WARNING"):
             self.convert()
         self.assertEqual(self.legacy_row_count(LEGACY_TAG_TABLE), 0)
 

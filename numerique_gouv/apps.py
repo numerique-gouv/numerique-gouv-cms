@@ -10,7 +10,7 @@ class NumeriqueGouvConfig(AppConfig):
         from sites_conformes.events.models import EventEntryPage, EventsIndexPage
 
         from numerique_gouv.blocks import STREAMFIELD_NUMERIQUE_BLOCKS
-        from numerique_gouv.streamfield import extend_stream_field
+        from numerique_gouv.services.streamfield import extend_stream_field
 
         # Make the numerique.gouv.fr blocks available in the Sites Conformes blog and events pages
         for model in [BlogIndexPage, BlogEntryPage, EventsIndexPage, EventEntryPage]:

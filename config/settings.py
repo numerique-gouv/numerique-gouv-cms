@@ -319,7 +319,7 @@ if os.getenv("S3_HOST"):
 
     if public_host:
         # Unsigned, stable URLs so that browsers and proxies can cache media.
-        # Images get a public-read ACL on upload (see numerique_gouv/storages.py);
+        # Images get a public-read ACL on upload (see numerique_gouv/services/storages.py);
         # documents stay private and are served by Wagtail (see below).
         if addressing_style == "virtual":
             # bucket.host/key: required by OVHcloud, which rejects anonymous
@@ -330,7 +330,7 @@ if os.getenv("S3_HOST"):
             options["custom_domain"] = f"{public_host}/{bucket_name}"
         options["url_protocol"] = f"{protocol}:"
         options["querystring_auth"] = False
-        storage_backend = "numerique_gouv.storages.PublicImagesS3Storage"
+        storage_backend = "numerique_gouv.services.storages.PublicImagesS3Storage"
         public_endpoint = f"{protocol}://{options['custom_domain'].split('/')[0]}"
     else:
         storage_backend = "storages.backends.s3.S3Storage"

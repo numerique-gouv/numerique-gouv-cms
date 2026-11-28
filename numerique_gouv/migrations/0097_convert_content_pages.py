@@ -1,6 +1,6 @@
 from django.db import migrations
 
-from numerique_gouv.content_page_conversion import convert_content_pages
+from numerique_gouv.services.content_page_conversion import convert_content_pages
 
 
 class Migration(migrations.Migration):

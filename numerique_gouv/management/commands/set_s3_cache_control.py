@@ -35,7 +35,7 @@ from storages.utils import clean_name
 from wagtail.documents import get_document_model
 from wagtail.images import get_image_model
 
-from numerique_gouv.storages import PUBLIC_ACL, PublicImagesS3Storage, is_public_key
+from numerique_gouv.services.storages import PUBLIC_ACL, PublicImagesS3Storage, is_public_key
 
 # Metadata that copy_object(MetadataDirective="REPLACE") would drop if not passed again.
 PRESERVED_HEADERS = ("ContentType", "ContentDisposition", "ContentEncoding", "ContentLanguage")

@@ -3,7 +3,7 @@
 import django.db.models.deletion
 from django.db import migrations, models
 
-from numerique_gouv.migration_operations import AlterModelBases
+from numerique_gouv.services.migration_operations import AlterModelBases
 
 
 class Migration(migrations.Migration):
